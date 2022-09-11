@@ -1,0 +1,26 @@
+// ignore_for_file: file_names
+
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:gym_staff_app/models/memberAttendencesData.dart';
+import 'package:gym_staff_app/models/memberData.dart';
+import 'package:gym_staff_app/models/planData.dart';
+import 'package:gym_staff_app/models/staffData.dart';
+import 'models/memberRegistrationsResponseData.dart';
+
+String token = '';
+String qrCodeURL = '';
+String qrCodeUUID = '';
+
+var localeLanguage = const Locale('en');
+
+StaffData currentStaffData;
+
+List<MemberData> allMembersList = [];
+List<MemberRegistrationsResponseData> allMemberRegistrationsList;
+List<PlanData> allPlansList;
+List<MemberAttendencesData> allMemberAttendencesList;
+
+MemberData pickedMember;
+
+MemberRegistrationsResponseData pickedMemberPackage;

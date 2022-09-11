@@ -1,0 +1,190 @@
+{
+    "language": "English",
+    "@language": {
+      "description": " "
+    },
+
+    "loginTitle": "LOG IN",
+    "@language": {
+      "description": " "
+    },
+    "phoneTitle": "Phone",
+    "@language": {
+      "description": " "
+    },
+    "passwordTitle": "Password",
+    "@language": {
+      "description": " "
+    },
+    "forgetPasswordTitle": "Forget password ?",
+    "@language": {
+      "description": " "
+    },
+
+    "searchForAMember": "Search For Members",
+    "@language": {
+      "description": " "
+    },
+
+    "searchBarHintTitle": "Search Phone Number",
+    "@language": {
+      "description": " "
+    },
+
+    "homeIconTitle": "Home",
+    "@language": {
+      "description": " "
+    },
+
+    "settingsIconTitle": "Settings",
+    "@language": {
+      "description": " "
+    },
+
+    "aboutUsIconTitle": "About Us",
+    "@language": {
+      "description": " "
+    },
+
+    "logOutIconTitle": "Log Out",
+    "@language": {
+      "description": " "
+    },
+
+    "confirmArrivalTitle": "Confirm Arrival",
+    "@language": {
+      "description": " "
+    },
+
+    "addANewMemberTitle": "Add New Member",
+    "@language": {
+      "description": " "
+    },
+
+    "nameHint": "Name",
+    "@language": {
+      "description": " "
+    },
+
+    "phoneHint": "Phone",
+    "@language": {
+      "description": " "
+    },
+
+    "addMemberTitle": "Add Member",
+    "@language": {
+      "description": " "
+    },
+
+    "notificationstitle": "Notifications",
+    "@language": {
+      "description": " "
+    },
+
+    "clubTitle": "Club",
+    "@language": {
+      "description": " "
+    },
+
+    "languageTitle": "Language",
+    "@language": {
+      "description": " "
+    },
+
+    "termsAndConditionsTitle": "Terms & Conditions",
+    "@language": {
+      "description": " "
+    },
+
+    "chooseAPlanTitle": "Choose Plan",
+    "@language": {
+      "description": " "
+    },
+
+    "numberOfSessionsTitle": "Number Of Sessions:",
+    "@language": {
+      "description": " "
+    },
+
+    "expirationDateTitle": "Expiration Date:",
+    "@language": {
+      "description": " "
+    },
+
+    "getPlanTitle": "Get Plan",
+    "@language": {
+      "description": " "
+    },
+
+    "connectionStatusMessage": "Error connecting to the internet, Please check your internet connction and try again",
+    "@language": {
+      "description": " "
+    },
+
+     "attendedTitle": "Attended",
+    "@language": {
+      "description": " "
+    },
+
+    "activeTitle": "Active",
+    "@language": {
+      "description": " "
+    },
+
+    "inActiveTitle": "Inactive",
+    "@language": {
+      "description": " "
+    },
+
+    "enrollNowTitle": "Enroll Now",
+    "@language": {
+      "description": " "
+    },
+
+    "emailTitle": "Email",
+    "@language": {
+      "description": " "
+    },
+
+    "optionalTitle": "Optional",
+    "@language": {
+      "description": " "
+    },
+
+    "memberAddedSuccessfullyTitle": "Member has been added  successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "expiresInTitle": "Expires In",
+    "@language": {
+      "description": " "
+    },
+
+    "doneTitle": "Done",
+    "@language": {
+      "description": " "
+    },
+
+    "registrationDoneTitle": "Registration Done Successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "cancelArrivalTitle": "Cancel Arrival",
+    "@language": {
+      "description": " "
+    },
+
+    "updatedAttendenceSuccessfully": "Updated Attendence Successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "cancelledAttendenceSuccessfully": "Cancelled Attendence Successfully",
+    "@language": {
+      "description": " "
+    }
+
+    
+}

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "88162271951",
+    "project_id": "barbels-f6774",
+    "storage_bucket": "barbels-f6774.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88162271951:android:4a6b41f142787c20a52dba",
+        "android_client_info": {
+          "package_name": "com.example.gym_staff_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "88162271951-4tgc811udssl8sno9rjc0vs0h5u7jm2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACFm7ufI-QIUH3d8UR__1OdUnS0As4lS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "88162271951-4tgc811udssl8sno9rjc0vs0h5u7jm2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
