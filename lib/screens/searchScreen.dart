@@ -12,6 +12,7 @@ import 'package:gym_staff_app/screens/addNewMemberScreen.dart';
 import 'package:gym_staff_app/widgets/searchScreenWidgets/memberDataTile.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../Exceptions/getRequest_exception.dart';
 import '../globalVariables.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool loadingMembersData = true;
   bool connectionError = false;
   bool empty = false;
+  final searchController = TextEditingController();
 
   @override
   void initState() {
@@ -62,6 +64,12 @@ class _SearchScreenState extends State<SearchScreen> {
         loadingMembersData = false;
         empty = false;
       });
+    } on GetRequestException catch (error) {
+      setState(() {
+        connectionError = false;
+        loadingMembersData = true;
+        empty = false;
+      });
     }
   }
 
@@ -88,7 +96,20 @@ class _SearchScreenState extends State<SearchScreen> {
         loadingMembersData = false;
         empty = false;
       });
+    } on GetRequestException catch (error) {
+      setState(() {
+        connectionError = false;
+        loadingMembersData = true;
+        empty = false;
+      });
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    searchController.dispose();
   }
 
   @override
@@ -161,6 +182,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Container(
                             child: folded == false
                                 ? TextField(
+                                    controller: searchController,
                                     cursorColor: Theme.of(context).primaryColor,
                                     decoration: InputDecoration(
                                       contentPadding:
@@ -208,6 +230,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                           loadingMembersData = false;
                                           empty = false;
                                         });
+                                      } on GetRequestException catch (error) {
+                                        setState(() {
+                                          connectionError = false;
+                                          loadingMembersData = true;
+                                          empty = false;
+                                        });
                                       }
                                     },
                                   )
@@ -223,7 +251,20 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         ),
                         onTap: () async {
+                          print('1');
                           if (folded == false) {
+                            print('2');
+                            print('Current Value::${searchController.text}:::');
+                            if (searchController.text == '') {
+                              print('3');
+                              setState(() {
+                                folded = !folded;
+                                connectionError = false;
+                                loadingMembersData = false;
+                              });
+                              return;
+                            }
+                            print('4');
                             try {
                               setState(() {
                                 connectionError = false;
@@ -231,19 +272,29 @@ class _SearchScreenState extends State<SearchScreen> {
                                 empty = false;
                               });
                               await getAllMembers();
+                              print('5');
                             } on SocketException {
                               setState(() {
                                 connectionError = true;
                                 loadingMembersData = false;
                                 empty = false;
                               });
+                            } on GetRequestException catch (error) {
+                              setState(() {
+                                connectionError = false;
+                                loadingMembersData = true;
+                                empty = false;
+                              });
                             }
                           }
+                          print('6');
                           setState(() {
                             folded = !folded;
                             connectionError = false;
                             loadingMembersData = false;
                           });
+                          print('7');
+                          searchController.text = '';
                         },
                       ),
                     ],

@@ -20,7 +20,7 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
   // String orderDate;
   // String convertedTime;
 
-  bool loading = false;
+  bool switchLanguageLoading = false;
   bool switchLanguage = true;
   bool isInit = true;
 
@@ -165,6 +165,9 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                       padding: const EdgeInsets.all(8),
                       child: InkWell(
                         onTap: () async {
+                          setState(() {
+                            switchLanguageLoading = true;
+                          });
                           try {
                             final provider =
                                 Provider.of<LocaleLanguageProvider>(context,
@@ -178,6 +181,7 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
 
                             setState(() {
                               switchLanguage = !switchLanguage;
+                              switchLanguageLoading = false;
                             });
                           } catch (error) {
                             showToast(error.toString(), context);
@@ -205,16 +209,6 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                     ),
                   ),
                 ),
-                Expanded(child: Container()),
-                loading == true
-                    ? Center(
-                        child: LoadingAnimationWidget.inkDrop(
-                          color: Theme.of(context).primaryColor,
-                          size: 50,
-                        ),
-                      )
-                    : const Text(''),
-                Expanded(child: Container()),
               ],
             ),
             Positioned(
@@ -225,12 +219,29 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                   Navigator.of(context).pop();
                 },
                 icon: Icon(
-                  Icons.arrow_back,
+                  localeLanguage == const Locale('en')
+                      ? Icons.arrow_back
+                      : Icons.arrow_forward,
                   color: Theme.of(context).scaffoldBackgroundColor,
                   size: 30,
                 ),
               ),
             ),
+            switchLanguageLoading == true
+                ? Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: LoadingAnimationWidget.fourRotatingDots(
+                        color: Theme.of(context).primaryColor,
+                        size: 50,
+                      ),
+                    ),
+                    color: Colors.black38,
+                  )
+                : const SizedBox(
+                    height: 0,
+                  ),
           ],
         ));
   }

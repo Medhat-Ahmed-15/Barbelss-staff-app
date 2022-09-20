@@ -139,7 +139,7 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                           bottom: 10,
                         ),
                         child: Text(
-                          'Send Qr Code',
+                          AppLocalizations.of(context).sendQrCode,
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 14),

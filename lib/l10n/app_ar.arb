@@ -73,14 +73,80 @@
      
      "cancelledAttendenceSuccessfully": "تم إلغاء الحضور بنجاح",
 
-     "updatedAttendenceSuccessfully": "تم تحديث الحضور بنجاح"
+     "updatedAttendenceSuccessfully": "تم تحديث الحضور بنجاح",
+
+     "memberNameIsrequired": "اسم العضو مطلوب",
+
+     "phoneNumberIsRequired": "رقم الهاتف مطلوب",
+
+     "sendQrCode": "أرسل رمز الاستجابة السريعة",
+
+     "exit": "مخرج",
+
+     "somethingWentWrong": "هناك خطأ ما",
+
+     "verifymember": "التحقق من العضو",
+
+     "freezed": "مجمدة",
+
+     "resendQrCode": "إعادة إرسال رمز الاستجابة السريعة",
+
+     "showMore":  "أظهر المزيد",
+
+     "packageDetails": "تفاصيل الحزمة",
+
+     "freeze": "تجميد",
+
+     "reactivate": "اعادة تفعيل",
+
+     "staffName": "اسم الموظف",
+
+     "attendenceDate": "بيانات الحضور",
+
+     "packageHasBeenFreezedSuccessfully": "تم تجميد الحزمة بنجاح",
+
+     "packageHasBeenReactivatedSuccessfully": "تمت إعادة تنشيط الحزمة بنجاح",
+
+     "personalInformation": "معلومات شخصية",
+
+     "blockMember": "منع العضو",
+
+     "allowVerification": "السماح بالتحقق",
+
+     "next": "التالي",
+
+     "moreMemberDetails": "المزيد من تفاصيل الأعضاء",
+
+     "gender": "جنس",
+
+     "female": "أنثى",
+
+     "male": "ذكر",
+
+     "clubMemberShip": "عضوية النادي",
+
+     "membership": "عضوية",
+
+     "age": "سن",
+
+     "membersAge": "عمر العضو",
+
+     "day": "يوم",
+
+     "week": "أسبوع",
+
+     "month": "شهر",
+
+     "year": "عام",
+
+    "specifyDuration": "حدد المدة",
+
+    "submit": "موافق",
+
+    "duration": "مدة"
 
 
 
 
-
-
-
-   
     
 }

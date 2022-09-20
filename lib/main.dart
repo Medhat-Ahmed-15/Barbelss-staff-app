@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/providers/localLanguageProvider.dart';
 import 'package:gym_staff_app/screens/addNewMemberScreen.dart';
+import 'package:gym_staff_app/screens/addNewMemberScreenP2.dart';
 import 'package:gym_staff_app/screens/changeLanguageScreen.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
 import 'package:gym_staff_app/screens/loginScreen.dart';
@@ -14,11 +16,14 @@ import 'package:gym_staff_app/screens/memberPersonalDataScreen.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:gym_staff_app/screens/searchScreen.dart';
 import 'package:gym_staff_app/screens/settingsScreen.dart';
+import 'package:gym_staff_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'l10n/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
@@ -69,10 +74,11 @@ class MyApp extends StatelessWidget {
                     : FutureBuilder(
                         future: authProviderObj.tryAutoSignIn(),
                         builder: (ctx, snapShot) {
-                          // if (snapShot.connectionState ==
-                          //     ConnectionState.waiting) {
-                          //   return SplashScreen();
-                          // }
+                          if (snapShot.connectionState ==
+                              ConnectionState.none) {
+                            print('SPLAAAASSHHH SCREEEBBBB');
+                            return SplashScreen();
+                          }
                           if (snapShot.data == true) {
                             return MainScreen();
                           } else {
@@ -82,6 +88,8 @@ class MyApp extends StatelessWidget {
                 locale: localLanguageProviderObj.locale,
                 routes: {
                   LoginScreen.routeName: (ctx) => LoginScreen(),
+                  AddNewMemberScreenP2.routeName: (ctx) =>
+                      AddNewMemberScreenP2(),
                   MemberPersonalDataScreen.routeName: (ctx) =>
                       MemberPersonalDataScreen(),
                   MemberPackageDetailsScreen.routeName: (ctx) =>

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:vibration/vibration.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScanQrCodeDialog extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class _ScanQrCodeDialogState extends State<ScanQrCodeDialog> {
             child: GestureDetector(
               onTap: () => Navigator.of(context).pop(),
               child: Text(
-                'Exit',
+                AppLocalizations.of(context).exit,
                 style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 18,

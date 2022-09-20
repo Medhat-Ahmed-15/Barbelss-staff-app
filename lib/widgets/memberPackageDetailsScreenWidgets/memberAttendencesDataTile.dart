@@ -12,73 +12,68 @@ class MemberAttendencesDataTile extends StatelessWidget {
   MemberAttendencesDataTile(this.memberAttendencesData);
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, MemberPackageDetailsScreen.routeName);
-      },
-      child: Container(
-        margin: const EdgeInsets.only(right: 15),
-        width: MediaQuery.of(context).size.width,
-        height: 135,
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15),
-              child: ListTile(
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          color: Theme.of(context).primaryColor,
-                          size: 16,
+    return Container(
+      margin: const EdgeInsets.only(right: 15),
+      width: MediaQuery.of(context).size.width,
+      height: 135,
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 15, left: 15),
+            child: ListTile(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.person,
+                        color: Theme.of(context).primaryColor,
+                        size: 20,
+                      ),
+                      Text(
+                        '${AppLocalizations.of(context).staffName}: ',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline2.color,
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          'Staff Name: ',
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.headline2.color,
-                          ),
-                        ),
-                        Text(
+                      ),
+                      Expanded(
+                        child: Text(
                           memberAttendencesData.staffName,
                           style: TextStyle(
                               color:
                                   Theme.of(context).textTheme.headline2.color,
                               fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.date_range_rounded,
-                          color: Theme.of(context).primaryColor,
-                          size: 16,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          'Attendence Date: ',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.date_range_rounded,
+                        color: Theme.of(context).primaryColor,
+                        size: 20,
+                      ),
+                      Expanded(
+                        child: Text(
+                          '${AppLocalizations.of(context).attendenceDate}: ',
                           style: TextStyle(
                             color: Theme.of(context).textTheme.headline2.color,
                           ),
                         ),
-                        Text(
+                      ),
+                      Expanded(
+                        child: Text(
                           convertDateToDayInNumberMonthInText(
                                   memberAttendencesData.createdAt) +
                               " " +
@@ -89,18 +84,18 @@ class MemberAttendencesDataTile extends StatelessWidget {
                                   Theme.of(context).textTheme.headline2.color,
                               fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-                contentPadding: const EdgeInsets.all(4),
+                      ),
+                    ],
+                  ),
+                ],
               ),
+              contentPadding: const EdgeInsets.all(4),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
       ),
     );
   }

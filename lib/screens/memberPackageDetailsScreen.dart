@@ -5,10 +5,10 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:lottie/lottie.dart' as lot;
-
 import '../Exceptions/getRequest_exception.dart';
 import '../widgets/feedBackDialog.dart';
 import '../widgets/memberPackageDetailsScreenWidgets/memberAttendencesDataTile.dart';
+import '../widgets/pickFreezingTimeDialog.dart';
 
 class MemberPackageDetailsScreen extends StatefulWidget {
   static const routeName = '/MemberPackageDetailsScreen';
@@ -23,40 +23,44 @@ class _MemberPackageDetailsScreenState
   bool loadingMemberAttendencesData = true;
   bool connectionError = false;
   bool empty = false;
-  String freezeButtonText = '';
   bool confirmationLoading = false;
+  bool isInit = true;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
 
-    try {
-      freezeButtonText = allMemberRegistrationsList[0].isFreezed == false
-          ? 'Freeze'
-          : 'Reactivate';
-      getAllMemberAttendences(pickedMemberPackage.registrationId).then((value) {
-        if (allMemberAttendencesList.isEmpty) {
-          setState(() {
-            loadingMemberAttendencesData = false;
-            connectionError = false;
-            empty = true;
-          });
-        } else {
-          print('msh empty');
-          setState(() {
-            loadingMemberAttendencesData = false;
-            connectionError = false;
-            empty = false;
-          });
-        }
-      });
-    } on SocketException {
-      setState(() {
-        connectionError = true;
-        loadingMemberAttendencesData = false;
-        empty = false;
-      });
+    if (isInit == true) {
+      try {
+        freezeButtonText = allMemberRegistrationsList[0].isFreezed == false
+            ? AppLocalizations.of(context).freeze
+            : AppLocalizations.of(context).reactivate;
+        getAllMemberAttendences(pickedMemberPackage.registrationId)
+            .then((value) {
+          if (allMemberAttendencesList.isEmpty) {
+            setState(() {
+              loadingMemberAttendencesData = false;
+              connectionError = false;
+              empty = true;
+            });
+          } else {
+            print('msh empty');
+            setState(() {
+              loadingMemberAttendencesData = false;
+              connectionError = false;
+              empty = false;
+            });
+          }
+        });
+      } on SocketException {
+        setState(() {
+          connectionError = true;
+          loadingMemberAttendencesData = false;
+          empty = false;
+        });
+      }
+      isInit = false;
     }
   }
 
@@ -99,26 +103,49 @@ class _MemberPackageDetailsScreenState
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Theme.of(context).primaryColor,
-                      size: 30,
-                    ),
-                  ),
+                  localeLanguage == const Locale('en')
+                      ? IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(
+                            localeLanguage == const Locale('en')
+                                ? Icons.arrow_back
+                                : Icons.arrow_forward,
+                            color: Theme.of(context).primaryColor,
+                            size: 30,
+                          ),
+                        )
+                      : Text(
+                          AppLocalizations.of(context).packageDetails,
+                          style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
                   const SizedBox(
                     width: 10,
                   ),
-                  const Text(
-                    'Package Details',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
+                  localeLanguage == const Locale('en')
+                      ? Text(
+                          AppLocalizations.of(context).packageDetails,
+                          style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(
+                            localeLanguage == const Locale('en')
+                                ? Icons.arrow_back
+                                : Icons.arrow_forward,
+                            color: Theme.of(context).primaryColor,
+                            size: 30,
+                          ),
+                        ),
                 ],
               ),
             ),
@@ -147,7 +174,7 @@ class _MemberPackageDetailsScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(12.0),
                           child: Row(
                             children: [
                               Text(
@@ -163,9 +190,9 @@ class _MemberPackageDetailsScreenState
                                 width: 5,
                               ),
                               pickedMemberPackage.isFreezed == true
-                                  ? const Text(
-                                      '(Freezed)',
-                                      style: TextStyle(
+                                  ? Text(
+                                      '(${AppLocalizations.of(context).freezed})',
+                                      style: const TextStyle(
                                           color: Colors.grey, fontSize: 11),
                                     )
                                   : const Text('')
@@ -290,68 +317,65 @@ class _MemberPackageDetailsScreenState
       child: FloatingActionButton.extended(
           heroTag: 'btn7',
           onPressed: () async {
-            try {
-              setState(() {
-                confirmationLoading = true;
-              });
-
-              if (allMemberRegistrationsList[0].isFreezed == false) {
-                await freezeRegistration(
-                    registrationId:
-                        allMemberRegistrationsList[0].registrationId,
-                    context: context);
-                freezeButtonText = 'Reactivate';
-
-                //   await refresh();
-                Navigator.of(context).pop(true);
-                showToast('Package has been freezed successfully', context);
-              } else {
+            if (allMemberRegistrationsList[0].isFreezed == true) {
+              try {
+                setState(() {
+                  confirmationLoading = true;
+                });
                 await reactivateRegestration(
                     registrationId:
                         allMemberRegistrationsList[0].registrationId,
                     context: context);
-                freezeButtonText = 'Freeze';
+
+                setState(() {
+                  confirmationLoading = false;
+                });
+                freezeButtonText = AppLocalizations.of(context).freeze;
                 //   await refresh();
                 Navigator.of(context).pop(true);
 
-                showToast('Package has been reactivated successfully', context);
+                showToast(
+                    AppLocalizations.of(context)
+                        .packageHasBeenReactivatedSuccessfully,
+                    context);
+              } on GetRequestException catch (error) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText: error.toStringMessage(),
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+                setState(() {
+                  confirmationLoading = false;
+                });
+              } on SocketException {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText:
+                          AppLocalizations.of(context).connectionStatusMessage,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
               }
-
-              setState(() {
-                confirmationLoading = false;
-              });
-            } on GetRequestException catch (error) {
+            } else {
               showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) => FeedBackDialog(
-                    titleText: error.toStringMessage(),
-                    gif: 'assets/gifs/fail.json',
-                    enableButton: true,
-                    buttonText: AppLocalizations.of(context).doneTitle,
-                    callBackFunction: () {
-                      Navigator.of(context).pop();
-                    },
-                    buttonColor: Colors.redAccent),
-              );
-              setState(() {
-                confirmationLoading = false;
-              });
-            } on SocketException {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) => FeedBackDialog(
-                    titleText:
-                        AppLocalizations.of(context).connectionStatusMessage,
-                    gif: 'assets/gifs/fail.json',
-                    enableButton: true,
-                    buttonText: AppLocalizations.of(context).doneTitle,
-                    callBackFunction: () {
-                      Navigator.of(context).pop();
-                    },
-                    buttonColor: Colors.redAccent),
-              );
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => PickFreezingTimeDialog());
             }
           },
           label: Text(
@@ -359,10 +383,6 @@ class _MemberPackageDetailsScreenState
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).textTheme.headline1.color),
-          ),
-          icon: Icon(
-            pickedMemberPackage.isFreezed == true ? Icons.task : Icons.pause,
-            color: Theme.of(context).iconTheme.color,
           ),
           backgroundColor: Theme.of(context).primaryColor),
     );

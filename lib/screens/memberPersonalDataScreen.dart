@@ -91,7 +91,9 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                 Navigator.of(context).pop();
               },
               icon: Icon(
-                Icons.arrow_back,
+                localeLanguage == const Locale('en')
+                    ? Icons.arrow_back
+                    : Icons.arrow_forward,
                 color: Theme.of(context).primaryColor,
                 size: 30,
               ),
@@ -106,7 +108,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15, right: 15),
                     child: Text(
-                      'Personl Information',
+                      AppLocalizations.of(context).personalInformation,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline2.color,
                           fontSize: 30,
@@ -121,6 +123,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                     child: Container(
                       padding: const EdgeInsets.only(
                         left: 22,
+                        right: 22,
                         top: 22,
                         bottom: 22,
                       ),
@@ -140,7 +143,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Name',
+                            AppLocalizations.of(context).nameHint,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 13.0,
@@ -165,7 +168,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           ///////////////////////////////////
 
                           Text(
-                            'Email',
+                            AppLocalizations.of(context).emailTitle,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 13.0,
@@ -190,7 +193,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           ////////////////////////
 
                           Text(
-                            'Phone',
+                            AppLocalizations.of(context).phoneTitle,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 13.0,
@@ -236,7 +239,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Allow Verification',
+                            AppLocalizations.of(context).allowVerification,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16.0,
@@ -289,7 +292,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                             bottom: 10,
                           ),
                           child: Text(
-                            'Block Member',
+                            AppLocalizations.of(context).blockMember,
                             style: TextStyle(
                                 color:
                                     Theme.of(context).textTheme.headline1.color,

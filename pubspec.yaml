@@ -95,6 +95,8 @@ flutter:
     - assets/images/logo1.png
     - assets/images/staff.png
     - assets/images/empty.png
+    - assets/images/male.png
+    - assets/images/female.png
     - assets/images/pickALanguageLogo.jpg
     - assets/gifs/empty.json
     - assets/gifs/error.json

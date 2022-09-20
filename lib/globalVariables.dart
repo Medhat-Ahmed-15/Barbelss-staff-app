@@ -11,6 +11,15 @@ import 'models/memberRegistrationsResponseData.dart';
 String token = '';
 String qrCodeURL = '';
 String qrCodeUUID = '';
+String addNewMemberFieldKey;
+String addedName = '';
+String addedEmail = '';
+String addedMembership = '';
+String addedPhone = '';
+String addedPhoneCode = '';
+String freezeButtonText = '';
+
+bool addedVerifyMember = false;
 
 var localeLanguage = const Locale('en');
 

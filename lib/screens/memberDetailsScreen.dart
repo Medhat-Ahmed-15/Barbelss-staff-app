@@ -306,7 +306,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                         child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            'Show More',
+                            AppLocalizations.of(context).showMore,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Theme.of(context)
@@ -330,7 +330,9 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                 Navigator.of(context).pop();
               },
               icon: Icon(
-                Icons.arrow_back,
+                localeLanguage == const Locale('en')
+                    ? Icons.arrow_back
+                    : Icons.arrow_forward,
                 color: Theme.of(context).scaffoldBackgroundColor,
                 size: 30,
               ),
@@ -715,7 +717,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
 
   Widget resendQrCOde() {
     return SizedBox(
-      width: 200,
+      width: localeLanguage == const Locale('en') ? 200 : 300,
       child: FloatingActionButton.extended(
         heroTag: 'btn4',
         key: UniqueKey(),
@@ -771,7 +773,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
           }
         },
         label: Text(
-          'Resend QR Code',
+          AppLocalizations.of(context).resendQrCode,
           style: TextStyle(
               fontWeight: FontWeight.bold,
               color: Theme.of(context).textTheme.headline1.color),

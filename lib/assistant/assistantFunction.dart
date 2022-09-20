@@ -60,18 +60,18 @@ Future<void> setLocalLanguageInSorage(String language) async {
 
 //translate variables/////////////////////////////////////////////////////////////////////////////
 
-Future<String> translateToArabic(String input) async {
-  final translator = GoogleTranslator();
-  var translation = await translator.translate(input, from: 'en', to: 'ar');
+// Future<String> translateToArabic(String input) async {
+//   final translator = GoogleTranslator();
+//   var translation = await translator.translate(input, from: 'en', to: 'ar');
 
-  print('Translation:: ${translation.toString()}');
+//   print('Translation:: ${translation.toString()}');
 
-  return translation.toString();
-}
+//   return translation.toString();
+// }
 
 //showDialog///////////////////////////////////////////////////////////////////////////////////
 
-void showErrozrDialog(
+void showErrorDialog(
     String message, String title, BuildContext context, Color color) {
   showDialog(
     barrierColor: Colors.white10,
@@ -98,6 +98,8 @@ void showErrozrDialog(
 //Get All Members/////////////////////////////////////////////////////////////////////////////
 
 Future<void> getAllMembers() async {
+  print('Staff Id:: ${currentStaffData.staffClubId}');
+  print('token:: ${token}');
   String url =
       'http://159.223.172.150/api/v1/members/clubs/${currentStaffData.staffClubId}/search?phone=&countryCode=';
 
@@ -116,9 +118,9 @@ Future<void> getAllMembers() async {
     print(
         'All Members Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
 
-    // if (decodeData['member'] == null) {
-    //   throw GetRequestException('New Member');
-    // }
+    if (decodeData['field'] != null) {
+      throw GetRequestException(decodeData['message']);
+    }
 
     var allMembers = decodeData['members'];
 
@@ -130,6 +132,8 @@ Future<void> getAllMembers() async {
   } on SocketException {
     print('Get all members socket exception (assistanFUnctions.dart)');
     throw const SocketException('Error connecting to internet');
+  } catch (error) {
+    print('Get all members api exception (assistanFUnctions.dart)');
   }
 }
 
@@ -273,6 +277,7 @@ Future<void> addNewMember(
         'Add New Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
     if (responseData['field'] != null) {
+      addNewMemberFieldKey = responseData['field'];
       throw GetRequestException(responseData['message']);
     }
 
@@ -297,6 +302,8 @@ Future<void> addNewMember(
   } on SocketException {
     print('Add New Member socket exception (assistantFunction.dart)');
     throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  } catch (error) {
+    rethrow;
   }
 }
 
@@ -545,7 +552,7 @@ Future<void> sendVerificationCodeToWhatsApp(BuildContext context) async {
 //Freeze Registration//////////////////////////////////////////////////////////////////////////
 
 Future<void> freezeRegistration(
-    {String registrationId, BuildContext context}) async {
+    {String registrationId, BuildContext context, String duration}) async {
   String url = 'http://159.223.172.150/api/v1/freeze-registrations';
 
   try {
@@ -557,7 +564,7 @@ Future<void> freezeRegistration(
         body: json.encode({
           "registrationId": registrationId,
           "staffId": currentStaffData.staffId,
-          "freezeDuration": "2 weeks"
+          "freezeDuration": duration
         }));
     final responseData = json.decode(response.body);
     print(
@@ -670,5 +677,45 @@ Future<void> updateMemberVerification(
     print(
         'update Member Verification Status socket exception (assistantFunction.dart)');
     throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  }
+}
+
+//Check MemberData valid for registration///////////////////////////////////////////////////////////////////////////
+
+Future<void> checkAddedNewMemberData(
+    {String name,
+    String email,
+    String phone,
+    String phoneCode,
+    BuildContext context}) async {
+  String url = 'http://159.223.172.150/api/v1/members/check';
+
+  try {
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: json.encode({
+          "clubId": currentStaffData.staffClubId,
+          "name": name,
+          "email": email,
+          "phone": phone,
+          "countryCode": phoneCode,
+          "staffId": currentStaffData.staffId,
+        }));
+    final responseData = json.decode(response.body);
+    print(
+        'Check New Member Data Added :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+
+    if (responseData['field'] != null) {
+      addNewMemberFieldKey = responseData['field'];
+      throw GetRequestException(responseData['message']);
+    }
+  } on SocketException {
+    print('check Member added new data  exception (assistantFunction.dart)');
+    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  } catch (error) {
+    rethrow;
   }
 }

@@ -163,7 +163,9 @@ class _PlansScreenState extends State<PlansScreen> {
                 Navigator.of(context).pop();
               },
               icon: Icon(
-                Icons.arrow_back,
+                localeLanguage == const Locale('en')
+                    ? Icons.arrow_back
+                    : Icons.arrow_forward,
                 color: Theme.of(context).iconTheme.color,
                 size: 30,
               ),

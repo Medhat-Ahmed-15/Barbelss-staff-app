@@ -184,7 +184,191 @@
     "cancelledAttendenceSuccessfully": "Cancelled Attendence Successfully",
     "@language": {
       "description": " "
+    },
+
+     "memberNameIsrequired": "Member name is required",
+    "@language": {
+      "description": " "
+    },
+
+    "phoneNumberIsRequired": "Phone number is required",
+    "@language": {
+      "description": " "
+    },
+
+    "sendQrCode": "Send Qr Code",
+    "@language": {
+      "description": " "
+    },
+
+    "exit": "Exit",
+    "@language": {
+      "description": " "
+    },
+
+    "somethingWentWrong": "Something went wrong",
+    "@language": {
+      "description": " "
+    },
+
+    "verifymember": "Verify Member",
+    "@language": {
+      "description": " "
+    },
+
+    "freezed": "Freezed",
+    "@language": {
+      "description": " "
+    },
+
+    "resendQrCode": "Resend Qr Code",
+    "@language": {
+      "description": " "
+    },
+
+    "showMore": "Show More",
+    "@language": {
+      "description": " "
+    },
+
+     "packageDetails": "Package Details",
+    "@language": {
+      "description": " "
+    },
+
+    "freeze": "Freeze",
+    "@language": {
+      "description": " "
+    },
+
+    "reactivate": "Reactivate",
+    "@language": {
+      "description": " "
+    },
+
+    "staffName": "Staff Name",
+    "@language": {
+      "description": " "
+    },
+
+    "attendenceDate": "Attendance Date",
+    "@language": {
+      "description": " "
+    },
+
+    "packageHasBeenFreezedSuccessfully": "The package has been frozen successfully",
+    "@language": {
+      "description": " "
+    },
+
+     "packageHasBeenReactivatedSuccessfully": "The package has been reactivated successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "personalInformation": "Personal Information",
+    "@language": {
+      "description": " "
+    },
+
+    "blockMember": "Block Member",
+    "@language": {
+      "description": " "
+    },
+
+    "allowVerification": "Allow Verification",
+    "@language": {
+      "description": " "
+    },
+
+    "next": "Next",
+    "@language": {
+      "description": " "
+    },
+
+    "moreMemberDetails": "More Member Details",
+    "@language": {
+      "description": " "
+    },
+
+
+    "gender": "Gender",
+    "@language": {
+      "description": " "
+    },
+
+    "male": "Male",
+    "@language": {
+      "description": " "
+    },
+
+    "female": "Female",
+    "@language": {
+      "description": " "
+    },
+
+    "clubMemberShip": "Club Membership",
+    "@language": {
+      "description": " "
+    },
+
+    "membership": "Membership",
+    "@language": {
+      "description": " "
+    },
+
+    "age": "Age",
+    "@language": {
+      "description": " "
+    },
+
+    "membersAge": "Memebr Age",
+    "@language": {
+      "description": " "
+    },
+
+    "day": "Day",
+    "@language": {
+      "description": " "
+    },
+
+    "week": "Week",
+    "@language": {
+      "description": " "
+    },
+
+    "month": "Month",
+    "@language": {
+      "description": " "
+    },
+
+    "year": "Year",
+    "@language": {
+      "description": " "
+    },
+
+    "specifyDuration": "Specify Duration",
+    "@language": {
+      "description": " "
+    },
+
+    "submit": "Submit",
+    "@language": {
+      "description": " "
+    },
+
+    "duration": "Duration",
+    "@language": {
+      "description": " "
     }
+
+
+  
+
+
+
+
+
 
     
 }

@@ -1,9 +1,13 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/widgets/shimmerEffect.dart';
 import 'package:lottie/lottie.dart' as lot;
 
-class FeedBackDialog extends StatelessWidget {
+import '../assistant/assistantFunction.dart';
+
+class FeedBackDialog extends StatefulWidget {
   String titleText;
   String gif;
   String buttonText;
@@ -19,6 +23,11 @@ class FeedBackDialog extends StatelessWidget {
       this.callBackFunction,
       this.buttonColor});
 
+  @override
+  State<FeedBackDialog> createState() => _FeedBackDialogState();
+}
+
+class _FeedBackDialogState extends State<FeedBackDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -40,11 +49,11 @@ class FeedBackDialog extends StatelessWidget {
             SizedBox(
               width: 200,
               height: 200,
-              child: lot.LottieBuilder.asset(gif),
+              child: lot.LottieBuilder.asset(widget.gif),
             ),
             const SizedBox(height: 18.0),
             Text(
-              titleText,
+              widget.titleText,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 18.0,
@@ -54,7 +63,7 @@ class FeedBackDialog extends StatelessWidget {
             const SizedBox(
               height: 10.0,
             ),
-            enableButton == true
+            widget.enableButton == true
                 ? Container(
                     width: 150,
                     height: 56,
@@ -62,14 +71,16 @@ class FeedBackDialog extends StatelessWidget {
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(
                               Theme.of(context).scaffoldBackgroundColor),
-                          overlayColor: MaterialStateProperty.all(buttonColor),
+                          overlayColor:
+                              MaterialStateProperty.all(widget.buttonColor),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: buttonColor)))),
+                                      side: BorderSide(
+                                          color: widget.buttonColor)))),
                       onPressed: () async {
-                        callBackFunction();
+                        widget.callBackFunction();
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(
@@ -77,8 +88,9 @@ class FeedBackDialog extends StatelessWidget {
                           bottom: 10,
                         ),
                         child: Text(
-                          buttonText,
-                          style: TextStyle(color: buttonColor, fontSize: 14),
+                          widget.buttonText,
+                          style: TextStyle(
+                              color: widget.buttonColor, fontSize: 14),
                         ),
                       ),
                     ),
