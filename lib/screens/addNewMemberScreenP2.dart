@@ -30,6 +30,7 @@ class _AddNewMemberScreenP2State extends State<AddNewMemberScreenP2> {
   String gender = '';
   bool maleChosen = false;
   bool femaleChosen = false;
+  bool responseFomQrDialog = true;
 
   FocusNode ageFocusNode = FocusNode();
 
@@ -39,22 +40,25 @@ class _AddNewMemberScreenP2State extends State<AddNewMemberScreenP2> {
         loading = true;
       });
 
-      var response = await showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) => QrCodeDialog(
-          addedName,
-          addedEmail,
-          addedPhone,
-          context,
-        ),
-      );
-
-      if (response == true) {
+      if (addedVerifyMember == true) {
+        responseFomQrDialog = await showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) => QrCodeDialog(
+            addedName,
+            addedEmail,
+            addedPhone,
+            context,
+          ),
+        );
+      }
+      if (responseFomQrDialog == true) {
         await addNewMember(
             context: context,
             email: addedEmail,
+            gender: gender,
             name: addedName,
+            age: int.parse(ageController.text),
             phone: addedPhone,
             isAuthenticate: addedVerifyMember,
             phoneCode: addedPhoneCode);

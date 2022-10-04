@@ -72,7 +72,7 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
+                        enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: durationFocusNode.hasFocus
                                 ? Theme.of(context).primaryColor
@@ -82,7 +82,7 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                             Radius.circular(10.0),
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
+                        focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: durationFocusNode.hasFocus
                                 ? Theme.of(context).primaryColor
@@ -92,7 +92,7 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                             Radius.circular(10.0),
                           ),
                         ),
-                        errorBorder: const OutlineInputBorder(
+                        errorBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.redAccent,
                           ),

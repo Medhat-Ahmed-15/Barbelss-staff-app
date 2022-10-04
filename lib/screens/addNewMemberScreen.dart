@@ -163,7 +163,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         });
       } else {
         setState(() {
-          emialErrorText = errorMessage;
+          errortext = errorMessage;
           loading = false;
         });
       }

@@ -247,6 +247,8 @@ Future<void> addNewMember(
     String email,
     String phone,
     String phoneCode,
+    String gender,
+    int age,
     bool isAuthenticate,
     BuildContext context}) async {
   String url = 'http://159.223.172.150/api/v1/members';
@@ -265,6 +267,8 @@ Future<void> addNewMember(
           "name": name,
           "email": email,
           "phone": phone,
+          "gender": gender,
+          "age": age,
           "countryCode": phoneCode,
           "staffId": currentStaffData.staffId,
           "canAuthenticate": isAuthenticate,
@@ -701,6 +705,7 @@ Future<void> checkAddedNewMemberData(
           "name": name,
           "email": email,
           "phone": phone,
+          "gender": "male",
           "countryCode": phoneCode,
           "staffId": currentStaffData.staffId,
         }));
@@ -710,6 +715,8 @@ Future<void> checkAddedNewMemberData(
 
     if (responseData['field'] != null) {
       addNewMemberFieldKey = responseData['field'];
+      print('entered here::::  ${addNewMemberFieldKey}');
+
       throw GetRequestException(responseData['message']);
     }
   } on SocketException {
