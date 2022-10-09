@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
@@ -8,12 +10,19 @@ import 'package:gym_staff_app/models/memberRegistrationsResponseData.dart';
 import 'package:gym_staff_app/screens/memberDetailsScreen.dart';
 import 'package:gym_staff_app/screens/memberPackageDetailsScreen.dart';
 
+import '../../Exceptions/getRequest_exception.dart';
+import '../feedBackDialog.dart';
+
 class MemberPackageDataTile extends StatelessWidget {
   MemberRegistrationsResponseData memberRegistrationsResponseData;
   Function refresh;
+  Function setBackgroundLoading;
+  Function stopBackgroundLoading;
   MemberPackageDataTile(
     this.memberRegistrationsResponseData,
     this.refresh,
+    this.setBackgroundLoading,
+    this.stopBackgroundLoading,
   );
   @override
   Widget build(BuildContext context) {
@@ -52,10 +61,37 @@ class MemberPackageDataTile extends StatelessWidget {
                     ),
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) async {
-                      await deleteRegistration(
+                      try {
+                        setBackgroundLoading();
+                        await deleteRegistration(
+                            context: context,
+                            registrationId:
+                                memberRegistrationsResponseData.registrationId);
+
+                        stopBackgroundLoading();
+                      } on SocketException {
+                        stopBackgroundLoading();
+                        print(
+                            'Delete registration socket exception (assistantFunction.dart)');
+                        throw SocketException(AppLocalizations.of(context)
+                            .connectionStatusMessage);
+                      } on GetRequestException catch (error) {
+                        stopBackgroundLoading();
+                        showDialog(
                           context: context,
-                          registrationId:
-                              memberRegistrationsResponseData.registrationId);
+                          barrierDismissible: true,
+                          builder: (BuildContext context) => FeedBackDialog(
+                              titleText: error.toStringMessage(),
+                              gif: 'assets/gifs/fail.json',
+                              enableButton: true,
+                              buttonText:
+                                  AppLocalizations.of(context).doneTitle,
+                              callBackFunction: () {
+                                Navigator.of(context).pop();
+                              },
+                              buttonColor: Colors.redAccent),
+                        );
+                      }
 
                       await refresh();
                     },

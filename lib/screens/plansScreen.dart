@@ -22,28 +22,28 @@ class _PlansScreenState extends State<PlansScreen> {
   bool loadingMembersData = true;
   bool connectionError = false;
   bool empty = false;
+  bool isInit = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     try {
-      getAllPlans().then((value) {
-        if (allPlansList.isEmpty) {
-          setState(() {
-            loadingMembersData = false;
-            connectionError = false;
-            empty = true;
-          });
-        } else {
-          setState(() {
-            loadingMembersData = false;
-            connectionError = false;
-            empty = false;
-          });
-        }
-      });
+      await getAllPlans();
+
+      if (allPlansList.isEmpty) {
+        setState(() {
+          loadingMembersData = false;
+          connectionError = false;
+          empty = true;
+        });
+      } else {
+        setState(() {
+          loadingMembersData = false;
+          connectionError = false;
+          empty = false;
+        });
+      }
     } on SocketException {
       setState(() {
         connectionError = true;
@@ -74,8 +74,34 @@ class _PlansScreenState extends State<PlansScreen> {
                         blurRadius: 5.0)
                   ],
                   borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15))),
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(0))),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      localeLanguage == const Locale('en')
+                          ? Icons.arrow_back
+                          : Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                      size: 25,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    AppLocalizations.of(context).chooseAPlanTitle,
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1.color,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
           ),
           Positioned(
@@ -88,87 +114,65 @@ class _PlansScreenState extends State<PlansScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(30)),
                     color: Colors.black26),
               )),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15, top: 100, right: 15),
-                child: Text(
-                  AppLocalizations.of(context).chooseAPlanTitle,
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1.color,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                child: connectionError == true
-                    ? Column(
-                        children: [
-                          Expanded(child: Container()),
-                          Align(
-                            alignment: Alignment.center,
-                            child: SizedBox(
-                              width: 250,
-                              height: 250,
-                              child: lot.LottieBuilder.asset(
-                                  'assets/gifs/error.json'),
-                            ),
-                          ),
-                          Text(AppLocalizations.of(context)
-                              .connectionStatusMessage),
-                          Expanded(child: Container()),
-                        ],
-                      )
-                    : loadingMembersData == true
-                        ? Center(
-                            child: LoadingAnimationWidget.fourRotatingDots(
-                              color: Theme.of(context).primaryColor,
-                              size: 50,
-                            ),
-                          )
-                        : empty == true
-                            ? Align(
-                                alignment: Alignment.center,
-                                child: SizedBox(
-                                  width: 200,
-                                  height: 200,
-                                  child: lot.LottieBuilder.asset(
-                                      'assets/gifs/empty.json'),
-                                ),
-                              )
-                            : Swiper(
-                                outer: true,
-                                pagination: const SwiperPagination(
-                                  builder: SwiperPagination.dots,
-                                ),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return PlanDataTile(allPlansList[index]);
-                                },
-                                itemCount: allPlansList.length,
-                                itemWidth: 300.0,
-                                itemHeight: 500.0,
-                                loop: true,
-                                layout: SwiperLayout.STACK,
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 125),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: connectionError == true
+                      ? Column(
+                          children: [
+                            Expanded(child: Container()),
+                            Align(
+                              alignment: Alignment.center,
+                              child: SizedBox(
+                                width: 250,
+                                height: 250,
+                                child: lot.LottieBuilder.asset(
+                                    'assets/gifs/error.json'),
                               ),
-              )
-            ],
-          ),
-          Positioned(
-            top: 40,
-            left: 10,
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Icon(
-                localeLanguage == const Locale('en')
-                    ? Icons.arrow_back
-                    : Icons.arrow_forward,
-                color: Theme.of(context).iconTheme.color,
-                size: 30,
-              ),
+                            ),
+                            Text(AppLocalizations.of(context)
+                                .connectionStatusMessage),
+                            Expanded(child: Container()),
+                          ],
+                        )
+                      : loadingMembersData == true
+                          ? Center(
+                              child: LoadingAnimationWidget.fourRotatingDots(
+                                color: Theme.of(context).primaryColor,
+                                size: 50,
+                              ),
+                            )
+                          : empty == true
+                              ? Align(
+                                  alignment: Alignment.center,
+                                  child: SizedBox(
+                                    width: 200,
+                                    height: 200,
+                                    child: lot.LottieBuilder.asset(
+                                        'assets/gifs/empty.json'),
+                                  ),
+                                )
+                              : Swiper(
+                                  outer: true,
+                                  pagination: const SwiperPagination(
+                                    builder: SwiperPagination.dots,
+                                  ),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return PlanDataTile(allPlansList[index]);
+                                  },
+                                  itemCount: allPlansList.length,
+                                  itemWidth: 300.0,
+                                  itemHeight: 500.0,
+                                  loop: true,
+                                  layout: SwiperLayout.STACK,
+                                ),
+                )
+              ],
             ),
           ),
         ],

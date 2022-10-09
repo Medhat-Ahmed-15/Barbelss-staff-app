@@ -282,7 +282,7 @@ class _MemberPackageDetailsScreenState
                                       return Divider(
                                         thickness: 3,
                                         endIndent: 10,
-                                        indent: 100,
+                                        indent: 10,
                                         color: Colors.grey[400],
                                       );
                                     },

@@ -17,6 +17,7 @@ import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:gym_staff_app/screens/searchScreen.dart';
 import 'package:gym_staff_app/screens/settingsScreen.dart';
 import 'package:gym_staff_app/screens/splash_screen.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'l10n/l10n.dart';
 
@@ -47,62 +48,65 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer2<AuthProvider, LocaleLanguageProvider>(
           builder: (ctx, authProviderObj, localLanguageProviderObj, _) =>
-              MaterialApp(
-                supportedLocales: L10n.all,
-                localizationsDelegates: const [
-                  AppLocalizations.delegate, // Add this line
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                title: 'Flutter Demo',
-                theme: ThemeData(
-                  // This is the theme of your application.
-                  primaryColor: const Color.fromRGBO(0, 41, 88, 1),
-                  scaffoldBackgroundColor: Colors.white,
-                  textTheme: TextTheme(
-                    headline1: const TextStyle(color: Colors.white),
-                    headline2: TextStyle(color: Colors.grey.shade900),
+              OverlaySupport.global(
+                child: MaterialApp(
+                  supportedLocales: L10n.all,
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate, // Add this line
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  title: 'Flutter Demo',
+                  theme: ThemeData(
+                    // This is the theme of your application.
+                    primaryColor: const Color.fromRGBO(0, 41, 88, 1),
+                    scaffoldBackgroundColor: Colors.white,
+                    textTheme: TextTheme(
+                      headline1: const TextStyle(color: Colors.white),
+                      headline2: TextStyle(color: Colors.grey.shade900),
+                    ),
+                    fontFamily: 'Poppins',
+                    iconTheme: const IconThemeData(
+                      color: Colors.white,
+                    ),
                   ),
-                  fontFamily: 'Poppins',
-                  iconTheme: const IconThemeData(
-                    color: Colors.white,
-                  ),
+                  home: authProviderObj.checkauthentication() == true
+                      ? MainScreen()
+                      : FutureBuilder(
+                          future: authProviderObj.tryAutoSignIn(),
+                          builder: (ctx, snapShot) {
+                            if (snapShot.connectionState ==
+                                ConnectionState.none) {
+                              print('SPLAAAASSHHH SCREEEBBBB');
+                              return SplashScreen();
+                            }
+                            if (snapShot.data == true) {
+                              return MainScreen();
+                            } else {
+                              return LoginScreen();
+                            }
+                          }),
+                  locale: localLanguageProviderObj.locale,
+                  routes: {
+                    LoginScreen.routeName: (ctx) => LoginScreen(),
+                    AddNewMemberScreenP2.routeName: (ctx) =>
+                        AddNewMemberScreenP2(),
+                    MemberPersonalDataScreen.routeName: (ctx) =>
+                        MemberPersonalDataScreen(),
+                    MemberPackageDetailsScreen.routeName: (ctx) =>
+                        MemberPackageDetailsScreen(),
+                    SearchScreen.routeName: (ctx) => SearchScreen(),
+                    MainScreen.routeName: (ctx) => MainScreen(),
+                    AddNewMemberScreen.routeName: (ctx) => AddNewMemberScreen(),
+                    MemberDetailsScreen.routeName: (ctx) =>
+                        MemberDetailsScreen(),
+                    PlansScreen.routeName: (ctx) => PlansScreen(),
+                    SettingsScreen.routeName: (ctx) => SettingsScreen(),
+                    ChangeLanguageScreen.routeName: (ctx) =>
+                        ChangeLanguageScreen(),
+                  },
                 ),
-                home: authProviderObj.checkauthentication() == true
-                    ? MainScreen()
-                    : FutureBuilder(
-                        future: authProviderObj.tryAutoSignIn(),
-                        builder: (ctx, snapShot) {
-                          if (snapShot.connectionState ==
-                              ConnectionState.none) {
-                            print('SPLAAAASSHHH SCREEEBBBB');
-                            return SplashScreen();
-                          }
-                          if (snapShot.data == true) {
-                            return MainScreen();
-                          } else {
-                            return LoginScreen();
-                          }
-                        }),
-                locale: localLanguageProviderObj.locale,
-                routes: {
-                  LoginScreen.routeName: (ctx) => LoginScreen(),
-                  AddNewMemberScreenP2.routeName: (ctx) =>
-                      AddNewMemberScreenP2(),
-                  MemberPersonalDataScreen.routeName: (ctx) =>
-                      MemberPersonalDataScreen(),
-                  MemberPackageDetailsScreen.routeName: (ctx) =>
-                      MemberPackageDetailsScreen(),
-                  SearchScreen.routeName: (ctx) => SearchScreen(),
-                  MainScreen.routeName: (ctx) => MainScreen(),
-                  AddNewMemberScreen.routeName: (ctx) => AddNewMemberScreen(),
-                  MemberDetailsScreen.routeName: (ctx) => MemberDetailsScreen(),
-                  PlansScreen.routeName: (ctx) => PlansScreen(),
-                  SettingsScreen.routeName: (ctx) => SettingsScreen(),
-                  ChangeLanguageScreen.routeName: (ctx) =>
-                      ChangeLanguageScreen(),
-                },
               )),
     );
   }

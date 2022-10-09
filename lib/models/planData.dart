@@ -8,6 +8,10 @@ class PlanData {
   int planAttendance;
   String planExpiresIn;
   int planPrice;
+  bool isOpen;
+  String createdAt;
+  int sync;
+  String operation;
 
   PlanData(
       {this.planId,
@@ -15,6 +19,10 @@ class PlanData {
       this.planTitle,
       this.planAttendance,
       this.planExpiresIn,
+      this.isOpen,
+      this.createdAt,
+      this.sync,
+      this.operation,
       this.planPrice});
 
   PlanData.fromjson(Map<String, dynamic> json) {
@@ -24,5 +32,13 @@ class PlanData {
     planAttendance = json['attendance'];
     planExpiresIn = json['expiresIn'];
     planPrice = json['price'];
+    createdAt = json['createdAt'];
+    sync = json['sync'];
+    operation = json['operation'];
+    isOpen = json['isOpen'] == 0
+        ? false
+        : json['isOpen'] == 1
+            ? true
+            : json['isOpen'];
   }
 }

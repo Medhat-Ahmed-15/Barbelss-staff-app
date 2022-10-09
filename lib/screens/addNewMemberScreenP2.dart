@@ -36,6 +36,12 @@ class _AddNewMemberScreenP2State extends State<AddNewMemberScreenP2> {
 
   Future<void> registerMember(BuildContext context) async {
     try {
+      if (gender == '') {
+        setState(() {
+          errortext = 'Please specify a gender';
+        });
+        return;
+      }
       setState(() {
         loading = true;
       });
@@ -67,7 +73,7 @@ class _AddNewMemberScreenP2State extends State<AddNewMemberScreenP2> {
 
         showDialog(
           context: context,
-          barrierDismissible: true,
+          barrierDismissible: false,
           builder: (BuildContext context) => FeedBackDialog(
               titleText:
                   AppLocalizations.of(context).memberAddedSuccessfullyTitle,

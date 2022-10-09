@@ -20,14 +20,17 @@ String addedPhoneCode = '';
 String freezeButtonText = '';
 
 bool addedVerifyMember = false;
+bool showConnectedToInternetPopUp = false;
 
 var localeLanguage = const Locale('en');
 
 StaffData currentStaffData;
 
 List<MemberData> allMembersList = [];
+List<MemberData> allMembersListFromMobileStorage = [];
 List<MemberRegistrationsResponseData> allMemberRegistrationsList;
 List<PlanData> allPlansList;
+List<PlanData> allPlansListFromMobileStorage;
 List<MemberAttendencesData> allMemberAttendencesList;
 
 MemberData pickedMember;

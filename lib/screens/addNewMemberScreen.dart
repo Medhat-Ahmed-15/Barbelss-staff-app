@@ -60,6 +60,34 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         return;
       }
 
+      if (nameController.text.trim().split(" ").length != 2) {
+        setState(() {
+          nameErrorText = 'You must write your first and second name';
+          phoneErrorText = null;
+          emialErrorText = null;
+          loading = false;
+        });
+
+        return;
+      }
+
+      await getAllMembersFromStorage();
+
+      if (emailController.text.trim().isNotEmpty) {
+        var result = checkEmailIsUnique(emailController.text.trim());
+
+        if (result == false) {
+          setState(() {
+            phoneErrorText = null;
+            nameErrorText = null;
+            loading = false;
+            emialErrorText = 'This email is already used';
+          });
+
+          return;
+        }
+      }
+
       if (phoneController.text.isEmpty) {
         setState(() {
           phoneErrorText = AppLocalizations.of(context).phoneNumberIsRequired;
@@ -71,17 +99,29 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         return;
       }
 
-      // if (phoneController.text.length > 11 ||
-      //     phoneController.text.length < 11) {
-      //   setState(() {
-      //     phoneErrorText = 'Phone number must be 11 digit';
-      //     nameErrorText = null;
-      //     loading = false;
-      //     emialErrorText = null;
-      //   });
+      if (phoneController.text.length != 10) {
+        setState(() {
+          phoneErrorText = 'Phone number must be 10 digit';
+          nameErrorText = null;
+          loading = false;
+          emialErrorText = null;
+        });
 
-      //   return;
-      // }
+        return;
+      }
+
+      var result = checkPhoneIsUnique(phoneController.text.trim());
+
+      if (result == false) {
+        setState(() {
+          phoneErrorText = 'This phone number is already used';
+          nameErrorText = null;
+          loading = false;
+          emialErrorText = null;
+        });
+
+        return;
+      }
 
       print('PHONEEEE CODEEE::: ${phoneCode}');
 

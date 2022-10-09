@@ -32,17 +32,19 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
   bool empty = false;
   bool confirmationLoading = false;
   bool enableConfirming = true;
+  bool isInit = true;
 
   String barcodeData;
   String freezeButtonText = '';
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
+  void didChangeDependencies() async {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     try {
-      getAllMemberRegistartions().then((value) {
+      if (isInit == true) {
+        await getAllMemberRegistartions();
+
         if (allMemberRegistrationsList.isEmpty) {
           setState(() {
             loadingMemberRegistrationsData = false;
@@ -59,7 +61,9 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                 : 'Reactivate';
           });
         }
-      });
+
+        isInit = false;
+      }
     } on SocketException {
       setState(() {
         connectionError = true;
@@ -69,23 +73,34 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
     }
   }
 
+  void setBackgroundLoading() {
+    setState(() {
+      confirmationLoading = true;
+    });
+  }
+
+  void stopBackgroundLoading() {
+    setState(() {
+      confirmationLoading = false;
+    });
+  }
+
   Future<void> refresh() async {
     try {
-      getAllMemberRegistartions().then((value) {
-        if (allMemberRegistrationsList.isEmpty) {
-          setState(() {
-            loadingMemberRegistrationsData = false;
-            connectionError = false;
-            empty = true;
-          });
-        } else {
-          setState(() {
-            loadingMemberRegistrationsData = false;
-            connectionError = false;
-            empty = false;
-          });
-        }
-      });
+      await getAllMemberRegistartions();
+      if (allMemberRegistrationsList.isEmpty) {
+        setState(() {
+          loadingMemberRegistrationsData = false;
+          connectionError = false;
+          empty = true;
+        });
+      } else {
+        setState(() {
+          loadingMemberRegistrationsData = false;
+          connectionError = false;
+          empty = false;
+        });
+      }
     } on SocketException {
       setState(() {
         connectionError = true;
@@ -194,6 +209,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                   color: Theme.of(context).primaryColor,
                                   strokeWidth: 5,
                                   onRefresh: () {
+                                    print("enterd refresh 1");
                                     return refresh();
                                   },
                                   child: ListView.separated(
@@ -201,7 +217,9 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                     itemBuilder: (context, index) {
                                       return MemberPackageDataTile(
                                           allMemberRegistrationsList[index],
-                                          refresh);
+                                          refresh,
+                                          setBackgroundLoading,
+                                          stopBackgroundLoading);
                                     },
                                     itemCount:
                                         allMemberRegistrationsList.length,
@@ -210,6 +228,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                       return Divider(
                                         thickness: 3,
                                         endIndent: 10,
+                                        indent: 10,
                                         color: Colors.grey[400],
                                       );
                                     },

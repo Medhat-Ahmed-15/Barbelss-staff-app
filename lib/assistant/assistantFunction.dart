@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gym_staff_app/DataBase/SqlDb.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:gym_staff_app/models/memberData.dart';
@@ -16,7 +18,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gym_staff_app/globalVariables.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:overlay_support/overlay_support.dart' as overlay;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 
@@ -64,7 +68,7 @@ Future<void> setLocalLanguageInSorage(String language) async {
 //   final translator = GoogleTranslator();
 //   var translation = await translator.translate(input, from: 'en', to: 'ar');
 
-//   print('Translation:: ${translation.toString()}');
+//   print('Translation:: ${translation.toSkvtring()}');
 
 //   return translation.toString();
 // }
@@ -98,43 +102,39 @@ void showErrorDialog(
 //Get All Members/////////////////////////////////////////////////////////////////////////////
 
 Future<void> getAllMembers() async {
+  var connection = await Connectivity().checkConnectivity();
+
+  if (connection == ConnectivityResult.none) {
+    throw const SocketException('Error');
+  }
+
   print('Staff Id:: ${currentStaffData.staffClubId}');
   print('token:: ${token}');
   String url =
       'http://159.223.172.150/api/v1/members/clubs/${currentStaffData.staffClubId}/search?phone=&countryCode=';
 
-  try {
-    var res = await http.get(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-access-token': token
-      },
-    );
+  var res = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+  );
 
-    String jSonData = res.body;
-    var decodeData = jsonDecode(jSonData);
+  String jSonData = res.body;
+  var decodeData = jsonDecode(jSonData);
 
-    print(
-        'All Members Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
+  print(
+      'All Members Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
 
-    if (decodeData['field'] != null) {
-      throw GetRequestException(decodeData['message']);
-    }
-
-    var allMembers = decodeData['members'];
-
-    allMembersList = (allMembers as List)
-        .map((index) => MemberData.fromjson(index))
-        .toList();
-
-    print('All members legnth:: ${allMembersList.length}');
-  } on SocketException {
-    print('Get all members socket exception (assistanFUnctions.dart)');
-    throw const SocketException('Error connecting to internet');
-  } catch (error) {
-    print('Get all members api exception (assistanFUnctions.dart)');
+  if (decodeData['field'] != null) {
+    throw GetRequestException(decodeData['message']);
   }
+
+  var allMembers = decodeData['members'];
+
+  allMembersList =
+      (allMembers as List).map((index) => MemberData.fromjson(index)).toList();
 }
 
 //Get All Member Registartions/////////////////////////////////////////////////////////////////////////////
@@ -251,12 +251,18 @@ Future<void> addNewMember(
     int age,
     bool isAuthenticate,
     BuildContext context}) async {
+  //Saving in mobile database
+  SqlDb sqlDb = SqlDb();
+
   String url = 'http://159.223.172.150/api/v1/members';
 
   print('CURRENT STAFF ID:: ${currentStaffData.staffId}');
   print('CURRENT URL:: $qrCodeURL');
 
   try {
+    await sqlDb.insertData(
+        "INSERT INTO 'Members' ('clubID','staffId','name','email','phone','countryCode','gender','birthYear','canAuthenticate','QRCodeURL','QRCodeUUID','isBlocked','createdAt','sync','operation') VALUES ('${currentStaffData.staffClubId}','${currentStaffData.staffId}','$name','$email','$phone','$phoneCode','$gender','$age','${isAuthenticate == true ? 1 : 0}','$qrCodeURL','$qrCodeUUID','${0}','${DateTime.now().toString()}','${0}','add')");
+
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -316,32 +322,35 @@ Future<void> addNewMember(
 Future<void> getAllPlans() async {
   String url =
       'http://159.223.172.150/api/v1/packages/clubs/${currentStaffData.staffClubId}';
+  SqlDb sqlDb = SqlDb();
 
-  try {
-    var res = await http.get(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-access-token': token
-      },
-    );
+  var res = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+  );
 
-    String jSonData = res.body;
-    var decodeData = jsonDecode(jSonData);
+  String jSonData = res.body;
+  var decodeData = jsonDecode(jSonData);
 
-    print(decodeData);
+  //print(decodeData);
 
-    // if (decodeData['member'] == null) {
-    //   throw GetRequestException('New Member');
-    // }
+  // if (decodeData['member'] == null) {
+  //   throw GetRequestException('New Member');
+  // }
 
-    var allPlans = decodeData['packages'];
+  var allPlans = decodeData['packages'];
 
-    allPlansList =
-        (allPlans as List).map((index) => PlanData.fromjson(index)).toList();
-  } on SocketException {
-    print('Get all plans socket exception (assistanFUnctions.dart)');
-    throw const SocketException('Error connecting to internet');
+  allPlansList =
+      (allPlans as List).map((index) => PlanData.fromjson(index)).toList();
+
+  sqlDb.deleteData('DELETE FROM Packages');
+
+  for (var element in allPlansList) {
+    await sqlDb.insertData(
+        "REPLACE INTO 'Packages' ('clubId','title','attendance','expiresIn','price','isOpen','createdAt','sync','operation') VALUES ('${element.planClubId}','${element.planTitle}','${element.planAttendance}','${element.planExpiresIn}','${element.planPrice}','${element.isOpen == true ? 1 : 0}','${element.createdAt}','${1}','add')");
   }
 }
 
@@ -349,9 +358,19 @@ Future<void> getAllPlans() async {
 
 Future<void> registerPlan(
     {String planId, int planPrice, BuildContext context}) async {
+  print(currentStaffData.staffClubId);
+  print(pickedMember.memberId);
+  print(currentStaffData.staffId);
+  print(planId);
+  print(planPrice);
+
   String url = 'http://159.223.172.150/api/v1/registrations';
+  SqlDb sqlDb = SqlDb();
 
   try {
+    // await sqlDb.insertData(
+    //     "INSERT INTO 'Registrations' ('clubID','memberId','staffId','packageId','isActive','attended','expiresAt','paid','isFreezed','createdAt','sync','operation') VALUES ('${currentStaffData.staffClubId}','${pickedMember.memberId}','${currentStaffData.staffId}','$planId','${1}','${0}','$gender','$planPrice','${0}','${DateTime.now().toString()}','${0}','add')");
+
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -441,27 +460,22 @@ Future<void> deleteRegistration(
     {String registrationId, BuildContext context}) async {
   String url = 'http://159.223.172.150/api/v1/cancelled-registrations';
 
-  try {
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "registrationId": registrationId,
-          "clubId": currentStaffData.staffClubId,
-          "staffId": currentStaffData.staffId
-        }));
-    final responseData = json.decode(response.body);
-    print(
-        'Delete Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "registrationId": registrationId,
+        "clubId": currentStaffData.staffClubId,
+        "staffId": currentStaffData.staffId
+      }));
+  final responseData = json.decode(response.body);
+  print(
+      'Delete Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['field'] != null) {
-      throw GetRequestException(responseData['message']);
-    }
-  } on SocketException {
-    print('Delete registration socket exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['field'] != null) {
+    throw GetRequestException(responseData['message']);
   }
 }
 
@@ -725,4 +739,48 @@ Future<void> checkAddedNewMemberData(
   } catch (error) {
     rethrow;
   }
+}
+
+//get all plans from mobile storage
+Future<void> getAllPlansFromStorage() async {
+  SqlDb sqlDb = SqlDb();
+  List<Map> selectResponse = await sqlDb.readData("SELECT * FROM Packages");
+  print("Packages From Storage :::: $selectResponse");
+  allPlansListFromMobileStorage =
+      selectResponse.map((index) => PlanData.fromjson(index)).toList();
+}
+
+//get all members from mobile storage
+Future<void> getAllMembersFromStorage() async {
+  SqlDb sqlDb = SqlDb();
+  List<Map> selectResponse = await sqlDb.readData("SELECT * FROM Members");
+  print("Members From Storage :::: $selectResponse");
+  allMembersListFromMobileStorage =
+      selectResponse.map((index) => MemberData.fromjson(index)).toList();
+}
+
+//Check if email is unique in mobile storage
+
+bool checkEmailIsUnique(String email) {
+  for (var element in allMembersListFromMobileStorage) {
+    print('element ${element.memberPhone}');
+    if (element.memberEmail == email) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  return true;
+}
+
+//Check if phone is unique in mobile storage
+bool checkPhoneIsUnique(String phone) {
+  for (var element in allMembersListFromMobileStorage) {
+    if (element.memberPhone == phone) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  return true;
 }
