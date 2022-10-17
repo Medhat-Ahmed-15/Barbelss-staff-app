@@ -225,32 +225,61 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      // appBar: AppBar(
-      //   title: Text('Add a new member 🚀'),
-      //   backgroundColor: Theme.of(context).primaryColor,
-      // ),
       body: Stack(
         children: [
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 150,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black54,
+                        offset: Offset(0, 4),
+                        blurRadius: 5.0)
+                  ],
+                  borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(0))),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      localeLanguage == const Locale('en')
+                          ? Icons.arrow_back
+                          : Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                      size: 25,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    AppLocalizations.of(context).addANewMemberTitle,
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1.color,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ),
           SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15, top: 100, right: 15, bottom: 50),
-                  child: Text(
-                    AppLocalizations.of(context).addANewMemberTitle,
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.headline2.color,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-
                 //Name ******************
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 15.0, right: 15, bottom: 15),
+                  padding: const EdgeInsets.only(
+                      top: 170, left: 15.0, right: 15, bottom: 15),
                   child: TextField(
                     controller: nameController,
                     onTap: () {
@@ -668,35 +697,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                         ),
                 ),
               ],
-            ),
-          ),
-          // Positioned(
-          //   bottom: -100,
-          //   child: ClipPath(
-          //     clipper: HexagonalClipper(reverse: true),
-          //     child: Container(
-          //       height: 300,
-          //       width: MediaQuery.of(context).size.width,
-          //       decoration: BoxDecoration(
-          //         color: Theme.of(context).primaryColor,
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          Positioned(
-            top: 40,
-            left: 10,
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              icon: Icon(
-                localeLanguage == const Locale('en')
-                    ? Icons.arrow_back
-                    : Icons.arrow_forward,
-                color: Theme.of(context).primaryColor,
-                size: 30,
-              ),
             ),
           ),
         ],

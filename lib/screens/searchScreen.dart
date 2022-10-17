@@ -27,8 +27,6 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  bool folded = true;
-
   bool loadingMembersData = true;
   bool connectionError = false;
   bool empty = false;
@@ -185,7 +183,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 duration: const Duration(
                   milliseconds: 400,
                 ),
-                width: folded == true ? 60 : MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width,
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
@@ -198,98 +196,45 @@ class _SearchScreenState extends State<SearchScreen> {
                   children: [
                     Expanded(
                       child: Container(
-                          child: folded == false
-                              ? TextField(
-                                  controller: searchController,
-                                  cursorColor: Theme.of(context).primaryColor,
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.all(16.0),
-                                    hintText: AppLocalizations.of(context)
-                                        .searchBarHintTitle,
-                                    hintStyle:
-                                        TextStyle(color: Colors.grey[600]),
-                                    border: InputBorder.none,
-                                  ),
-                                  onChanged: (value) async {
-                                    List<MemberData> sortedMemberData = [];
-
-                                    try {
-                                      setState(() {
-                                        connectionError = false;
-                                        empty = false;
-                                        loadingMembersData = true;
-                                      });
-                                      await getAllMembers();
-
-                                      for (var memberData in allMembersList) {
-                                        if (memberData.memberPhone
-                                            .startsWith(value)) {
-                                          sortedMemberData.add(memberData);
-                                        }
-                                      }
-                                      if (sortedMemberData.isEmpty &&
-                                          value != '') {
-                                        setState(() {
-                                          empty = true;
-                                          loadingMembersData = false;
-                                          connectionError = false;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          allMembersList = sortedMemberData;
-                                          loadingMembersData = false;
-                                          connectionError = false;
-                                        });
-                                      }
-                                    } on SocketException {
-                                      setState(() {
-                                        connectionError = true;
-                                        loadingMembersData = false;
-                                        empty = false;
-                                      });
-                                    } on GetRequestException catch (error) {
-                                      setState(() {
-                                        connectionError = false;
-                                        loadingMembersData = true;
-                                        empty = false;
-                                      });
-                                    }
-                                  },
-                                )
-                              : null),
-                    ),
-                    InkWell(
-                      highlightColor: Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Icon(
-                          folded == true ? Icons.search : Icons.close,
-                          color: Theme.of(context).primaryColor,
+                          child: TextField(
+                        controller: searchController,
+                        cursorColor: Theme.of(context).primaryColor,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.all(16.0),
+                          hintText:
+                              AppLocalizations.of(context).searchBarHintTitle,
+                          hintStyle: TextStyle(color: Colors.grey[600]),
+                          border: InputBorder.none,
                         ),
-                      ),
-                      onTap: () async {
-                        print('1');
-                        if (folded == false) {
-                          print('2');
-                          print('Current Value::${searchController.text}:::');
-                          if (searchController.text == '') {
-                            print('3');
-                            setState(() {
-                              folded = !folded;
-                              connectionError = false;
-                              loadingMembersData = false;
-                            });
-                            return;
-                          }
-                          print('4');
+                        onChanged: (value) async {
+                          List<MemberData> sortedMemberData = [];
+
                           try {
                             setState(() {
                               connectionError = false;
-                              loadingMembersData = true;
                               empty = false;
+                              loadingMembersData = true;
                             });
                             await getAllMembers();
-                            print('5');
+
+                            for (var memberData in allMembersList) {
+                              if (memberData.memberPhone.startsWith(value)) {
+                                sortedMemberData.add(memberData);
+                              }
+                            }
+                            if (sortedMemberData.isEmpty && value != '') {
+                              setState(() {
+                                empty = true;
+                                loadingMembersData = false;
+                                connectionError = false;
+                              });
+                            } else {
+                              setState(() {
+                                allMembersList = sortedMemberData;
+                                loadingMembersData = false;
+                                connectionError = false;
+                              });
+                            }
                           } on SocketException {
                             setState(() {
                               connectionError = true;
@@ -303,16 +248,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               empty = false;
                             });
                           }
-                        }
-                        print('6');
-                        setState(() {
-                          folded = !folded;
-                          connectionError = false;
-                          loadingMembersData = false;
-                        });
-                        print('7');
-                        searchController.text = '';
-                      },
+                        },
+                      )),
                     ),
                   ],
                 ),

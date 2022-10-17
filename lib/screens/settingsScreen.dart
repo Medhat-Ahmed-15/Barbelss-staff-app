@@ -43,31 +43,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         blurRadius: 5.0)
                   ],
                   borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15))),
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(0))),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      // ZoomDrawer.of(context).toggle();
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      Icons.menu,
+                      color: Theme.of(context).iconTheme.color,
+                      size: 30,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    AppLocalizations.of(context).settingsIconTitle,
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1.color,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //Search title
-              Padding(
-                padding: const EdgeInsets.only(left: 15, top: 100, right: 15),
-                child: Text(
-                  AppLocalizations.of(context).settingsIconTitle,
-                  style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1.color,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
               Padding(
                 padding: const EdgeInsets.only(
+                  top: 170,
                   left: 15,
                   right: 15,
                 ),
@@ -123,7 +134,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(
                 height: 40,
               ),
-
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -313,21 +323,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               )
             ],
-          ),
-          Positioned(
-            top: 40,
-            left: 10,
-            child: IconButton(
-              onPressed: () {
-                // ZoomDrawer.of(context).toggle();
-                Navigator.of(context).pop();
-              },
-              icon: Icon(
-                Icons.menu,
-                color: Theme.of(context).iconTheme.color,
-                size: 30,
-              ),
-            ),
           ),
         ],
       ),

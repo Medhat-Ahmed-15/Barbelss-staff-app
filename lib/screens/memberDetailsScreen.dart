@@ -264,9 +264,11 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                       radius: 45,
                       child: Text(
                         pickedMember.memberName.contains(' ')
-                            ? pickedMember.memberName[0] +
-                                pickedMember.memberName.split(' ')[1][0]
-                            : pickedMember.memberName[0],
+                            ? pickedMember.memberName[0].toUpperCase() +
+                                pickedMember.memberName
+                                    .split(' ')[1][0]
+                                    .toUpperCase()
+                            : pickedMember.memberName[0].toUpperCase(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Theme.of(context).textTheme.headline1.color,

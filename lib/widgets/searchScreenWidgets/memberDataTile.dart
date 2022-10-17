@@ -55,9 +55,11 @@ class _MemberDataTileState extends State<MemberDataTile> {
                   alignment: Alignment.center,
                   child: Text(
                     widget.memberData.memberName.contains(' ')
-                        ? widget.memberData.memberName[0] +
-                            widget.memberData.memberName.split(' ')[1][0]
-                        : widget.memberData.memberName[0],
+                        ? widget.memberData.memberName[0].toUpperCase() +
+                            widget.memberData.memberName
+                                .split(' ')[1][0]
+                                .toUpperCase()
+                        : widget.memberData.memberName[0].toUpperCase(),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 17),

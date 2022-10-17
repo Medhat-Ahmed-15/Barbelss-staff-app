@@ -59,8 +59,34 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                           blurRadius: 5.0)
                     ],
                     borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15))),
+                        bottomLeft: Radius.circular(0),
+                        bottomRight: Radius.circular(0))),
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(
+                        localeLanguage == const Locale('en')
+                            ? Icons.arrow_back
+                            : Icons.arrow_forward,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        size: 30,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      AppLocalizations.of(context).settingsIconTitle,
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
             ),
             Column(
@@ -68,20 +94,8 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 100, right: 15),
-                  child: Text(
-                    AppLocalizations.of(context).settingsIconTitle,
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1.color,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                Padding(
                   padding: const EdgeInsets.only(
+                    top: 170,
                     left: 15,
                     right: 15,
                   ),
@@ -210,22 +224,6 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                   ),
                 ),
               ],
-            ),
-            Positioned(
-              top: 40,
-              left: 10,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: Icon(
-                  localeLanguage == const Locale('en')
-                      ? Icons.arrow_back
-                      : Icons.arrow_forward,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  size: 30,
-                ),
-              ),
             ),
             switchLanguageLoading == true
                 ? Container(

@@ -154,7 +154,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           boxShadow: const [
                             BoxShadow(
                                 color: Colors.black54,
-                                offset: Offset(0, 4),
+                                offset: Offset(0, 0.5),
                                 blurRadius: 5.0)
                           ],
                           color: Theme.of(context).scaffoldBackgroundColor),
@@ -276,7 +276,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           boxShadow: const [
                             BoxShadow(
                                 color: Colors.black54,
-                                offset: Offset(0, 4),
+                                offset: Offset(0, 0.5),
                                 blurRadius: 5.0)
                           ],
                           color: Theme.of(context).scaffoldBackgroundColor),
