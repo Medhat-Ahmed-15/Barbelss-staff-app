@@ -107,9 +107,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                       Navigator.of(context).pop();
                     },
                     icon: Icon(
-                      localeLanguage == const Locale('en')
-                          ? Icons.arrow_back
-                          : Icons.arrow_forward,
+                      Icons.arrow_back,
                       color: Theme.of(context).iconTheme.color,
                       size: 25,
                     ),
@@ -129,11 +127,100 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 150),
+            padding: const EdgeInsets.only(top: 170),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 36.0,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 34.0,
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.grey,
+                              size: 50,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15.0,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context).nameHint,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0,
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              pickedMember.memberName,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.0,
+                                  color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        Expanded(child: Container()),
+                        Container(
+                          width: 100,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: pickedMember.isBlocked == true
+                                ? Colors.redAccent
+                                : Colors.green,
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: Colors.black54,
+                                  offset: Offset(0, 4),
+                                  blurRadius: 5.0)
+                            ],
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                pickedMember.isBlocked == true
+                                    ? AppLocalizations.of(context).inActiveTitle
+                                    : AppLocalizations.of(context).activeTitle,
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      .color,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                pickedMember.isBlocked == true
+                                    ? Icons.cancel_outlined
+                                    : Icons.check,
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(
                     height: 30,
                   ),
@@ -162,46 +249,19 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppLocalizations.of(context).nameHint,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.0,
-                                color: Colors.grey[600]),
-                          ),
-                          Text(
-                            pickedMember.memberName,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18.0,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline2
-                                    .color),
-                          ),
-
-                          const Divider(
-                            endIndent: 20,
-                            indent: 20,
-                          ),
-
-                          ///////////////////////////////////
-
-                          Text(
                             AppLocalizations.of(context).emailTitle,
                             style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.0,
-                                color: Colors.grey[600]),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0,
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
                           Text(
                             pickedMember.memberEmail,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                                 fontSize: 18.0,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline2
-                                    .color),
+                                color: Colors.grey),
                           ),
 
                           const Divider(
@@ -214,45 +274,20 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           Text(
                             AppLocalizations.of(context).phoneTitle,
                             style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.0,
-                                color: Colors.grey[600]),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.0,
+                                color: Theme.of(context).primaryColor),
                           ),
                           Text(
                             pickedMember.memberPhone,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                                 fontSize: 18.0,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline2
-                                    .color),
+                                color: Colors.grey),
                           ),
                           const Divider(
                             endIndent: 20,
                             indent: 20,
-                          ),
-
-                          ///////////////////////////////////
-
-                          Text(
-                            'Status',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 13.0,
-                                color: Colors.grey[600]),
-                          ),
-                          Text(
-                            pickedMember.isBlocked == true
-                                ? 'Blocked'
-                                : 'Active',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18.0,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline2
-                                    .color),
                           ),
                         ],
                       ),
@@ -266,6 +301,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                     child: Container(
                       padding: const EdgeInsets.only(
                         left: 22,
+                        right: 22,
                         top: 22,
                         bottom: 22,
                       ),
@@ -285,10 +321,10 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                         children: [
                           Text(
                             AppLocalizations.of(context).allowVerification,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                                color: Colors.grey[600]),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                                color: Colors.grey),
                           ),
                           Switch(
                             onChanged: toggleSwitch,

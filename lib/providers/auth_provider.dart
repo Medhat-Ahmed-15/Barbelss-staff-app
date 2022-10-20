@@ -25,65 +25,61 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> userLogin(String phone, String countryCode, String password,
       BuildContext context) async {
-    String url = 'http://159.223.172.150/api/v1/auth/staffs/login';
+    String url =
+        'http://159.223.172.150/api/v1/auth/staffs/login?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-    try {
-      final response = await http.post(Uri.parse(url),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: json.encode({
-            'phone': phone,
-            'countryCode': countryCode,
-            'password': password,
-          }));
-      final responseData = json.decode(response.body);
-      print(responseData);
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode({
+          'phone': phone,
+          'countryCode': countryCode,
+          'password': password,
+        }));
+    final responseData = json.decode(response.body);
+    print(responseData);
 
-      if (responseData['message'] != null) {
-        throw GetRequestException(responseData['message']);
-      }
-
-      _token = responseData['token'];
-      token = _token;
-
-      StaffData staffData = StaffData();
-      staffData.staffId = responseData['staff']['_id'];
-      staffData.staffEmail = responseData['staff']['email'];
-      staffData.staffClubId = responseData['staff']['clubId'];
-      staffData.staffName = responseData['staff']['name'];
-      staffData.staffPhone = responseData['staff']['phone'];
-      staffData.staffCountryCode = responseData['staff']['countryCode'];
-
-      currentStaffData = staffData;
-
-      // print(currentStaffData.staffClubId);
-      // print(currentStaffData.staffCountryCode);
-      // print(currentStaffData.staffEmail);
-      // print(currentStaffData.staffId);
-      // print(currentStaffData.staffName);
-      // print(currentStaffData.staffPhone);
-
-      notifyListeners();
-
-      final prefs = await SharedPreferences.getInstance();
-
-      final staffDataInStorage = json.encode({
-        'token': _token,
-        'staffId': responseData['staff']['_id'],
-        'staffEmail': responseData['staff']['email'],
-        'staffClubId': responseData['staff']['clubId'],
-        'staffName': responseData['staff']['name'],
-        'staffPhone': responseData['staff']['phone'],
-        'staffCountryCode': responseData['staff']['countryCode'],
-      });
-
-      prefs.setString('staffDataInStorage', staffDataInStorage);
-    } on SocketException {
-      print('Staff login socket exception (auth_provider.dart)');
-      throw SocketException(
-          AppLocalizations.of(context).connectionStatusMessage);
+    if (responseData['message'] != null) {
+      loginFieldKey = responseData['field'];
+      throw GetRequestException(responseData['message']);
     }
+
+    _token = responseData['token'];
+    token = _token;
+
+    StaffData staffData = StaffData();
+    staffData.staffId = responseData['staff']['_id'];
+    staffData.staffEmail = responseData['staff']['email'];
+    staffData.staffClubId = responseData['staff']['clubId'];
+    staffData.staffName = responseData['staff']['name'];
+    staffData.staffPhone = responseData['staff']['phone'];
+    staffData.staffCountryCode = responseData['staff']['countryCode'];
+
+    currentStaffData = staffData;
+
+    // print(currentStaffData.staffClubId);
+    // print(currentStaffData.staffCountryCode);
+    // print(currentStaffData.staffEmail);
+    // print(currentStaffData.staffId);
+    // print(currentStaffData.staffName);
+    // print(currentStaffData.staffPhone);
+
+    notifyListeners();
+
+    final prefs = await SharedPreferences.getInstance();
+
+    final staffDataInStorage = json.encode({
+      'token': _token,
+      'staffId': responseData['staff']['_id'],
+      'staffEmail': responseData['staff']['email'],
+      'staffClubId': responseData['staff']['clubId'],
+      'staffName': responseData['staff']['name'],
+      'staffPhone': responseData['staff']['phone'],
+      'staffCountryCode': responseData['staff']['countryCode'],
+    });
+
+    prefs.setString('staffDataInStorage', staffDataInStorage);
   }
 
   //Auto Sigin>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

@@ -33,7 +33,6 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isInit = true;
   final searchController = TextEditingController();
 
-  StreamSubscription connectivitySubscription;
   @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
@@ -115,17 +114,12 @@ class _SearchScreenState extends State<SearchScreen> {
     // TODO: implement dispose
     super.dispose();
     searchController.dispose();
-    connectivitySubscription.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      //  appBar: AppBar(
-
-      //   title: Text('MyShop'),
-      // ),
       body: Stack(
         children: [
           Positioned(
@@ -171,7 +165,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           ),
-
           Positioned(
             child: Padding(
               padding: const EdgeInsets.only(
@@ -179,28 +172,23 @@ class _SearchScreenState extends State<SearchScreen> {
                 left: 15,
                 right: 15,
               ),
-              child: AnimatedContainer(
-                duration: const Duration(
-                  milliseconds: 400,
-                ),
+              child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 60,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(10),
                   color: Theme.of(context).scaffoldBackgroundColor,
-                  border: Border.all(
-                      color: Theme.of(context).primaryColor, width: 2),
                   boxShadow: kElevationToShadow[1],
                 ),
                 child: Row(
                   children: [
                     Expanded(
-                      child: Container(
-                          child: TextField(
+                      child: TextField(
                         controller: searchController,
                         cursorColor: Theme.of(context).primaryColor,
                         decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(16.0),
+                          prefixIcon: Icon(Icons.search,
+                              color: Theme.of(context).primaryColor),
                           hintText:
                               AppLocalizations.of(context).searchBarHintTitle,
                           hintStyle: TextStyle(color: Colors.grey[600]),
@@ -249,142 +237,145 @@ class _SearchScreenState extends State<SearchScreen> {
                             });
                           }
                         },
-                      )),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(
+          Positioned(
+            child: Padding(
+                padding: EdgeInsets.only(
                     top: 200,
-                    left: 15,
-                    right: 15,
-                  ),
-                  child: connectionError == true
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(child: Container()),
-                            Align(
-                              alignment: Alignment.center,
-                              child: SizedBox(
-                                width: 250,
-                                height: 250,
-                                child: lot.LottieBuilder.asset(
-                                    'assets/gifs/error.json'),
-                              ),
-                            ),
-                            Container(
-                              width: 150,
-                              height: 45,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Theme.of(context)
-                                            .scaffoldBackgroundColor),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(18.0),
-                                            side: BorderSide(
-                                                color: Theme.of(context)
-                                                    .textTheme
-                                                    .headline2
-                                                    .color)))),
-                                onPressed: () async {
-                                  refresh();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 10,
-                                    bottom: 10,
-                                  ),
-                                  child: Text(
-                                    'Try again',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .headline2
-                                            .color,
-                                        fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(child: Container()),
-                          ],
-                        )
-                      : loadingMembersData == true
-                          ? Center(
-                              child: LoadingAnimationWidget.fourRotatingDots(
-                                color: Theme.of(context).primaryColor,
-                                size: 50,
-                              ),
-                            )
-                          : empty == true
-                              ? Align(
-                                  alignment: Alignment.center,
-                                  child: SizedBox(
-                                    width: 200,
-                                    height: 200,
-                                    child: lot.LottieBuilder.asset(
-                                        'assets/gifs/empty.json'),
-                                  ),
-                                )
-                              : RefreshIndicator(
-                                  color: Theme.of(context).primaryColor,
-                                  strokeWidth: 5,
-                                  onRefresh: () {
-                                    return refresh();
-                                  },
-                                  child: ListView.builder(
-                                    padding: const EdgeInsets.all(0),
-                                    itemBuilder: (context, index) {
-                                      return MemberDataTile(
-                                          allMembersList[index]);
-                                    },
-                                    itemCount: allMembersList.length,
-                                  ),
-                                ),
-                ),
-              ),
-
-              // //Empty logo
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 200),
-              //   child: Align(
-              //     alignment: Alignment.center,
-              //     child: SizedBox(
-              //       height: 130,
-              //       width: 130,
-              //       child: Image.asset('assets/images/empty.png'),
-              //     ),
-              //   ),
-              // )
-            ],
+                    left: localeLanguage == const Locale('en') ? 50 : 0,
+                    right: localeLanguage != const Locale('en') ? 50 : 0),
+                child: Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).searchResultsContains,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '${empty == true ? 0 : allMembersList.length}',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      AppLocalizations.of(context).members,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                )),
           ),
-          // Positioned(
-          //   top: 40,
-          //   left: 10,
-          //   child: IconButton(
-          //     onPressed: () {
-          //       ZoomDrawer.of(context).toggle();
-          //     },
-          //     icon: Icon(
-          //       Icons.menu,
-          //       color: Theme.of(context).iconTheme.color,
-          //       size: 30,
-          //     ),
-          //   ),
-          // ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 230,
+              left: 15,
+              right: 15,
+            ),
+            child: connectionError == true
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(child: Container()),
+                      Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 250,
+                          height: 250,
+                          child:
+                              lot.LottieBuilder.asset('assets/gifs/error.json'),
+                        ),
+                      ),
+                      Container(
+                        width: 150,
+                        height: 45,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).scaffoldBackgroundColor),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .headline2
+                                              .color)))),
+                          onPressed: () async {
+                            refresh();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 10,
+                              bottom: 10,
+                            ),
+                            child: Text(
+                              'Try again',
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline2
+                                      .color,
+                                  fontSize: 14),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Container()),
+                    ],
+                  )
+                : loadingMembersData == true
+                    ? Center(
+                        child: LoadingAnimationWidget.fourRotatingDots(
+                          color: Theme.of(context).primaryColor,
+                          size: 50,
+                        ),
+                      )
+                    : empty == true
+                        ? Align(
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: 200,
+                              height: 200,
+                              child: lot.LottieBuilder.asset(
+                                  'assets/gifs/empty.json'),
+                            ),
+                          )
+                        : RefreshIndicator(
+                            color: Theme.of(context).primaryColor,
+                            strokeWidth: 5,
+                            onRefresh: () {
+                              return refresh();
+                            },
+                            child: Scrollbar(
+                              thumbVisibility: true,
+                              interactive: true,
+                              child: ListView.builder(
+                                padding: const EdgeInsets.all(0),
+                                itemBuilder: (context, index) {
+                                  return MemberDataTile(allMembersList[index]);
+                                },
+                                itemCount: allMembersList.length,
+                              ),
+                            ),
+                          ),
+          ),
         ],
       ),
       floatingActionButton: OpenContainer(
@@ -400,15 +391,7 @@ class _SearchScreenState extends State<SearchScreen> {
             size: 30,
             color: Theme.of(context).iconTheme.color,
           ),
-
           onPressed: openContainer,
-          // label: Text(
-          //   'New member',
-          //   style: TextStyle(
-          //       fontWeight: FontWeight.bold,
-          //       color: Theme.of(context).textTheme.headline1.color),
-          // ),
-          //icon:
           backgroundColor: Theme.of(context).primaryColor,
         ),
       ),

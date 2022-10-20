@@ -40,7 +40,7 @@ class MemberPackageDataTile extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 15),
             width: MediaQuery.of(context).size.width,
-            height: 135,
+            height: 190,
             child: Column(
               children: [
                 const SizedBox(
@@ -71,8 +71,7 @@ class MemberPackageDataTile extends StatelessWidget {
                         stopBackgroundLoading();
                       } on SocketException {
                         stopBackgroundLoading();
-                        print(
-                            'Delete registration socket exception (assistantFunction.dart)');
+
                         throw SocketException(AppLocalizations.of(context)
                             .connectionStatusMessage);
                       } on GetRequestException catch (error) {
@@ -103,14 +102,23 @@ class MemberPackageDataTile extends StatelessWidget {
                       child: ListTile(
                           title: Row(
                             children: [
-                              Text(
-                                memberRegistrationsResponseData.packageTitle,
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline2
-                                      .color,
-                                  fontWeight: FontWeight.bold,
+                              Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                      color: Theme.of(context).primaryColor,
+                                    )),
+                                child: Text(
+                                  memberRegistrationsResponseData.packageTitle,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline2
+                                        .color,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -138,27 +146,28 @@ class MemberPackageDataTile extends StatelessWidget {
                                     color: Theme.of(context).primaryColor,
                                     size: 20,
                                   ),
-                                  Text(
-                                    '${AppLocalizations.of(context).attendedTitle}: ',
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline2
-                                          .color,
-                                    ),
+                                  const SizedBox(
+                                    width: 10,
                                   ),
-                                  Expanded(
-                                    child: Text(
-                                      '${memberRegistrationsResponseData.registrationAttended}/${memberRegistrationsResponseData.packageAttendance}',
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .headline2
-                                              .color,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                  Text(
+                                    AppLocalizations.of(context).attendedTitle,
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .headline2
+                                            .color,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                '${memberRegistrationsResponseData.registrationAttended}/${memberRegistrationsResponseData.packageAttendance}',
+                                style: const TextStyle(
+                                    color: Colors.grey, fontSize: 20),
                               ),
                               const SizedBox(
                                 height: 10,
@@ -170,35 +179,33 @@ class MemberPackageDataTile extends StatelessWidget {
                                     color: Theme.of(context).primaryColor,
                                     size: 20,
                                   ),
-                                  Expanded(
-                                    child: Text(
-                                      '${AppLocalizations.of(context).expirationDateTitle} ',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .headline2
-                                            .color,
-                                      ),
-                                    ),
+                                  const SizedBox(
+                                    width: 10,
                                   ),
-                                  Expanded(
-                                    child: Text(
-                                      convertDateToDayInNumberMonthInText(
-                                              memberRegistrationsResponseData
-                                                  .registrationExpiresAt) +
-                                          " " +
-                                          convertTimeTo12HFormat(
-                                              memberRegistrationsResponseData
-                                                  .registrationExpiresAt),
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .headline2
-                                              .color,
-                                          fontWeight: FontWeight.bold),
+                                  Text(
+                                    AppLocalizations.of(context)
+                                        .expirationDateTitle,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headline2
+                                          .color,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ],
+                              ),
+                              Text(
+                                convertDateToDayInNumberMonthInText(
+                                        memberRegistrationsResponseData
+                                            .registrationExpiresAt) +
+                                    " " +
+                                    convertTimeTo12HFormat(
+                                        memberRegistrationsResponseData
+                                            .registrationExpiresAt),
+                                style: const TextStyle(
+                                    color: Colors.grey, fontSize: 20),
                               ),
                             ],
                           ),
@@ -244,10 +251,10 @@ class MemberPackageDataTile extends StatelessWidget {
               ? Container(
                   margin: const EdgeInsets.only(right: 15),
                   width: MediaQuery.of(context).size.width,
-                  height: 135,
+                  height: 200,
                   decoration: const BoxDecoration(
                       color: Colors.black26,
-                      borderRadius: BorderRadius.all(Radius.circular(30))),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                 )
               : const Text('')
         ],

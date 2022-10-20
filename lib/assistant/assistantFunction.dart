@@ -7,7 +7,6 @@ import 'dart:ui';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
-import 'package:gym_staff_app/DataBase/SqlDb.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:gym_staff_app/models/memberData.dart';
@@ -62,19 +61,6 @@ Future<void> setLocalLanguageInSorage(String language) async {
   localeLanguage = Locale(language);
 }
 
-//translate variables/////////////////////////////////////////////////////////////////////////////
-
-// Future<String> translateToArabic(String input) async {
-//   final translator = GoogleTranslator();
-//   var translation = await translator.translate(input, from: 'en', to: 'ar');
-
-//   print('Translation:: ${translation.toSkvtring()}');
-
-//   return translation.toString();
-// }
-
-//showDialog///////////////////////////////////////////////////////////////////////////////////
-
 void showErrorDialog(
     String message, String title, BuildContext context, Color color) {
   showDialog(
@@ -108,10 +94,8 @@ Future<void> getAllMembers() async {
     throw const SocketException('Error');
   }
 
-  print('Staff Id:: ${currentStaffData.staffClubId}');
-  print('token:: ${token}');
   String url =
-      'http://159.223.172.150/api/v1/members/clubs/${currentStaffData.staffClubId}/search?phone=&countryCode=';
+      'http://159.223.172.150/api/v1/members/clubs/${currentStaffData.staffClubId}/search?phone=&countryCode=?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   var res = await http.get(
     Uri.parse(url),
@@ -144,7 +128,7 @@ Future<void> getAllMemberRegistartions() async {
   print('Member Id:: ${pickedMember.memberId}');
 
   String url =
-      'http://159.223.172.150/api/v1/registrations/clubs/${currentStaffData.staffClubId}/members/${pickedMember.memberId}';
+      'http://159.223.172.150/api/v1/registrations/clubs/${currentStaffData.staffClubId}/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     var res = await http.get(
@@ -252,17 +236,14 @@ Future<void> addNewMember(
     bool isAuthenticate,
     BuildContext context}) async {
   //Saving in mobile database
-  SqlDb sqlDb = SqlDb();
 
-  String url = 'http://159.223.172.150/api/v1/members';
+  String url =
+      'http://159.223.172.150/api/v1/members?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   print('CURRENT STAFF ID:: ${currentStaffData.staffId}');
   print('CURRENT URL:: $qrCodeURL');
 
   try {
-    await sqlDb.insertData(
-        "INSERT INTO 'Members' ('clubID','staffId','name','email','phone','countryCode','gender','birthYear','canAuthenticate','QRCodeURL','QRCodeUUID','isBlocked','createdAt','sync','operation') VALUES ('${currentStaffData.staffClubId}','${currentStaffData.staffId}','$name','$email','$phone','$phoneCode','$gender','$age','${isAuthenticate == true ? 1 : 0}','$qrCodeURL','$qrCodeUUID','${0}','${DateTime.now().toString()}','${0}','add')");
-
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -321,8 +302,7 @@ Future<void> addNewMember(
 
 Future<void> getAllPlans() async {
   String url =
-      'http://159.223.172.150/api/v1/packages/clubs/${currentStaffData.staffClubId}';
-  SqlDb sqlDb = SqlDb();
+      'http://159.223.172.150/api/v1/packages/clubs/${currentStaffData.staffClubId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   var res = await http.get(
     Uri.parse(url),
@@ -345,13 +325,6 @@ Future<void> getAllPlans() async {
 
   allPlansList =
       (allPlans as List).map((index) => PlanData.fromjson(index)).toList();
-
-  sqlDb.deleteData('DELETE FROM Packages');
-
-  for (var element in allPlansList) {
-    await sqlDb.insertData(
-        "REPLACE INTO 'Packages' ('clubId','title','attendance','expiresIn','price','isOpen','createdAt','sync','operation') VALUES ('${element.planClubId}','${element.planTitle}','${element.planAttendance}','${element.planExpiresIn}','${element.planPrice}','${element.isOpen == true ? 1 : 0}','${element.createdAt}','${1}','add')");
-  }
 }
 
 //Register Plan///////////////////////////////////////////////////////////////////////////
@@ -364,13 +337,10 @@ Future<void> registerPlan(
   print(planId);
   print(planPrice);
 
-  String url = 'http://159.223.172.150/api/v1/registrations';
-  SqlDb sqlDb = SqlDb();
+  String url =
+      'http://159.223.172.150/api/v1/registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
-    // await sqlDb.insertData(
-    //     "INSERT INTO 'Registrations' ('clubID','memberId','staffId','packageId','isActive','attended','expiresAt','paid','isFreezed','createdAt','sync','operation') VALUES ('${currentStaffData.staffClubId}','${pickedMember.memberId}','${currentStaffData.staffId}','$planId','${1}','${0}','$gender','$planPrice','${0}','${DateTime.now().toString()}','${0}','add')");
-
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -401,7 +371,8 @@ Future<void> registerPlan(
 Future<void> confirmArrival(
     {String registrationId, BuildContext context}) async {
   print('Registration Id:: $registrationId');
-  String url = 'http://159.223.172.150/api/v1/attendances';
+  String url =
+      'http://159.223.172.150/api/v1/attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.post(Uri.parse(url),
@@ -429,7 +400,8 @@ Future<void> confirmArrival(
 //Cancel Attendence////////////////////////////////////////////////////////////////////////////
 Future<void> cancelAttendence(
     {String registrationId, BuildContext context}) async {
-  String url = 'http://159.223.172.150/api/v1/cancelled-attendances';
+  String url =
+      'http://159.223.172.150/api/v1/cancelled-attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.post(Uri.parse(url),
@@ -458,7 +430,8 @@ Future<void> cancelAttendence(
 
 Future<void> deleteRegistration(
     {String registrationId, BuildContext context}) async {
-  String url = 'http://159.223.172.150/api/v1/cancelled-registrations';
+  String url =
+      'http://159.223.172.150/api/v1/cancelled-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   final response = await http.post(Uri.parse(url),
       headers: <String, String>{
@@ -511,7 +484,7 @@ Future<bool> extractImageAndPutInFirebase(
 
 Future<void> updateMemberQrCode({BuildContext context}) async {
   String url =
-      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code';
+      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.patch(Uri.parse(url),
@@ -544,7 +517,7 @@ Future<void> updateMemberQrCode({BuildContext context}) async {
 
 Future<void> sendVerificationCodeToWhatsApp(BuildContext context) async {
   String url =
-      'http://159.223.172.150/api/v1/auth/members/${pickedMember.memberId}/language/en/whatsapp/verification';
+      'http://159.223.172.150/api/v1/auth/members/${pickedMember.memberId}/language/en/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.post(
@@ -571,7 +544,8 @@ Future<void> sendVerificationCodeToWhatsApp(BuildContext context) async {
 
 Future<void> freezeRegistration(
     {String registrationId, BuildContext context, String duration}) async {
-  String url = 'http://159.223.172.150/api/v1/freeze-registrations';
+  String url =
+      'http://159.223.172.150/api/v1/freeze-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.post(Uri.parse(url),
@@ -602,7 +576,7 @@ Future<void> freezeRegistration(
 Future<void> reactivateRegestration(
     {String registrationId, BuildContext context}) async {
   String url =
-      'http://159.223.172.150/api/v1/freeze-registrations/registrations/$registrationId';
+      'http://159.223.172.150/api/v1/freeze-registrations/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.patch(Uri.parse(url),
@@ -630,7 +604,7 @@ Future<void> reactivateRegestration(
 
 Future<void> getAllMemberAttendences(String registrationId) async {
   String url =
-      'http://159.223.172.150/api/v1/attendances/registrations/$registrationId/staff';
+      'http://159.223.172.150/api/v1/attendances/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     var res = await http.get(
@@ -641,13 +615,11 @@ Future<void> getAllMemberAttendences(String registrationId) async {
       },
     );
 
-    String jSonData = res.body;
-    var decodeData = jsonDecode(jSonData);
-
+    final responseData = json.decode(res.body);
     print(
-        'All Member Attendences Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
+        'All Member Attendences Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    var allMemberAttendences = decodeData['attendances'];
+    var allMemberAttendences = responseData['attendances'];
 
     allMemberAttendencesList = (allMemberAttendences as List)
         .map((index) => MemberAttendencesData.fromjson(index))
@@ -666,7 +638,7 @@ Future<void> getAllMemberAttendences(String registrationId) async {
 Future<void> updateMemberVerification(
     {BuildContext context, bool verificationStatus}) async {
   String url =
-      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/authentication';
+      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/authentication?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.patch(Uri.parse(url),
@@ -706,7 +678,8 @@ Future<void> checkAddedNewMemberData(
     String phone,
     String phoneCode,
     BuildContext context}) async {
-  String url = 'http://159.223.172.150/api/v1/members/check';
+  String url =
+      'http://159.223.172.150/api/v1/members/check?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.post(Uri.parse(url),
@@ -739,48 +712,4 @@ Future<void> checkAddedNewMemberData(
   } catch (error) {
     rethrow;
   }
-}
-
-//get all plans from mobile storage
-Future<void> getAllPlansFromStorage() async {
-  SqlDb sqlDb = SqlDb();
-  List<Map> selectResponse = await sqlDb.readData("SELECT * FROM Packages");
-  print("Packages From Storage :::: $selectResponse");
-  allPlansListFromMobileStorage =
-      selectResponse.map((index) => PlanData.fromjson(index)).toList();
-}
-
-//get all members from mobile storage
-Future<void> getAllMembersFromStorage() async {
-  SqlDb sqlDb = SqlDb();
-  List<Map> selectResponse = await sqlDb.readData("SELECT * FROM Members");
-  print("Members From Storage :::: $selectResponse");
-  allMembersListFromMobileStorage =
-      selectResponse.map((index) => MemberData.fromjson(index)).toList();
-}
-
-//Check if email is unique in mobile storage
-
-bool checkEmailIsUnique(String email) {
-  for (var element in allMembersListFromMobileStorage) {
-    print('element ${element.memberPhone}');
-    if (element.memberEmail == email) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  return true;
-}
-
-//Check if phone is unique in mobile storage
-bool checkPhoneIsUnique(String phone) {
-  for (var element in allMembersListFromMobileStorage) {
-    if (element.memberPhone == phone) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  return true;
 }

@@ -106,7 +106,7 @@
       "description": " "
     },
 
-    "expirationDateTitle": "Expiration Date:",
+    "expirationDateTitle": "Expiration Date",
     "@language": {
       "description": " "
     },
@@ -358,6 +358,56 @@
     },
 
     "duration": "Duration",
+    "@language": {
+      "description": " "
+    },
+
+    "writeFirstAndSecondName": "You must write your first and second name",
+    "@language": {
+      "description": " "
+    },
+
+    "phoneNumberMustBe10Digit": "Phone number must be 10 digit",
+    "@language": {
+      "description": " "
+    },
+
+    "errorChangingLanguage": "Error changing language",
+    "@language": {
+      "description": " "
+    },
+
+    "searchResultsContains": "Search results contain",
+    "@language": {
+      "description": " "
+    },
+
+    "registrations": "registrations",
+    "@language": {
+      "description": " "
+    },
+
+    "cantConfirmTwice": "Sorry you can't confirm arrival twice in a row",
+    "@language": {
+      "description": " "
+    },
+
+    "usersDontMatch": "Users Don't Match",
+    "@language": {
+      "description": " "
+    },
+
+    "updateQrCodeSuccessfully": "Updated Qr Code Successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "attendences": "Attendances",
+    "@language": {
+      "description": " "
+    },
+
+    "members": "Members",
     "@language": {
       "description": " "
     }

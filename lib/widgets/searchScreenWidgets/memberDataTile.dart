@@ -6,6 +6,8 @@ import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/memberData.dart';
 import 'package:gym_staff_app/screens/memberDetailsScreen.dart';
 
+import '../../assistant/assistantFunction.dart';
+
 class MemberDataTile extends StatefulWidget {
   MemberData memberData;
 
@@ -39,88 +41,95 @@ class _MemberDataTileState extends State<MemberDataTile> {
     return Column(
       children: [
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 15, top: 10, bottom: 10),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor:
-                    colors[index] /*Theme.of(context).primaryColor*/,
-                foregroundColor: Theme.of(context).textTheme.headline1.color,
-                radius: 30,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    widget.memberData.memberName.contains(' ')
-                        ? widget.memberData.memberName[0].toUpperCase() +
-                            widget.memberData.memberName
-                                .split(' ')[1][0]
-                                .toUpperCase()
-                        : widget.memberData.memberName[0].toUpperCase(),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 17),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromRGBO(206, 206, 206, 1),
+                offset: Offset(1, 3),
+                blurRadius: 1.0,
+              )
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 15, top: 10, bottom: 10),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor:
+                      colors[index] /*Theme.of(context).primaryColor*/,
+                  foregroundColor: Theme.of(context).textTheme.headline1.color,
+                  radius: 30,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      widget.memberData.memberName.contains(' ')
+                          ? widget.memberData.memberName[0].toUpperCase() +
+                              widget.memberData.memberName
+                                  .split(' ')[1][0]
+                                  .toUpperCase()
+                          : widget.memberData.memberName[0].toUpperCase(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 17),
+                    ),
                   ),
                 ),
-              ),
-              title: Text(
-                widget.memberData.memberName,
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.headline2.color,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 5,
+                title: Text(
+                  widget.memberData.memberName,
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.headline2.color,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.phone,
-                        color: Theme.of(context).primaryColor,
-                        size: 16,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        widget.memberData.memberPhone,
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.headline2.color,
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '+${widget.memberData.countryCode}',
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          widget.memberData.memberPhone,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                trailing: Text(
+                  convertDateToDayInNumberMonthInText(
+                      widget.memberData.createdAt),
+                  style: const TextStyle(
+                    color: Colors.grey,
                   ),
-                ],
-              ),
-              // contentPadding: const EdgeInsets.all(4),
-              // trailing: Icon(
-              //   Icons.info,
-              //   color: Theme.of(context).primaryColor,
-              //   size: 25,
-              // ),
-              onTap: () {
-                pickedMember = widget.memberData;
+                ),
+                onTap: () {
+                  pickedMember = widget.memberData;
 
-                Navigator.pushNamed(context, MemberDetailsScreen.routeName);
-              },
+                  Navigator.pushNamed(context, MemberDetailsScreen.routeName);
+                },
+              ),
             ),
           ),
         ),
-        const SizedBox(
-          height: 1,
-        ),
-        Divider(
-          thickness: 1,
-          endIndent: 10,
-          color: Colors.grey[400],
-        )
       ],
     );
   }

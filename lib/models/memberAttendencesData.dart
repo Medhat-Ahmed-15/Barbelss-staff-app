@@ -18,6 +18,6 @@ class MemberAttendencesData {
     staffId = json['staffId'];
     memberId = json['memberId'];
     createdAt = json['createdAt'];
-    staffName = json['staff'][0]['name'];
+    staffName = json['staff']['name'];
   }
 }

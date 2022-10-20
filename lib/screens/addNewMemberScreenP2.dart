@@ -454,19 +454,6 @@ class _AddNewMemberScreenP2State extends State<AddNewMemberScreenP2> {
                 ),
               ],
             ),
-            // Positioned(
-            //   bottom: -100,
-            //   child: ClipPath(
-            //     clipper: HexagonalClipper(reverse: true),
-            //     child: Container(
-            //       height: 300,
-            //       width: MediaQuery.of(context).size.width,
-            //       decoration: BoxDecoration(
-            //         color: Theme.of(context).primaryColor,
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

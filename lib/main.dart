@@ -60,8 +60,8 @@ class MyApp extends StatelessWidget {
                   title: 'Flutter Demo',
                   theme: ThemeData(
                     // This is the theme of your application.
-                    primaryColor: const Color.fromRGBO(0, 41, 88, 1),
-                    scaffoldBackgroundColor: Colors.white,
+                    primaryColor: const Color.fromRGBO(6, 24, 40, 1),
+                    scaffoldBackgroundColor: Color.fromRGBO(247, 249, 249, 6),
                     textTheme: TextTheme(
                       headline1: const TextStyle(color: Colors.white),
                       headline2: TextStyle(color: Colors.grey.shade900),

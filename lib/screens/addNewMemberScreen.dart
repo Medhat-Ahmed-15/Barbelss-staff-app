@@ -62,30 +62,13 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
 
       if (nameController.text.trim().split(" ").length != 2) {
         setState(() {
-          nameErrorText = 'You must write your first and second name';
+          nameErrorText = AppLocalizations.of(context).writeFirstAndSecondName;
           phoneErrorText = null;
           emialErrorText = null;
           loading = false;
         });
 
         return;
-      }
-
-      await getAllMembersFromStorage();
-
-      if (emailController.text.trim().isNotEmpty) {
-        var result = checkEmailIsUnique(emailController.text.trim());
-
-        if (result == false) {
-          setState(() {
-            phoneErrorText = null;
-            nameErrorText = null;
-            loading = false;
-            emialErrorText = 'This email is already used';
-          });
-
-          return;
-        }
       }
 
       if (phoneController.text.isEmpty) {
@@ -101,7 +84,8 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
 
       if (phoneController.text.length != 10) {
         setState(() {
-          phoneErrorText = 'Phone number must be 10 digit';
+          phoneErrorText =
+              AppLocalizations.of(context).phoneNumberMustBe10Digit;
           nameErrorText = null;
           loading = false;
           emialErrorText = null;
@@ -109,21 +93,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
 
         return;
       }
-
-      var result = checkPhoneIsUnique(phoneController.text.trim());
-
-      if (result == false) {
-        setState(() {
-          phoneErrorText = 'This phone number is already used';
-          nameErrorText = null;
-          loading = false;
-          emialErrorText = null;
-        });
-
-        return;
-      }
-
-      print('PHONEEEE CODEEE::: ${phoneCode}');
 
       await checkAddedNewMemberData(
           context: context,
@@ -138,8 +107,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
       addedPhone = phoneController.text.trim();
       addedPhoneCode = phoneCode;
       addedVerifyMember = isAuthenticate;
-
-      print('PHONEEEE CODEEE::: ${addedPhoneCode}');
 
       setState(() {
         loading = false;
@@ -165,8 +132,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
       });
     } on GetRequestException catch (error) {
       var errorMessage = error.toStringMessage();
-
-      print('Entered GetRequestException');
 
       if (addNewMemberFieldKey == 'phone') {
         setState(() {
@@ -227,51 +192,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 150,
-              decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Colors.black54,
-                        offset: Offset(0, 4),
-                        blurRadius: 5.0)
-                  ],
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(0))),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(
-                      localeLanguage == const Locale('en')
-                          ? Icons.arrow_back
-                          : Icons.arrow_forward,
-                      color: Theme.of(context).iconTheme.color,
-                      size: 25,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    AppLocalizations.of(context).addANewMemberTitle,
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1.color,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
           SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -571,7 +491,8 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                                     Radius.circular(30.0),
                                   ),
                                 ),
-                                labelText: 'Search',
+                                labelText: AppLocalizations.of(context)
+                                    .searchBarHintTitle,
                                 labelStyle: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontWeight: FontWeight.bold,
@@ -657,7 +578,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                             size: 50,
                           ),
                         )
-                      : Container(
+                      : SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: 56,
                           child: ElevatedButton(
@@ -697,6 +618,51 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                         ),
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 150,
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black54,
+                        offset: Offset(0, 4),
+                        blurRadius: 5.0)
+                  ],
+                  borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(0))),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      localeLanguage == const Locale('en')
+                          ? Icons.arrow_back
+                          : Icons.arrow_forward,
+                      color: Theme.of(context).iconTheme.color,
+                      size: 25,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    AppLocalizations.of(context).addANewMemberTitle,
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1.color,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

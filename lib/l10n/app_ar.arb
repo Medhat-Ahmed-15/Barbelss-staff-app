@@ -43,7 +43,7 @@
 
     "numberOfSessionsTitle": "عدد الجلسات:",
 
-    "expirationDateTitle": "تاريخ إنتهاء الصلاحية:",
+    "expirationDateTitle": "تاريخ إنتهاء الصلاحية",
 
     "getPlanTitle": "احصل على خطة",
 
@@ -143,7 +143,27 @@
 
     "submit": "موافق",
 
-    "duration": "مدة"
+    "duration": "مدة",
+
+     "writeFirstAndSecondName": "يجب أن تكتب اسمك الأول والثاني",
+
+     "phoneNumberMustBe10Digit": "يجب أن يتكون رقم الهاتف من 10 أرقام",
+
+     "errorChangingLanguage": "خطأ في تغيير اللغة",
+
+     "searchResultsContains": "نتائج البحث تحتوي على",
+
+     "registrations": "التسجيلات",
+
+     "cantConfirmTwice": "آسف لا يمكنك تأكيد الوصول مرتين على التوالي",
+
+     "usersDontMatch": "المستخدمون لا يتطابقون",
+
+     "updateQrCodeSuccessfully": "تم تحديث رمز الاستجابة السريعة بنجاح",
+
+     "attendences": "الحضور",
+
+     "members": "أعضاء"
 
 
 

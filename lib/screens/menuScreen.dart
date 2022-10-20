@@ -26,30 +26,6 @@ class _MenuScreenState extends State<MenuScreen> {
 
   bool isInit = true;
 
-  // @override
-  // void didChangeDependencies() {
-  //   print('Entered here in menu screen');
-  //   if (isInit == true) {
-  //     if (localeLanguage.languageCode == 'ar') {
-  //       print('Translated to arabic');
-
-  //       translateToArabic(userName).then((value) {
-  //         setState(() {
-  //           userName = value;
-  //           loadingUserData = false;
-  //         });
-  //       });
-  //     } else {
-  //       setState(() {
-  //         loadingUserData = false;
-  //         userName = 'Ahmed Omar';
-  //       });
-  //     }
-  //   }
-  //   isInit = false;
-  //   super.didChangeDependencies();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

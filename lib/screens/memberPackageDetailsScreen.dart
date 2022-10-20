@@ -64,32 +64,34 @@ class _MemberPackageDetailsScreenState
     }
   }
 
-  // Future<void> refresh() async {
-  //   try {
-  //   getAllMemberAttendences(pickedMemberPackage.registrationId)
-  //           .then((value) {
-  //         if (allMemberAttendencesList.isEmpty) {
-  //           setState(() {
-  //             loadingMemberAttendencesData = false;
-  //             connectionError = false;
-  //             empty = true;
-  //           });
-  //         } else {
-  //           setState(() {
-  //             loadingMemberAttendencesData = false;
-  //             connectionError = false;
-  //             empty = false;
-  //           });
-  //         }
-  //       });
-  //   } on SocketException {
-  //     setState(() {
-  //       connectionError = true;
-  //       loadingMemberAttendencesData = false;
-  //       empty = false;
-  //     });
-  //   }
-  // }
+  Future<void> refresh() async {
+    try {
+      freezeButtonText = allMemberRegistrationsList[0].isFreezed == false
+          ? AppLocalizations.of(context).freeze
+          : AppLocalizations.of(context).reactivate;
+      await getAllMemberAttendences(pickedMemberPackage.registrationId);
+      if (allMemberAttendencesList.isEmpty) {
+        setState(() {
+          loadingMemberAttendencesData = false;
+          connectionError = false;
+          empty = true;
+        });
+      } else {
+        print('msh empty');
+        setState(() {
+          loadingMemberAttendencesData = false;
+          connectionError = false;
+          empty = false;
+        });
+      }
+    } on SocketException {
+      setState(() {
+        connectionError = true;
+        loadingMemberAttendencesData = false;
+        empty = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,199 +99,225 @@ class _MemberPackageDetailsScreenState
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Stack(
           children: [
+            Column(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 270,
+                  color: Theme.of(context).primaryColor,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 130),
+                    child: connectionError == true
+                        ? Column(
+                            children: [
+                              Expanded(child: Container()),
+                              Align(
+                                alignment: Alignment.center,
+                                child: SizedBox(
+                                  width: 250,
+                                  height: 250,
+                                  child: lot.LottieBuilder.asset(
+                                      'assets/gifs/error.json'),
+                                ),
+                              ),
+                              Text(AppLocalizations.of(context)
+                                  .connectionStatusMessage),
+                              Expanded(child: Container()),
+                            ],
+                          )
+                        : loadingMemberAttendencesData == true
+                            ? Center(
+                                child: LoadingAnimationWidget.fourRotatingDots(
+                                  color: Theme.of(context).primaryColor,
+                                  size: 50,
+                                ),
+                              )
+                            : empty == true
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 200,
+                                        height: 200,
+                                        child: lot.LottieBuilder.asset(
+                                            'assets/gifs/empty.json'),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  )
+                                : RefreshIndicator(
+                                    color: Theme.of(context).primaryColor,
+                                    strokeWidth: 5,
+                                    onRefresh: () {
+                                      return refresh();
+                                    },
+                                    child: Scrollbar(
+                                      thumbVisibility: true,
+                                      interactive: true,
+                                      child: ListView.separated(
+                                        padding: const EdgeInsets.all(0),
+                                        itemBuilder: (context, index) {
+                                          return MemberAttendencesDataTile(
+                                              allMemberAttendencesList[index]);
+                                        },
+                                        itemCount:
+                                            allMemberAttendencesList.length,
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return Divider(
+                                            thickness: 1,
+                                            endIndent: 10,
+                                            indent: 10,
+                                            color: Colors.grey[300],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              child: Padding(
+                  padding: EdgeInsets.only(
+                    top: 370,
+                    left: localeLanguage == const Locale('en') ? 60 : 0,
+                    right: localeLanguage != const Locale('en') ? 55 : 0,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context).searchResultsContains,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        '${empty == true || allMemberAttendencesList == null ? 0 : allMemberAttendencesList.length}',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        AppLocalizations.of(context).attendences,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
             Positioned(
               top: 40,
-              left: 10,
+              left: localeLanguage == const Locale('en') ? 10 : 0,
+              right: localeLanguage != const Locale('en') ? 10 : 0,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  localeLanguage == const Locale('en')
-                      ? IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: Icon(
-                            localeLanguage == const Locale('en')
-                                ? Icons.arrow_back
-                                : Icons.arrow_forward,
-                            color: Theme.of(context).primaryColor,
-                            size: 30,
-                          ),
-                        )
-                      : Text(
-                          AppLocalizations.of(context).packageDetails,
-                          style: const TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Theme.of(context).iconTheme.color,
+                      size: 25,
+                    ),
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
-                  localeLanguage == const Locale('en')
-                      ? Text(
-                          AppLocalizations.of(context).packageDetails,
-                          style: const TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        )
-                      : IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: Icon(
-                            localeLanguage == const Locale('en')
-                                ? Icons.arrow_back
-                                : Icons.arrow_forward,
-                            color: Theme.of(context).primaryColor,
-                            size: 30,
-                          ),
-                        ),
+                  Text(
+                    AppLocalizations.of(context).packageDetails,
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1.color,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 120, left: 22, right: 22, bottom: 30),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.black54,
-                            offset: Offset(0, 4),
-                            blurRadius: 5.0)
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                '${pickedMemberPackage.packageTitle} Package',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .headline1
-                                        .color),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              pickedMemberPackage.isFreezed == true
-                                  ? Text(
-                                      '(${AppLocalizations.of(context).freezed})',
-                                      style: const TextStyle(
-                                          color: Colors.grey, fontSize: 11),
-                                    )
-                                  : const Text('')
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+            Positioned(
+              top: 150,
+              left: 50,
+              right: 50,
+              child: Container(
+                width: 100,
+                height: 200,
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.black54,
+                          offset: Offset(0, 4),
+                          blurRadius: 5.0)
+                    ],
+                    color: Theme.of(context).scaffoldBackgroundColor),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
                           children: [
                             Text(
-                              '${pickedMemberPackage.registrationAttended}/${pickedMemberPackage.packageAttendance}',
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).textTheme.headline1.color,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 52,
+                              '${pickedMemberPackage.packageTitle} Package',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(
-                              width: 10,
+                              width: 5,
                             ),
+                            pickedMemberPackage.isFreezed == true
+                                ? Text(
+                                    '(${AppLocalizations.of(context).freezed})',
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontSize: 13),
+                                  )
+                                : const Text('')
                           ],
-                        )
-                      ],
-                    ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${pickedMemberPackage.registrationAttended}/${pickedMemberPackage.packageAttendance}',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 60,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: connectionError == true
-                      ? Column(
-                          children: [
-                            Expanded(child: Container()),
-                            Align(
-                              alignment: Alignment.center,
-                              child: SizedBox(
-                                width: 250,
-                                height: 250,
-                                child: lot.LottieBuilder.asset(
-                                    'assets/gifs/error.json'),
-                              ),
-                            ),
-                            Text(AppLocalizations.of(context)
-                                .connectionStatusMessage),
-                            Expanded(child: Container()),
-                          ],
-                        )
-                      : loadingMemberAttendencesData == true
-                          ? Center(
-                              child: LoadingAnimationWidget.fourRotatingDots(
-                                color: Theme.of(context).primaryColor,
-                                size: 50,
-                              ),
-                            )
-                          : empty == true
-                              ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 200,
-                                      height: 200,
-                                      child: lot.LottieBuilder.asset(
-                                          'assets/gifs/empty.json'),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                )
-                              : RefreshIndicator(
-                                  color: Theme.of(context).primaryColor,
-                                  strokeWidth: 5,
-                                  onRefresh: () {
-                                    // return refresh();
-                                  },
-                                  child: ListView.separated(
-                                    padding: const EdgeInsets.all(0),
-                                    itemBuilder: (context, index) {
-                                      return MemberAttendencesDataTile(
-                                          allMemberAttendencesList[index]);
-                                    },
-                                    itemCount: allMemberAttendencesList.length,
-                                    separatorBuilder:
-                                        (BuildContext context, int index) {
-                                      return Divider(
-                                        thickness: 3,
-                                        endIndent: 10,
-                                        indent: 10,
-                                        color: Colors.grey[400],
-                                      );
-                                    },
-                                  ),
-                                ),
-                ),
-              ],
+              ),
             ),
             confirmationLoading == true
                 ? Container(

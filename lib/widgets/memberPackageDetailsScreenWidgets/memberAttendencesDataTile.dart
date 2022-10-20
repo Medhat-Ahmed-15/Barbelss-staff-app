@@ -15,7 +15,7 @@ class MemberAttendencesDataTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(right: 15),
       width: MediaQuery.of(context).size.width,
-      height: 135,
+      height: 170,
       child: Column(
         children: [
           const SizedBox(
@@ -27,9 +27,6 @@ class MemberAttendencesDataTile extends StatelessWidget {
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
                   Row(
                     children: [
                       Icon(
@@ -37,22 +34,24 @@ class MemberAttendencesDataTile extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                         size: 20,
                       ),
-                      Text(
-                        '${AppLocalizations.of(context).staffName}: ',
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.headline2.color,
-                        ),
+                      const SizedBox(
+                        width: 10,
                       ),
-                      Expanded(
-                        child: Text(
-                          memberAttendencesData.staffName,
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline2.color,
-                              fontWeight: FontWeight.bold),
-                        ),
+                      Text(
+                        AppLocalizations.of(context).staffName,
+                        style: TextStyle(
+                            color: Theme.of(context).textTheme.headline2.color,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    memberAttendencesData.staffName,
+                    style: const TextStyle(color: Colors.grey, fontSize: 20),
                   ),
                   const SizedBox(
                     height: 10,
@@ -64,36 +63,30 @@ class MemberAttendencesDataTile extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                         size: 20,
                       ),
-                      Expanded(
-                        child: Text(
-                          '${AppLocalizations.of(context).attendenceDate}: ',
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.headline2.color,
-                          ),
-                        ),
+                      const SizedBox(
+                        width: 10,
                       ),
-                      Expanded(
-                        child: Text(
-                          convertDateToDayInNumberMonthInText(
-                                  memberAttendencesData.createdAt) +
-                              " " +
-                              convertTimeTo12HFormat(
-                                  memberAttendencesData.createdAt),
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline2.color,
-                              fontWeight: FontWeight.bold),
+                      Text(
+                        AppLocalizations.of(context).attendenceDate,
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline2.color,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
+                  ),
+                  Text(
+                    convertDateToDayInNumberMonthInText(
+                            memberAttendencesData.createdAt) +
+                        " " +
+                        convertTimeTo12HFormat(memberAttendencesData.createdAt),
+                    style: const TextStyle(color: Colors.grey, fontSize: 20),
                   ),
                 ],
               ),
               contentPadding: const EdgeInsets.all(4),
             ),
-          ),
-          const SizedBox(
-            height: 10,
           ),
         ],
       ),

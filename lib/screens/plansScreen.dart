@@ -83,9 +83,7 @@ class _PlansScreenState extends State<PlansScreen> {
                       Navigator.of(context).pop();
                     },
                     icon: Icon(
-                      localeLanguage == const Locale('en')
-                          ? Icons.arrow_back
-                          : Icons.arrow_forward,
+                      Icons.arrow_back,
                       color: Theme.of(context).iconTheme.color,
                       size: 25,
                     ),
@@ -105,17 +103,19 @@ class _PlansScreenState extends State<PlansScreen> {
             ),
           ),
           Positioned(
-              bottom: 7,
-              left: 150,
-              right: 150,
-              child: Container(
-                height: 20,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    color: Colors.black26),
-              )),
+            bottom: 0,
+            child: Container(
+              height: 35,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30)),
+                  color: Colors.grey[300]),
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, top: 125),
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 150),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +167,7 @@ class _PlansScreenState extends State<PlansScreen> {
                                   },
                                   itemCount: allPlansList.length,
                                   itemWidth: 300.0,
-                                  itemHeight: 500.0,
+                                  itemHeight: 550.0,
                                   loop: true,
                                   layout: SwiperLayout.STACK,
                                 ),

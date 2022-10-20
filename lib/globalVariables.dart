@@ -12,6 +12,7 @@ String token = '';
 String qrCodeURL = '';
 String qrCodeUUID = '';
 String addNewMemberFieldKey;
+String loginFieldKey;
 String addedName = '';
 String addedEmail = '';
 String addedMembership = '';
@@ -27,10 +28,8 @@ var localeLanguage = const Locale('en');
 StaffData currentStaffData;
 
 List<MemberData> allMembersList = [];
-List<MemberData> allMembersListFromMobileStorage = [];
 List<MemberRegistrationsResponseData> allMemberRegistrationsList;
 List<PlanData> allPlansList;
-List<PlanData> allPlansListFromMobileStorage;
 List<MemberAttendencesData> allMemberAttendencesList;
 
 MemberData pickedMember;

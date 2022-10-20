@@ -73,15 +73,12 @@ class _LoginScreenState extends State<LoginScreen> {
     } on GetRequestException catch (error) {
       var errorMessage = error.toStringMessage();
 
-      if (errorMessage == 'phone number is not registered' ||
-          errorMessage == 'invalid phone formate' ||
-          errorMessage == 'phone is required') {
+      if (loginFieldKey == 'phone') {
         setState(() {
           phoneErrorMessage = errorMessage;
           loading = false;
         });
-      } else if (errorMessage == 'wrong password' ||
-          errorMessage == 'password is required') {
+      } else {
         setState(() {
           passwordErrorMessage = errorMessage;
           loading = false;
@@ -158,17 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body:
-
-          // loadingScreen == true
-          //     ? Center(
-          //         child: LoadingAnimationWidget.inkDrop(
-          //           color: Theme.of(context).primaryColor,
-          //           size: 50,
-          //         ),
-          //       )
-          //     :
-          Column(
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
@@ -292,7 +279,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               Radius.circular(30.0),
                             ),
                           ),
-                          labelText: 'Search',
+                          labelText:
+                              AppLocalizations.of(context).searchBarHintTitle,
                           labelStyle: TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,

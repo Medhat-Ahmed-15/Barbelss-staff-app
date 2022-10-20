@@ -130,7 +130,10 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                               switchLanguage = !switchLanguage;
                             });
                           } catch (error) {
-                            showToast('Error changing language', context);
+                            showToast(
+                                AppLocalizations.of(context)
+                                    .errorChangingLanguage,
+                                context);
                           }
                         },
                         child: ListTile(

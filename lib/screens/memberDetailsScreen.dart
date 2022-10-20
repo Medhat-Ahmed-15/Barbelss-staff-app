@@ -116,6 +116,44 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
+          Positioned(
+            child: Padding(
+                padding: EdgeInsets.only(
+                  top: 370,
+                  left: localeLanguage == const Locale('en') ? 60 : 0,
+                  right: localeLanguage != const Locale('en') ? 55 : 0,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).searchResultsContains,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '${empty == true || allMemberRegistrationsList == null ? 0 : allMemberRegistrationsList.length}',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      AppLocalizations.of(context).registrations,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                )),
+          ),
           Column(
             children: [
               Container(
@@ -125,7 +163,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 100),
+                  padding: const EdgeInsets.only(left: 15, top: 130),
                   child: connectionError == true
                       ? Column(
                           children: [
@@ -164,7 +202,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: 150,
                                       height: 56,
                                       child: ElevatedButton(
@@ -209,29 +247,32 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                   color: Theme.of(context).primaryColor,
                                   strokeWidth: 5,
                                   onRefresh: () {
-                                    print("enterd refresh 1");
                                     return refresh();
                                   },
-                                  child: ListView.separated(
-                                    padding: const EdgeInsets.all(0),
-                                    itemBuilder: (context, index) {
-                                      return MemberPackageDataTile(
-                                          allMemberRegistrationsList[index],
-                                          refresh,
-                                          setBackgroundLoading,
-                                          stopBackgroundLoading);
-                                    },
-                                    itemCount:
-                                        allMemberRegistrationsList.length,
-                                    separatorBuilder:
-                                        (BuildContext context, int index) {
-                                      return Divider(
-                                        thickness: 3,
-                                        endIndent: 10,
-                                        indent: 10,
-                                        color: Colors.grey[400],
-                                      );
-                                    },
+                                  child: Scrollbar(
+                                    thumbVisibility: true,
+                                    interactive: true,
+                                    child: ListView.separated(
+                                      padding: const EdgeInsets.all(0),
+                                      itemBuilder: (context, index) {
+                                        return MemberPackageDataTile(
+                                            allMemberRegistrationsList[index],
+                                            refresh,
+                                            setBackgroundLoading,
+                                            stopBackgroundLoading);
+                                      },
+                                      itemCount:
+                                          allMemberRegistrationsList.length,
+                                      separatorBuilder:
+                                          (BuildContext context, int index) {
+                                        return Divider(
+                                          thickness: 1,
+                                          endIndent: 10,
+                                          indent: 10,
+                                          color: Colors.grey[300],
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                 ),
@@ -246,7 +287,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               width: 100,
               height: 200,
               decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(30)),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   boxShadow: const [
                     BoxShadow(
                         color: Colors.black54,
@@ -279,65 +320,33 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.person,
-                          color: Theme.of(context).primaryColor,
-                          size: 16,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          pickedMember.memberName,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.headline2.color,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      pickedMember.memberName,
+                      style: const TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
                     ),
                     const SizedBox(
                       height: 5,
                     ),
-                    Container(
-                      width: 100,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        border:
-                            Border.all(color: Theme.of(context).primaryColor),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.black54,
-                              offset: Offset(0, 4),
-                              blurRadius: 5.0)
-                        ],
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, MemberPersonalDataScreen.routeName);
-                        },
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            AppLocalizations.of(context).showMore,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    .color),
-                          ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, MemberPersonalDataScreen.routeName);
+                      },
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          AppLocalizations.of(context).showMore,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -393,7 +402,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
         ],
       ),
       floatingActionButton: connectionError == true
-          ? Text('')
+          ? const Text('')
           : empty == true
               ? Text('')
               : AnimatedFloatingActionButton(
@@ -431,7 +440,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               context: context,
               barrierDismissible: true,
               builder: (BuildContext context) => FeedBackDialog(
-                  titleText: 'Sorry you can\'t confirm arrival twice in a row',
+                  titleText: AppLocalizations.of(context).cantConfirmTwice,
                   gif: 'assets/gifs/fail.json',
                   enableButton: true,
                   buttonText: AppLocalizations.of(context).doneTitle,
@@ -451,14 +460,11 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             );
 
             if (value == null) {
-              print('Null Value');
               return;
             } else {
-              print('Value Not Null');
               barcodeData = value;
 
               if (barcodeData == 'Failed To Scan') {
-                print('Entered Failed To Scan');
                 showDialog(
                   context: context,
                   barrierDismissible: true,
@@ -473,11 +479,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                       buttonColor: Colors.redAccent),
                 );
               } else {
-                print('Scannned tmam');
-
                 Map decodedBarcodeData = json.decode(barcodeData);
-
-                print('DECODED DATA:: $decodedBarcodeData');
 
                 if (decodedBarcodeData['memberName'] ==
                         pickedMember.memberName &&
@@ -554,7 +556,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                     context: context,
                     barrierDismissible: true,
                     builder: (BuildContext context) => FeedBackDialog(
-                        titleText: 'Users Don\'t Match',
+                        titleText: AppLocalizations.of(context).usersDontMatch,
                         gif: 'assets/gifs/fail.json',
                         enableButton: true,
                         buttonText: AppLocalizations.of(context).doneTitle,
@@ -760,7 +762,8 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             if (response == true) {
               await updateMemberQrCode(context: context);
 
-              showToast('Update Qr Code Successfully', context);
+              showToast(AppLocalizations.of(context).updateQrCodeSuccessfully,
+                  context);
             }
           } on GetRequestException catch (error) {
             showDialog(
