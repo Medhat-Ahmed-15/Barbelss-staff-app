@@ -3,19 +3,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:animations/animations.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:gym_staff_app/screens/addNewMemeberScreen.dart';
 import 'package:lottie/lottie.dart' as lot;
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/models/memberData.dart';
-import 'package:gym_staff_app/screens/addNewMemberScreen.dart';
 import 'package:gym_staff_app/widgets/searchScreenWidgets/memberDataTile.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:overlay_support/overlay_support.dart';
-
 import '../Exceptions/getRequest_exception.dart';
 import '../globalVariables.dart';
 
@@ -35,16 +31,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     if (isInit == true) {
-      print(currentStaffData.staffClubId);
-      print(currentStaffData.staffCountryCode);
-      print(currentStaffData.staffEmail);
-      print(currentStaffData.staffId);
-      print(currentStaffData.staffName);
-      print(currentStaffData.staffPhone);
-
       try {
         await getAllMembers();
         if (allMembersList.isEmpty) {
@@ -100,7 +88,7 @@ class _SearchScreenState extends State<SearchScreen> {
         loadingMembersData = false;
         empty = false;
       });
-    } on GetRequestException catch (error) {
+    } on GetRequestException {
       setState(() {
         connectionError = false;
         loadingMembersData = false;
@@ -111,7 +99,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     searchController.dispose();
   }
@@ -122,12 +109,13 @@ class _SearchScreenState extends State<SearchScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
+          //upper container containing burger button and title
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: Container(
-              height: 150,
+              height: 200,
               decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   boxShadow: const [
@@ -139,36 +127,44 @@ class _SearchScreenState extends State<SearchScreen> {
                   borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(0),
                       bottomRight: Radius.circular(0))),
-              child: Row(
+              child: Column(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      ZoomDrawer.of(context).toggle();
-                    },
-                    icon: Icon(
-                      Icons.menu,
-                      color: Theme.of(context).iconTheme.color,
-                      size: 25,
-                    ),
-                  ),
                   const SizedBox(
-                    width: 10,
+                    height: 90,
                   ),
-                  Text(
-                    AppLocalizations.of(context).searchForAMember,
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1.color,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          ZoomDrawer.of(context).toggle();
+                        },
+                        icon: Icon(
+                          Icons.menu,
+                          color: Theme.of(context).iconTheme.color,
+                          size: 25,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        AppLocalizations.of(context).searchForAMember,
+                        style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1.color,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
+          //search textfield
           Positioned(
             child: Padding(
               padding: const EdgeInsets.only(
-                top: 120,
+                top: 170,
                 left: 15,
                 right: 15,
               ),
@@ -244,10 +240,11 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           ),
+          //number of members
           Positioned(
             child: Padding(
                 padding: EdgeInsets.only(
-                    top: 200,
+                    top: 250,
                     left: localeLanguage == const Locale('en') ? 50 : 0,
                     right: localeLanguage != const Locale('en') ? 50 : 0),
                 child: Row(
@@ -281,9 +278,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   ],
                 )),
           ),
+
+          //Members List
           Padding(
             padding: const EdgeInsets.only(
-              top: 230,
+              top: 290,
               left: 15,
               right: 15,
             ),

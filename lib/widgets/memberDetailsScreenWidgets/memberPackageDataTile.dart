@@ -105,8 +105,16 @@ class MemberPackageDataTile extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.all(3),
                                 decoration: BoxDecoration(
-                                    color: Colors.transparent,
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
                                     borderRadius: BorderRadius.circular(5),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).primaryColor,
+                                        offset: const Offset(5, 5),
+                                        blurRadius: 1.0,
+                                      )
+                                    ],
                                     border: Border.all(
                                       color: Theme.of(context).primaryColor,
                                     )),

@@ -35,3 +35,19 @@ List<MemberAttendencesData> allMemberAttendencesList;
 MemberData pickedMember;
 
 MemberRegistrationsResponseData pickedMemberPackage;
+
+MaterialColor primaryColor = const MaterialColor(
+  0x00061828,
+  <int, Color>{
+    50: Color(0x00061828),
+    100: Color(0x00061828),
+    200: Color(0x00061828),
+    300: Color(0x00061828),
+    400: Color(0x00061828),
+    500: Color(0x00061828),
+    600: Color(0x00061828),
+    700: Color(0x00061828),
+    800: Color(0x00061828),
+    900: Color(0x00061828),
+  },
+);

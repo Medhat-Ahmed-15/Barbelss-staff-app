@@ -81,7 +81,7 @@
       "description": " "
     },
 
-    "clubTitle": "Club",
+    "id": "ID",
     "@language": {
       "description": " "
     },
@@ -408,6 +408,26 @@
     },
 
     "members": "Members",
+    "@language": {
+      "description": " "
+    },
+
+    "memberVerification": "Member Verification",
+    "@language": {
+      "description": " "
+    },
+
+    "personalInfo": "Personal Information",
+    "@language": {
+      "description": " "
+    },
+
+    "memberId": "Member ID",
+    "@language": {
+      "description": " "
+    },
+
+     "ageMustBeSpecified": "Age must be specified",
     "@language": {
       "description": " "
     }

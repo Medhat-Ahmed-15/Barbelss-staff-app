@@ -15,7 +15,6 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/widgets/memberDetailsScreenWidgets/memberPackageDataTile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:vibration/vibration.dart';
 
 import '../widgets/qrCodeDialog.dart';
 
@@ -39,7 +38,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
 
   @override
   void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     try {
       if (isInit == true) {
@@ -116,6 +114,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
+          //number of registrations
           Positioned(
             child: Padding(
                 padding: EdgeInsets.only(
@@ -154,6 +153,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   ],
                 )),
           ),
+          //registartions list
           Column(
             children: [
               Container(
@@ -279,6 +279,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               ),
             ],
           ),
+          //central card
           Positioned(
             top: 150,
             left: 50,
@@ -352,6 +353,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               ),
             ),
           ),
+          //back arrow
           Positioned(
             top: 40,
             left: 10,
@@ -368,6 +370,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               ),
             ),
           ),
+          //add button
           Positioned(
             top: 40,
             right: 10,
@@ -404,7 +407,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       floatingActionButton: connectionError == true
           ? const Text('')
           : empty == true
-              ? Text('')
+              ? const Text('')
               : AnimatedFloatingActionButton(
                   fabButtons: <Widget>[
                     Padding(

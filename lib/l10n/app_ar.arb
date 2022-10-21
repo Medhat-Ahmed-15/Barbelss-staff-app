@@ -33,7 +33,7 @@
 
     "notificationstitle": "إشعارات",
 
-    "clubTitle": "نادي",
+    "id": "ID",
 
     "languageTitle": "لغة",
 
@@ -163,7 +163,15 @@
 
      "attendences": "الحضور",
 
-     "members": "أعضاء"
+     "members": "أعضاء",
+
+     "memberVerification": "التحقق من العضو",
+
+     "personalInfo": "معلومات شخصية",
+
+     "memberId": "معرف العضو",
+
+     "ageMustBeSpecified": "يجب تحديد العمر"
 
 
 

@@ -22,6 +22,7 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
 
   bool switchLanguageLoading = false;
   bool switchLanguage = true;
+
   bool isInit = true;
 
   @override
@@ -104,10 +105,13 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                       color: switchLanguage == true
                           ? Theme.of(context).primaryColor
                           : Theme.of(context).scaffoldBackgroundColor,
-                      border: Border.all(
-                        color: Theme.of(context).primaryColor,
-                        width: 1.5,
-                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromRGBO(206, 206, 206, 1),
+                          offset: Offset(1, 3),
+                          blurRadius: 1.0,
+                        )
+                      ],
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     width: MediaQuery.of(context).size.width,
@@ -115,6 +119,9 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                       padding: const EdgeInsets.all(8),
                       child: InkWell(
                         onTap: () async {
+                          if (switchLanguage == true) {
+                            return;
+                          }
                           try {
                             final provider =
                                 Provider.of<LocaleLanguageProvider>(context,
@@ -137,14 +144,12 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                           }
                         },
                         child: ListTile(
-                          leading: Text(
+                          leading: const Text(
                             'English',
                             style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                                color: switchLanguage == true
-                                    ? Colors.white
-                                    : Colors.grey[600]),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: Colors.grey),
                           ),
                           trailing: switchLanguage == false
                               ? null
@@ -171,10 +176,13 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                       color: switchLanguage == false
                           ? Theme.of(context).primaryColor
                           : Theme.of(context).scaffoldBackgroundColor,
-                      border: Border.all(
-                        color: Theme.of(context).primaryColor,
-                        width: 1.5,
-                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromRGBO(206, 206, 206, 1),
+                          offset: Offset(1, 3),
+                          blurRadius: 1.0,
+                        )
+                      ],
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     width: MediaQuery.of(context).size.width,
@@ -182,6 +190,9 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                       padding: const EdgeInsets.all(8),
                       child: InkWell(
                         onTap: () async {
+                          if (switchLanguage == false) {
+                            return;
+                          }
                           setState(() {
                             switchLanguageLoading = true;
                           });
@@ -205,14 +216,12 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                           }
                         },
                         child: ListTile(
-                          leading: Text(
+                          leading: const Text(
                             'العربية',
                             style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                                color: switchLanguage == false
-                                    ? Colors.white
-                                    : Theme.of(context).primaryColor),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: Colors.grey),
                           ),
                           trailing: switchLanguage == true
                               ? null

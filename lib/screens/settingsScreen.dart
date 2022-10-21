@@ -97,10 +97,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               : currentStaffData.staffName[0],
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 27,
+                              fontSize: 37,
                               color: Theme.of(context).primaryColor),
                         ),
-                        radius: 33.0,
+                        radius: 34.0,
                       ),
                     ),
                     const SizedBox(
@@ -112,19 +112,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Text(
                           AppLocalizations.of(context).nameHint,
                           style: TextStyle(
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.bold,
                               fontSize: 14.0,
-                              color: Colors.grey[600]),
+                              color: Theme.of(context).primaryColor),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
                         Text(
                           currentStaffData.staffName,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
                               fontSize: 18.0,
-                              color: Theme.of(context).primaryColor),
+                              color: Colors.grey),
                         ),
                       ],
                     ),
@@ -147,11 +147,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Theme.of(context).scaffoldBackgroundColor,
-                            border: Border.all(
-                              color: Theme.of(context).primaryColor,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromRGBO(206, 206, 206, 1),
+                                offset: Offset(1, 3),
+                                blurRadius: 1.0,
+                              )
+                            ],
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
                           width: MediaQuery.of(context).size.width,
                           child: Padding(
@@ -165,12 +168,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Text(
                                     AppLocalizations.of(context).phoneHint,
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13.0,
-                                        color: Colors.grey[600]),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.0,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                   Text(
-                                    currentStaffData.staffPhone,
+                                    '+${currentStaffData.staffCountryCode} ${currentStaffData.staffPhone}',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16.0,
@@ -186,7 +190,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         height: 20,
                       ),
 
-                      //Location
+                      //Id
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 15,
@@ -195,10 +199,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Theme.of(context).scaffoldBackgroundColor,
-                            border: Border.all(
-                              color: Theme.of(context).primaryColor,
-                              width: 1.5,
-                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromRGBO(206, 206, 206, 1),
+                                offset: Offset(1, 3),
+                                blurRadius: 1.0,
+                              )
+                            ],
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           width: MediaQuery.of(context).size.width,
@@ -211,14 +218,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context).clubTitle,
+                                    AppLocalizations.of(context).id,
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13.0,
-                                        color: Colors.grey[600]),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.0,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                                   ),
                                   Text(
-                                    currentStaffData.staffClubId,
+                                    currentStaffData.staffId,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16.0,
@@ -240,10 +248,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).primaryColor,
-                              width: 1.5,
-                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromRGBO(206, 206, 206, 1),
+                                offset: Offset(1, 3),
+                                blurRadius: 1.0,
+                              )
+                            ],
                             color: Theme.of(context).scaffoldBackgroundColor,
                             borderRadius: BorderRadius.circular(15.0),
                           ),
@@ -261,9 +272,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 leading: Text(
                                   AppLocalizations.of(context).languageTitle,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0,
-                                      color: Colors.grey[600]),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 ),
                                 trailing: Icon(Icons.navigate_next,
                                     size: 30,
@@ -284,10 +296,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).primaryColor,
-                              width: 1.5,
-                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromRGBO(206, 206, 206, 1),
+                                offset: Offset(1, 3),
+                                blurRadius: 1.0,
+                              )
+                            ],
                             color: Theme.of(context).scaffoldBackgroundColor,
                             borderRadius: BorderRadius.circular(15.0),
                           ),
@@ -306,9 +321,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   AppLocalizations.of(context)
                                       .termsAndConditionsTitle,
                                   style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0,
-                                      color: Colors.grey[600]),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                                 ),
                                 trailing: Icon(Icons.navigate_next,
                                     size: 30,
