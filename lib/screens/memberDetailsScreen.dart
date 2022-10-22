@@ -412,10 +412,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   fabButtons: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: resendQrCOde(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
                       child: cancelArrivalFloatingButton(),
                     ),
                     Padding(
@@ -736,111 +732,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             color: Theme.of(context).iconTheme.color,
           ),
           backgroundColor: Colors.redAccent),
-    );
-  }
-
-//Resend Code  /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  Widget resendQrCOde() {
-    return SizedBox(
-      width: localeLanguage == const Locale('en') ? 200 : 300,
-      child: FloatingActionButton.extended(
-        heroTag: 'btn4',
-        key: UniqueKey(),
-        onPressed: () async {
-          try {
-            var response = await showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (BuildContext context) => QrCodeDialog(
-                pickedMember.memberName,
-                pickedMember.memberEmail,
-                pickedMember.memberPhone,
-                context,
-              ),
-            );
-
-            print('RESPONSE:::  ${response}');
-
-            if (response == true) {
-              await updateMemberQrCode(context: context);
-
-              showToast(AppLocalizations.of(context).updateQrCodeSuccessfully,
-                  context);
-            }
-          } on GetRequestException catch (error) {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (BuildContext context) => FeedBackDialog(
-                  titleText: error.toStringMessage(),
-                  gif: 'assets/gifs/fail.json',
-                  enableButton: true,
-                  buttonText: AppLocalizations.of(context).doneTitle,
-                  callBackFunction: () {
-                    Navigator.of(context).pop();
-                  },
-                  buttonColor: Colors.redAccent),
-            );
-          } on SocketException catch (error) {
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (BuildContext context) => FeedBackDialog(
-                  titleText:
-                      AppLocalizations.of(context).connectionStatusMessage,
-                  gif: 'assets/gifs/fail.json',
-                  enableButton: true,
-                  buttonText: AppLocalizations.of(context).doneTitle,
-                  callBackFunction: () {
-                    Navigator.of(context).pop();
-                  },
-                  buttonColor: Colors.redAccent),
-            );
-          }
-        },
-        label: Text(
-          AppLocalizations.of(context).resendQrCode,
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.headline1.color),
-        ),
-        icon: Icon(
-          Icons.qr_code_rounded,
-          color: Theme.of(context).iconTheme.color,
-        ),
-        backgroundColor: Colors.grey,
-      ),
-    );
-  }
-//Freeze /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  Widget freeze() {
-    return SizedBox(
-      width: 200,
-      child: FloatingActionButton.extended(
-        heroTag: 'btn5',
-        key: UniqueKey(),
-        onPressed: () async {
-          print('pressed');
-          var response = await showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) => PickFreezingTimeDialog(),
-          );
-        },
-        label: Text(
-          freezeButtonText,
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.headline1.color),
-        ),
-        icon: Icon(
-          Icons.pause_circle_filled_outlined,
-          color: Theme.of(context).iconTheme.color,
-        ),
-        backgroundColor: Colors.blue,
-      ),
     );
   }
 }

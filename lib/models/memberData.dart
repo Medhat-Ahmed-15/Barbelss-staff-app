@@ -43,7 +43,6 @@ class MemberData {
     isBlocked = json['isBlocked'];
     createdAt = json['createdAt'];
     memberPhone = json['phone'];
-    createdAt = json['createdAt'];
     countryCode = json['countryCode'];
     qrCodeURL = json['QRCodeURL'];
     qrCodeUUID = json['QRCodeUUID'];

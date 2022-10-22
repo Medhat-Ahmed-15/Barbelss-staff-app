@@ -168,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   boxShadow: [
                     BoxShadow(
                       color: Theme.of(context).primaryColor,
-                      offset: Offset(10, 15),
+                      offset: const Offset(10, 15),
                       blurRadius: 1.0,
                     )
                   ],
@@ -229,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 labelText:
                                     AppLocalizations.of(context).phoneTitle,
-                                hintText: phonehHintText,
+                                hintText: '$phonehHintText ex: 1282923670',
                                 errorText: phoneErrorMessage == ''
                                     ? null
                                     : phoneErrorMessage,

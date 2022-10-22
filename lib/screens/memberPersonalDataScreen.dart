@@ -33,18 +33,18 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
           ),
         );
         if (response == true) {
+          await updateMemberVerification(
+              context: context, verificationStatus: value);
           setState(() {
             allowVerification = value;
           });
-          await updateMemberVerification(
-              context: context, verificationStatus: value);
         }
       } else {
+        await updateMemberVerification(
+            context: context, verificationStatus: value);
         setState(() {
           allowVerification = value;
         });
-        await updateMemberVerification(
-            context: context, verificationStatus: value);
       }
     } on GetRequestException catch (error) {
       showDialog(
@@ -342,6 +342,117 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                   ),
                   const SizedBox(
                     height: 100,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 56,
+                      decoration: const BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black54,
+                              offset: Offset(0, 4),
+                              blurRadius: 5.0)
+                        ],
+                      ),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.grey),
+                            overlayColor: MaterialStateProperty.all(
+                                Theme.of(context).scaffoldBackgroundColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ))),
+                        onPressed: () async {
+                          try {
+                            var response = await showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) => QrCodeDialog(
+                                pickedMember.memberName,
+                                pickedMember.memberEmail,
+                                pickedMember.memberPhone,
+                                context,
+                              ),
+                            );
+
+                            print('RESPONSE:::  ${response}');
+
+                            if (response == true) {
+                              await updateMemberQrCode(context: context);
+
+                              showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (BuildContext context) =>
+                                    FeedBackDialog(
+                                        titleText: AppLocalizations.of(context)
+                                            .updateQrCodeSuccessfully,
+                                        gif: 'assets/gifs/success.json',
+                                        enableButton: true,
+                                        buttonText: AppLocalizations.of(context)
+                                            .doneTitle,
+                                        callBackFunction: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        buttonColor:
+                                            Theme.of(context).primaryColor),
+                              );
+                            }
+                          } on GetRequestException catch (error) {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) => FeedBackDialog(
+                                  titleText: error.toStringMessage(),
+                                  gif: 'assets/gifs/fail.json',
+                                  enableButton: true,
+                                  buttonText:
+                                      AppLocalizations.of(context).doneTitle,
+                                  callBackFunction: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  buttonColor: Colors.redAccent),
+                            );
+                          } on SocketException catch (error) {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) => FeedBackDialog(
+                                  titleText: AppLocalizations.of(context)
+                                      .connectionStatusMessage,
+                                  gif: 'assets/gifs/fail.json',
+                                  enableButton: true,
+                                  buttonText:
+                                      AppLocalizations.of(context).doneTitle,
+                                  callBackFunction: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  buttonColor: Colors.redAccent),
+                            );
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context).resendQrCode,
+                            style: TextStyle(
+                                color:
+                                    Theme.of(context).textTheme.headline1.color,
+                                fontSize: 18),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 15, right: 15),

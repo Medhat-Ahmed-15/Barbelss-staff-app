@@ -1,7 +1,6 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:gym_staff_app/models/memberData.dart';
 import 'package:gym_staff_app/models/planData.dart';

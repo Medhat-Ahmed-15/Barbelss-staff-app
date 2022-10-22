@@ -394,6 +394,19 @@ class _SearchScreenState extends State<SearchScreen> {
           backgroundColor: Theme.of(context).primaryColor,
         ),
       ),
+
+      // floatingActionButton: FloatingActionButton(
+      //   heroTag: 'btn1',
+      //   child: Icon(
+      //     Icons.add,
+      //     size: 30,
+      //     color: Theme.of(context).iconTheme.color,
+      //   ),
+      //   onPressed: () {
+      //     Navigator.pushNamed(context, AddNewMemberScreen.routeName);
+      //   },
+      //   backgroundColor: Theme.of(context).primaryColor,
+      // ),
     );
   }
 }

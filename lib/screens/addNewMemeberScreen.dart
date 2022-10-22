@@ -441,7 +441,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                 ),
               ),
             ),
-
             //Age
             TextField(
               controller: ageController,
@@ -549,7 +548,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                         ),
                       ),
                       labelText: AppLocalizations.of(context).phoneHint,
-                      hintText: phonehHintText,
+                      hintText: '$phonehHintText ex: 1282923670',
                       errorText: phoneErrorText == '' ? null : phoneErrorText,
                       labelStyle: TextStyle(
                         color: phoneFocusNode.hasFocus

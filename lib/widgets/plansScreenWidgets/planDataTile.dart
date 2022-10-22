@@ -132,12 +132,15 @@ class _PlanDataTileState extends State<PlanDataTile> {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Text(
-                                widget.planData.planAttendance.toString(),
-                                style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
+                              Expanded(
+                                child: Text(
+                                  widget.planData.planAttendance.toString(),
+                                  style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 20,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ],
                           ),

@@ -17,11 +17,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gym_staff_app/globalVariables.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
-import 'package:overlay_support/overlay_support.dart' as overlay;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:translator/translator.dart';
+import 'package:gym_staff_app/l10n/l10n.dart';
 
 void showToast(String message, BuildContext context) {
   Fluttertoast.showToast(
@@ -283,13 +281,7 @@ Future<void> addNewMember(
 
     pickedMember = memberData;
 
-    // print(currentStaffData.staffClubId);
-    // print(currentStaffData.staffCountryCode);
-    // print(currentStaffData.staffEmail);
-    // print(currentStaffData.staffId);
-    // print(currentStaffData.staffName);
-    // print(currentStaffData.staffPhone);
-
+    print('Current member id:: ${pickedMember.memberId}');
   } on SocketException {
     print('Add New Member socket exception (assistantFunction.dart)');
     throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
@@ -635,7 +627,7 @@ Future<void> getAllMemberAttendences(String registrationId) async {
 
 //Update Verify Member Registration//////////////////////////////////////////////////////////////////////////
 
-Future<void> updateMemberVerification(
+Future<bool> updateMemberVerification(
     {BuildContext context, bool verificationStatus}) async {
   String url =
       'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/authentication?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
@@ -647,8 +639,8 @@ Future<void> updateMemberVerification(
           'x-access-token': token
         },
         body: json.encode({
-          "QRCodeURL": verificationStatus == null ? '' : qrCodeURL,
-          "QRCodeUUID": verificationStatus == null ? '' : qrCodeUUID,
+          "QRCodeURL": qrCodeURL,
+          "QRCodeUUID": qrCodeUUID,
           "canAuthenticate": verificationStatus,
           "languageCode": "en"
         }));
@@ -661,8 +653,28 @@ Future<void> updateMemberVerification(
         responseData['whatsappMessage']['isSent'] == false) {
       print(
           'Response::::::::::: ${responseData['whatsappMessage']['message']}');
+
       throw GetRequestException(responseData['whatsappMessage']['message']);
     }
+
+    MemberData memberData = MemberData();
+    memberData.memberId = responseData['updatedMember']['_id'];
+    memberData.clubId = responseData['updatedMember']['clubId'];
+    memberData.memberName = responseData['updatedMember']['name'];
+    memberData.staffId = responseData['updatedMember']['staffId'];
+    memberData.gender = responseData['updatedMember']['gender'];
+    memberData.memberEmail = responseData['updatedMember']['email'];
+    memberData.birthYear = responseData['updatedMember']['birthYear'];
+    memberData.isBlocked = responseData['updatedMember']['isBlocked'];
+    memberData.createdAt = responseData['updatedMember']['createdAt'];
+    memberData.memberPhone = responseData['updatedMember']['phone'];
+    memberData.countryCode = responseData['updatedMember']['countryCode'];
+    memberData.qrCodeURL = responseData['updatedMember']['QRCodeURL'];
+    memberData.qrCodeUUID = responseData['updatedMember']['QRCodeUUID'];
+    memberData.canAuthenticate =
+        responseData['updatedMember']['canAuthenticate'];
+
+    pickedMember = memberData;
   } on SocketException {
     print(
         'update Member Verification Status socket exception (assistantFunction.dart)');
