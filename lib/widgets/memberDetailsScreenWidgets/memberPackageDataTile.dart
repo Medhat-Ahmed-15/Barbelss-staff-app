@@ -35,237 +35,205 @@ class MemberPackageDataTile extends StatelessWidget {
           await refresh();
         }
       },
-      child: Stack(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(right: 15),
-            width: MediaQuery.of(context).size.width,
-            height: 190,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
+      child: Container(
+        margin: const EdgeInsets.only(right: 15),
+        width: MediaQuery.of(context).size.width,
+        height: 190,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: Dismissible(
+                key: UniqueKey(),
+                background: Container(
+                  margin: const EdgeInsets.all(15),
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  child: const Icon(
+                    Icons.delete,
+                    size: 40,
+                    color: Colors.white,
+                  ),
                 ),
-                Expanded(
-                  child: Dismissible(
-                    key: UniqueKey(),
-                    background: Container(
-                      margin: const EdgeInsets.all(15),
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      child: const Icon(
-                        Icons.delete,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                    ),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) async {
-                      try {
-                        setBackgroundLoading();
-                        await deleteRegistration(
-                            context: context,
-                            registrationId:
-                                memberRegistrationsResponseData.registrationId);
+                direction: DismissDirection.endToStart,
+                onDismissed: (direction) async {
+                  try {
+                    setBackgroundLoading();
+                    await deleteRegistration(
+                        context: context,
+                        registrationId:
+                            memberRegistrationsResponseData.registrationId);
 
-                        stopBackgroundLoading();
-                      } on SocketException {
-                        stopBackgroundLoading();
+                    stopBackgroundLoading();
+                  } on SocketException {
+                    stopBackgroundLoading();
 
-                        throw SocketException(AppLocalizations.of(context)
-                            .connectionStatusMessage);
-                      } on GetRequestException catch (error) {
-                        stopBackgroundLoading();
-                        showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) => FeedBackDialog(
-                              titleText: error.toStringMessage(),
-                              gif: 'assets/gifs/fail.json',
-                              enableButton: true,
-                              buttonText:
-                                  AppLocalizations.of(context).doneTitle,
-                              callBackFunction: () {
-                                Navigator.of(context).pop();
-                              },
-                              buttonColor: Colors.redAccent),
-                        );
-                      }
+                    throw SocketException(
+                        AppLocalizations.of(context).connectionStatusMessage);
+                  } on GetRequestException catch (error) {
+                    stopBackgroundLoading();
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) => FeedBackDialog(
+                          titleText: error.toStringMessage(),
+                          gif: 'assets/gifs/fail.json',
+                          enableButton: true,
+                          buttonText: AppLocalizations.of(context).doneTitle,
+                          callBackFunction: () {
+                            Navigator.of(context).pop();
+                          },
+                          buttonColor: Colors.redAccent),
+                    );
+                  }
 
-                      await refresh();
-                    },
-                    confirmDismiss: (direction) async {
-                      return true;
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 15, left: 15),
-                      child: ListTile(
-                          title: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Theme.of(context).primaryColor,
-                                        offset: const Offset(5, 5),
-                                        blurRadius: 1.0,
-                                      )
-                                    ],
-                                    border: Border.all(
-                                      color: Theme.of(context).primaryColor,
-                                    )),
-                                child: Text(
-                                  memberRegistrationsResponseData.packageTitle,
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .headline2
-                                        .color,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              memberRegistrationsResponseData.isFreezed == true
-                                  ? Text(
-                                      '(${AppLocalizations.of(context).freezed})',
-                                      style: const TextStyle(
-                                          color: Colors.grey, fontSize: 11),
-                                    )
-                                  : const Text('')
-                            ],
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.calendar_today,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    AppLocalizations.of(context).attendedTitle,
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .headline2
-                                            .color,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                '${memberRegistrationsResponseData.registrationAttended}/${memberRegistrationsResponseData.packageAttendance}',
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 20),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.lock_clock,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    AppLocalizations.of(context)
-                                        .expirationDateTitle,
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline2
-                                          .color,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                convertDateToDayInNumberMonthInText(
-                                        memberRegistrationsResponseData
-                                            .registrationExpiresAt) +
-                                    " " +
-                                    convertTimeTo12HFormat(
-                                        memberRegistrationsResponseData
-                                            .registrationExpiresAt),
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 20),
-                              ),
-                            ],
-                          ),
-                          contentPadding: const EdgeInsets.all(4),
-                          trailing: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: memberRegistrationsResponseData
-                                          .registrationIsActive ==
-                                      false
-                                  ? Colors.redAccent
-                                  : Colors.green,
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: Colors.black54,
-                                    offset: Offset(0, 4),
-                                    blurRadius: 5.0)
-                              ],
-                              borderRadius: BorderRadius.circular(3),
+                  await refresh();
+                },
+                confirmDismiss: (direction) async {
+                  return true;
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 15, left: 15),
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                color: Theme.of(context).primaryColor,
+                              )),
+                          child: Text(
+                            memberRegistrationsResponseData.packageTitle,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline2.color,
+                              fontWeight: FontWeight.bold,
                             ),
-                            child: Text(
-                              memberRegistrationsResponseData
-                                          .registrationIsActive ==
-                                      false
-                                  ? AppLocalizations.of(context).inActiveTitle
-                                  : AppLocalizations.of(context).activeTitle,
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today,
+                              color: Theme.of(context).primaryColor,
+                              size: 20,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              AppLocalizations.of(context).attendedTitle,
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline2
+                                      .color,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          '${memberRegistrationsResponseData.registrationAttended}/${memberRegistrationsResponseData.packageAttendance}',
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.lock_clock,
+                              color: Theme.of(context).primaryColor,
+                              size: 20,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              AppLocalizations.of(context).expirationDateTitle,
                               style: TextStyle(
                                 color:
-                                    Theme.of(context).textTheme.headline1.color,
+                                    Theme.of(context).textTheme.headline2.color,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          )),
+                          ],
+                        ),
+                        Text(
+                          convertDateToDayInNumberMonthInText(
+                                  memberRegistrationsResponseData
+                                      .registrationExpiresAt) +
+                              " " +
+                              convertTimeTo12HFormat(
+                                  memberRegistrationsResponseData
+                                      .registrationExpiresAt),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    contentPadding: const EdgeInsets.all(4),
+                    trailing: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: memberRegistrationsResponseData.isFreezed == true
+                            ? Colors.blue
+                            : memberRegistrationsResponseData
+                                        .registrationIsActive ==
+                                    false
+                                ? Colors.redAccent
+                                : Colors.green,
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.black54,
+                              offset: Offset(0, 4),
+                              blurRadius: 5.0)
+                        ],
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: Text(
+                        memberRegistrationsResponseData.isFreezed == true
+                            ? AppLocalizations.of(context).freezed
+                            : memberRegistrationsResponseData
+                                        .registrationIsActive ==
+                                    false
+                                ? AppLocalizations.of(context).inActiveTitle
+                                : AppLocalizations.of(context).activeTitle,
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
+              ),
             ),
-          ),
-          memberRegistrationsResponseData.isFreezed == true
-              ? Container(
-                  margin: const EdgeInsets.only(right: 15),
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  decoration: const BoxDecoration(
-                      color: Colors.black26,
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                )
-              : const Text('')
-        ],
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
       ),
     );
   }

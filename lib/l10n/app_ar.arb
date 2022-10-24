@@ -101,7 +101,7 @@
 
      "staffName": "اسم الموظف",
 
-     "attendenceDate": "بيانات الحضور",
+     "attendenceTme": "وقت الحضور",
 
      "packageHasBeenFreezedSuccessfully": "تم تجميد الحزمة بنجاح",
 

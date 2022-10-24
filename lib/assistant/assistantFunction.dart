@@ -19,7 +19,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gym_staff_app/l10n/l10n.dart';
 
 void showToast(String message, BuildContext context) {
   Fluttertoast.showToast(
@@ -109,7 +108,7 @@ Future<void> getAllMembers() async {
   print(
       'All Members Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
 
-  if (decodeData['field'] != null) {
+  if (decodeData['accepted'] == false) {
     throw GetRequestException(decodeData['message']);
   }
 
@@ -143,9 +142,9 @@ Future<void> getAllMemberRegistartions() async {
     print(
         'All Member Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
 
-    // if (decodeData['member'] == null) {
-    //   throw GetRequestException('New Member');
-    // }
+    if (decodeData['accepted'] == false) {
+      throw GetRequestException('Error');
+    }
 
     var allMemberRegistrations = decodeData['memberRegistrations'];
 
@@ -232,6 +231,7 @@ Future<void> addNewMember(
     String gender,
     int age,
     bool isAuthenticate,
+    int membership,
     BuildContext context}) async {
   //Saving in mobile database
 
@@ -254,18 +254,19 @@ Future<void> addNewMember(
           "phone": phone,
           "gender": gender,
           "age": age,
+          "membership": membership,
           "countryCode": phoneCode,
           "staffId": currentStaffData.staffId,
           "canAuthenticate": isAuthenticate,
-          "languageCode": "en",
-          "QRCodeURL": qrCodeURL,
-          "QRCodeUUID": qrCodeUUID
+          "languageCode": localeLanguage == const Locale('en') ? "en" : "ar",
+          // "QRCodeURL": qrCodeURL,
+          // "QRCodeUUID": qrCodeUUID
         }));
     final responseData = json.decode(response.body);
     print(
         'Add New Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['field'] != null) {
+    if (responseData['accepted'] == false) {
       addNewMemberFieldKey = responseData['field'];
       throw GetRequestException(responseData['message']);
     }
@@ -309,9 +310,9 @@ Future<void> getAllPlans() async {
 
   //print(decodeData);
 
-  // if (decodeData['member'] == null) {
-  //   throw GetRequestException('New Member');
-  // }
+  if (decodeData['accepted'] == false) {
+    throw GetRequestException('Error');
+  }
 
   var allPlans = decodeData['packages'];
 
@@ -323,12 +324,6 @@ Future<void> getAllPlans() async {
 
 Future<void> registerPlan(
     {String planId, int planPrice, BuildContext context}) async {
-  print(currentStaffData.staffClubId);
-  print(pickedMember.memberId);
-  print(currentStaffData.staffId);
-  print(planId);
-  print(planPrice);
-
   String url =
       'http://159.223.172.150/api/v1/registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -348,7 +343,7 @@ Future<void> registerPlan(
     final responseData = json.decode(response.body);
     print(responseData);
 
-    if (responseData['field'] != null) {
+    if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message']);
     }
   } on SocketException {
@@ -380,7 +375,7 @@ Future<void> confirmArrival(
     print(
         'Confirm Arrival Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['field'] != null) {
+    if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message']);
     }
   } on SocketException {
@@ -409,7 +404,7 @@ Future<void> cancelAttendence(
     final responseData = json.decode(response.body);
     print(responseData);
 
-    if (responseData['field'] != null) {
+    if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message']);
     }
   } on SocketException {
@@ -439,7 +434,7 @@ Future<void> deleteRegistration(
   print(
       'Delete Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-  if (responseData['field'] != null) {
+  if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message']);
   }
 }
@@ -492,7 +487,7 @@ Future<void> updateMemberQrCode({BuildContext context}) async {
     print(
         'Update Member Qr Code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['field'] != null) {
+    if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message']);
     }
 
@@ -523,7 +518,7 @@ Future<void> sendVerificationCodeToWhatsApp(BuildContext context) async {
     print(
         'Send QrCode Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['field'] != null) {
+    if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message']);
     }
   } on SocketException {
@@ -554,7 +549,7 @@ Future<void> freezeRegistration(
     print(
         'Freeze Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['field'] != null) {
+    if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message']);
     }
   } on SocketException {
@@ -583,7 +578,7 @@ Future<void> reactivateRegestration(
     print(
         'Reactivate Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['field'] != null) {
+    if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message']);
     }
   } on SocketException {
@@ -627,8 +622,11 @@ Future<void> getAllMemberAttendences(String registrationId) async {
 
 //Update Verify Member Registration//////////////////////////////////////////////////////////////////////////
 
-Future<bool> updateMemberVerification(
+Future<void> updateMemberVerification(
     {BuildContext context, bool verificationStatus}) async {
+  print(pickedMember.memberId);
+  print(pickedMember.memberId);
+
   String url =
       'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/authentication?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -642,7 +640,7 @@ Future<bool> updateMemberVerification(
           "QRCodeURL": qrCodeURL,
           "QRCodeUUID": qrCodeUUID,
           "canAuthenticate": verificationStatus,
-          "languageCode": "en"
+          "languageCode": localeLanguage == const Locale('en') ? "en" : "ar"
         }));
     final responseData = jsonDecode(response.body.toString());
     print(
@@ -678,6 +676,110 @@ Future<bool> updateMemberVerification(
   } on SocketException {
     print(
         'update Member Verification Status socket exception (assistantFunction.dart)');
+    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  }
+}
+
+//Add Attendance By Member//////////////////////////////////////////////////////////////////////////
+
+Future<void> addAttendanceBymember(
+    {String memberId, BuildContext context}) async {
+  String url =
+      'http://159.223.172.150/api/v1/attendances/members/$memberId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+    );
+    final responseData = json.decode(response.body);
+    print(
+        'Add Attendance By Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(
+          '${responseData['message']}\n${responseData['note']}');
+    }
+  } on SocketException {
+    print('Add Attendance By Member exception (assistantFunction.dart)');
+    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  }
+}
+//Forget Password Package///////////////////////////////////////////////
+
+Future<void> memberForgetPassword(String email, BuildContext context) async {
+  String url =
+      'http://159.223.172.150/api/v1/auth/reset-password/mail/staff?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+  try {
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: json.encode({"email": email}));
+
+    final responseData = json.decode(response.body);
+    print(responseData);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message']);
+    }
+  } on SocketException {
+    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  }
+}
+
+//Block Member//////////////////////////////////////////////////////////
+
+Future<void> blockMember(
+  BuildContext context,
+) async {
+  String url =
+      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+  try {
+    final response = await http.patch(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode(
+        {
+          "isBlocked": !pickedMember.isBlocked,
+        },
+      ),
+    );
+
+    final responseData = json.decode(response.body);
+    print(responseData);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message']);
+    }
+
+    MemberData memberData = MemberData();
+    memberData.memberId = responseData['member']['_id'];
+    memberData.clubId = responseData['member']['clubId'];
+    memberData.memberName = responseData['member']['name'];
+    memberData.staffId = responseData['member']['staffId'];
+    memberData.gender = responseData['member']['gender'];
+    memberData.memberEmail = responseData['member']['email'];
+    memberData.birthYear = responseData['member']['birthYear'];
+    memberData.isBlocked = responseData['member']['isBlocked'];
+    memberData.createdAt = responseData['member']['createdAt'];
+    memberData.memberPhone = responseData['member']['phone'];
+    memberData.countryCode = responseData['member']['countryCode'];
+    memberData.qrCodeURL = responseData['member']['QRCodeURL'];
+    memberData.qrCodeUUID = responseData['member']['QRCodeUUID'];
+    memberData.canAuthenticate = responseData['member']['canAuthenticate'];
+
+    pickedMember = memberData;
+  } on SocketException {
     throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
   }
 }

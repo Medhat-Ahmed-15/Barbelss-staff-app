@@ -34,7 +34,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
   bool isInit = true;
 
   String barcodeData;
-  String freezeButtonText = '';
 
   @override
   void didChangeDependencies() async {
@@ -54,9 +53,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             loadingMemberRegistrationsData = false;
             connectionError = false;
             empty = false;
-            freezeButtonText = allMemberRegistrationsList[0].isFreezed == false
-                ? 'Freeze Package'
-                : 'Reactivate';
           });
         }
 
@@ -343,7 +339,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Theme.of(context).primaryColor,
-                              decoration: TextDecoration.underline,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -421,7 +416,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   ],
                   colorStartAnimation: Theme.of(context).primaryColor,
                   colorEndAnimation: Theme.of(context).primaryColor,
-                  animatedIconData: AnimatedIcons.menu_close,
+                  animatedIconData: AnimatedIcons.view_list,
                 ),
     );
   }
@@ -451,187 +446,86 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             return;
           }
 
-          if (pickedMember.canAuthenticate == true) {
-            String value = await showDialog(
+          if (pickedMember.isBlocked == true) {
+            showDialog(
               context: context,
               barrierDismissible: true,
-              builder: (BuildContext context) => ScanQrCodeDialog(),
+              builder: (BuildContext context) => FeedBackDialog(
+                  titleText: 'Sorry member is blocked',
+                  gif: 'assets/gifs/fail.json',
+                  enableButton: true,
+                  buttonText: AppLocalizations.of(context).doneTitle,
+                  callBackFunction: () {
+                    Navigator.of(context).pop();
+                  },
+                  buttonColor: Colors.redAccent),
+            );
+            return;
+          }
+
+          try {
+            setState(() {
+              confirmationLoading = true;
+            });
+            await confirmArrival(
+                context: context,
+                registrationId: allMemberRegistrationsList[0].registrationId);
+
+            confirmationLoading = false;
+            await refresh();
+            enableConfirming = false;
+
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) => FeedBackDialog(
+                  titleText: AppLocalizations.of(context)
+                      .updatedAttendenceSuccessfully,
+                  gif: 'assets/gifs/success.json',
+                  enableButton: true,
+                  buttonText: AppLocalizations.of(context).doneTitle,
+                  callBackFunction: () {
+                    Navigator.of(context).pop();
+                  },
+                  buttonColor: Theme.of(context).primaryColor),
+            );
+          } on GetRequestException catch (error) {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) => FeedBackDialog(
+                  titleText: error.toStringMessage(),
+                  gif: 'assets/gifs/fail.json',
+                  enableButton: true,
+                  buttonText: AppLocalizations.of(context).doneTitle,
+                  callBackFunction: () {
+                    Navigator.of(context).pop();
+                  },
+                  buttonColor: Colors.redAccent),
             );
 
-            if (value == null) {
-              return;
-            } else {
-              barcodeData = value;
-
-              if (barcodeData == 'Failed To Scan') {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) => FeedBackDialog(
-                      titleText: barcodeData,
-                      gif: 'assets/gifs/fail.json',
-                      enableButton: true,
-                      buttonText: AppLocalizations.of(context).doneTitle,
-                      callBackFunction: () {
-                        Navigator.of(context).pop();
-                      },
-                      buttonColor: Colors.redAccent),
-                );
-              } else {
-                Map decodedBarcodeData = json.decode(barcodeData);
-
-                if (decodedBarcodeData['memberName'] ==
-                        pickedMember.memberName &&
-                    decodedBarcodeData['memberPhone'] ==
-                        pickedMember.memberPhone &&
-                    decodedBarcodeData['uuid'] == pickedMember.qrCodeUUID) {
-                  try {
-                    setState(() {
-                      confirmationLoading = true;
-                    });
-                    await confirmArrival(
-                        context: context,
-                        registrationId:
-                            allMemberRegistrationsList[0].registrationId);
-
-                    confirmationLoading = false;
-                    await refresh();
-                    enableConfirming = false;
-
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) => FeedBackDialog(
-                          titleText: AppLocalizations.of(context)
-                              .updatedAttendenceSuccessfully,
-                          gif: 'assets/gifs/success.json',
-                          enableButton: true,
-                          buttonText: AppLocalizations.of(context).doneTitle,
-                          callBackFunction: () {
-                            Navigator.of(context).pop();
-                          },
-                          buttonColor: Theme.of(context).primaryColor),
-                    );
-                  } on GetRequestException catch (error) {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) => FeedBackDialog(
-                          titleText: error.toStringMessage(),
-                          gif: 'assets/gifs/fail.json',
-                          enableButton: true,
-                          buttonText: AppLocalizations.of(context).doneTitle,
-                          callBackFunction: () {
-                            Navigator.of(context).pop();
-                          },
-                          buttonColor: Colors.redAccent),
-                    );
-
-                    setState(() {
-                      confirmationLoading = false;
-                    });
-                  } on SocketException {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) => FeedBackDialog(
-                          titleText: AppLocalizations.of(context)
-                              .connectionStatusMessage,
-                          gif: 'assets/gifs/fail.json',
-                          enableButton: true,
-                          buttonText: AppLocalizations.of(context).doneTitle,
-                          callBackFunction: () {
-                            Navigator.of(context).pop();
-                          },
-                          buttonColor: Colors.redAccent),
-                    );
-
-                    setState(() {
-                      confirmationLoading = false;
-                    });
-                  }
-                } else {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) => FeedBackDialog(
-                        titleText: AppLocalizations.of(context).usersDontMatch,
-                        gif: 'assets/gifs/fail.json',
-                        enableButton: true,
-                        buttonText: AppLocalizations.of(context).doneTitle,
-                        callBackFunction: () {
-                          Navigator.of(context).pop();
-                        },
-                        buttonColor: Colors.redAccent),
-                  );
-                }
-              }
-            }
-          } else {
-            try {
-              setState(() {
-                confirmationLoading = true;
-              });
-              await confirmArrival(
-                  context: context,
-                  registrationId: allMemberRegistrationsList[0].registrationId);
-
+            setState(() {
               confirmationLoading = false;
-              await refresh();
-              enableConfirming = false;
+            });
+          } on SocketException {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) => FeedBackDialog(
+                  titleText:
+                      AppLocalizations.of(context).connectionStatusMessage,
+                  gif: 'assets/gifs/fail.json',
+                  enableButton: true,
+                  buttonText: AppLocalizations.of(context).doneTitle,
+                  callBackFunction: () {
+                    Navigator.of(context).pop();
+                  },
+                  buttonColor: Colors.redAccent),
+            );
 
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) => FeedBackDialog(
-                    titleText: AppLocalizations.of(context)
-                        .updatedAttendenceSuccessfully,
-                    gif: 'assets/gifs/success.json',
-                    enableButton: true,
-                    buttonText: AppLocalizations.of(context).doneTitle,
-                    callBackFunction: () {
-                      Navigator.of(context).pop();
-                    },
-                    buttonColor: Theme.of(context).primaryColor),
-              );
-            } on GetRequestException catch (error) {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) => FeedBackDialog(
-                    titleText: error.toStringMessage(),
-                    gif: 'assets/gifs/fail.json',
-                    enableButton: true,
-                    buttonText: AppLocalizations.of(context).doneTitle,
-                    callBackFunction: () {
-                      Navigator.of(context).pop();
-                    },
-                    buttonColor: Colors.redAccent),
-              );
-
-              setState(() {
-                confirmationLoading = false;
-              });
-            } on SocketException {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (BuildContext context) => FeedBackDialog(
-                    titleText:
-                        AppLocalizations.of(context).connectionStatusMessage,
-                    gif: 'assets/gifs/fail.json',
-                    enableButton: true,
-                    buttonText: AppLocalizations.of(context).doneTitle,
-                    callBackFunction: () {
-                      Navigator.of(context).pop();
-                    },
-                    buttonColor: Colors.redAccent),
-              );
-
-              setState(() {
-                confirmationLoading = false;
-              });
-            }
+            setState(() {
+              confirmationLoading = false;
+            });
           }
         },
         label: Text(
@@ -656,6 +550,22 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       child: FloatingActionButton.extended(
           heroTag: 'btn2',
           onPressed: () async {
+            if (pickedMember.isBlocked == true) {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) => FeedBackDialog(
+                    titleText: 'Sorry member is blocked',
+                    gif: 'assets/gifs/fail.json',
+                    enableButton: true,
+                    buttonText: AppLocalizations.of(context).doneTitle,
+                    callBackFunction: () {
+                      Navigator.of(context).pop();
+                    },
+                    buttonColor: Colors.redAccent),
+              );
+              return;
+            }
             try {
               setState(() {
                 confirmationLoading = true;

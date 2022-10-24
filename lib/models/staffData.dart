@@ -7,13 +7,16 @@ class StaffData {
   String staffEmail;
   String staffPhone;
   String staffCountryCode;
+  String clubName;
+  bool hasMembership;
 
-  StaffData({
-    this.staffId,
-    this.staffClubId,
-    this.staffName,
-    this.staffEmail,
-    this.staffPhone,
-    this.staffCountryCode,
-  });
+  StaffData(
+      {this.staffId,
+      this.staffClubId,
+      this.staffName,
+      this.staffEmail,
+      this.staffPhone,
+      this.hasMembership,
+      this.staffCountryCode,
+      this.clubName});
 }

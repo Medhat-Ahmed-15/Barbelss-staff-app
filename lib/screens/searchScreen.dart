@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import 'package:gym_staff_app/widgets/searchScreenWidgets/memberDataTile.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../globalVariables.dart';
+import '../widgets/feedBackDialog.dart';
+import '../widgets/scanQrCodeDialog.dart';
 
 class SearchScreen extends StatefulWidget {
   static const routeName = '/SearchScreen';
@@ -27,6 +30,8 @@ class _SearchScreenState extends State<SearchScreen> {
   bool connectionError = false;
   bool empty = false;
   bool isInit = true;
+  bool confirmationLoading = false;
+  String barcodeData;
   final searchController = TextEditingController();
 
   @override
@@ -115,7 +120,7 @@ class _SearchScreenState extends State<SearchScreen> {
             left: 0,
             right: 0,
             child: Container(
-              height: 200,
+              height: 150,
               decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   boxShadow: const [
@@ -130,9 +135,10 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Column(
                 children: [
                   const SizedBox(
-                    height: 90,
+                    height: 60,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         onPressed: () {
@@ -144,15 +150,16 @@ class _SearchScreenState extends State<SearchScreen> {
                           size: 25,
                         ),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        AppLocalizations.of(context).searchForAMember,
-                        style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1.color,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, AddNewMemberScreen.routeName);
+                        },
+                        icon: Icon(
+                          Icons.add,
+                          color: Theme.of(context).iconTheme.color,
+                          size: 25,
+                        ),
                       ),
                     ],
                   ),
@@ -164,7 +171,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Positioned(
             child: Padding(
               padding: const EdgeInsets.only(
-                top: 170,
+                top: 120,
                 left: 15,
                 right: 15,
               ),
@@ -244,7 +251,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Positioned(
             child: Padding(
                 padding: EdgeInsets.only(
-                    top: 250,
+                    top: 200,
                     left: localeLanguage == const Locale('en') ? 50 : 0,
                     right: localeLanguage != const Locale('en') ? 50 : 0),
                 child: Row(
@@ -282,7 +289,7 @@ class _SearchScreenState extends State<SearchScreen> {
           //Members List
           Padding(
             padding: const EdgeInsets.only(
-              top: 290,
+              top: 230,
               left: 15,
               right: 15,
             ),
@@ -300,7 +307,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               lot.LottieBuilder.asset('assets/gifs/error.json'),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 150,
                         height: 45,
                         child: ElevatedButton(
@@ -375,38 +382,125 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           ),
           ),
+
+          confirmationLoading == true
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(
+                    child: LoadingAnimationWidget.fourRotatingDots(
+                      color: Theme.of(context).primaryColor,
+                      size: 50,
+                    ),
+                  ),
+                  color: Colors.black38,
+                )
+              : const SizedBox(
+                  height: 0,
+                ),
         ],
       ),
-      floatingActionButton: OpenContainer(
-        transitionDuration: const Duration(seconds: 1),
-        closedColor: Theme.of(context).primaryColor,
-        openColor: Theme.of(context).primaryColor,
-        closedShape: const CircleBorder(),
-        openBuilder: (context, _) => AddNewMemberScreen(),
-        closedBuilder: (context, openContainer) => FloatingActionButton(
-          heroTag: 'btn1',
-          child: Icon(
-            Icons.add,
-            size: 30,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          onPressed: openContainer,
-          backgroundColor: Theme.of(context).primaryColor,
+      floatingActionButton: FloatingActionButton(
+        heroTag: 'btn1',
+        child: Icon(
+          Icons.qr_code,
+          size: 30,
+          color: Theme.of(context).iconTheme.color,
         ),
-      ),
+        onPressed: () async {
+          String value = await showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) => ScanQrCodeDialog(),
+          );
 
-      // floatingActionButton: FloatingActionButton(
-      //   heroTag: 'btn1',
-      //   child: Icon(
-      //     Icons.add,
-      //     size: 30,
-      //     color: Theme.of(context).iconTheme.color,
-      //   ),
-      //   onPressed: () {
-      //     Navigator.pushNamed(context, AddNewMemberScreen.routeName);
-      //   },
-      //   backgroundColor: Theme.of(context).primaryColor,
-      // ),
+          if (value == null) {
+            return;
+          } else {
+            barcodeData = value;
+
+            if (barcodeData == 'Failed To Scan') {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) => FeedBackDialog(
+                    titleText: barcodeData,
+                    gif: 'assets/gifs/fail.json',
+                    enableButton: true,
+                    buttonText: AppLocalizations.of(context).doneTitle,
+                    callBackFunction: () {
+                      Navigator.of(context).pop();
+                    },
+                    buttonColor: Colors.redAccent),
+              );
+            } else {
+              try {
+                setState(() {
+                  confirmationLoading = true;
+                });
+                Map decodedBarcodeData = json.decode(barcodeData);
+
+                await addAttendanceBymember(
+                    context: context, memberId: decodedBarcodeData['memberId']);
+
+                setState(() {
+                  confirmationLoading = false;
+                });
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText: AppLocalizations.of(context)
+                          .updatedAttendenceSuccessfully,
+                      gif: 'assets/gifs/success.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Theme.of(context).primaryColor),
+                );
+              } on GetRequestException catch (error) {
+                setState(() {
+                  confirmationLoading = false;
+                });
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText: error.toStringMessage(),
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+              } on SocketException {
+                setState(() {
+                  confirmationLoading = false;
+                });
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText:
+                          AppLocalizations.of(context).connectionStatusMessage,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+              }
+            }
+          }
+        },
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
     );
   }
 }

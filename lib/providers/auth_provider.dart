@@ -55,6 +55,8 @@ class AuthProvider with ChangeNotifier {
     staffData.staffName = responseData['staff']['name'];
     staffData.staffPhone = responseData['staff']['phone'];
     staffData.staffCountryCode = responseData['staff']['countryCode'];
+    staffData.clubName = responseData['club']['name'];
+    staffData.hasMembership = responseData['club']['hasMembership'];
 
     currentStaffData = staffData;
 
@@ -77,6 +79,8 @@ class AuthProvider with ChangeNotifier {
       'staffName': responseData['staff']['name'],
       'staffPhone': responseData['staff']['phone'],
       'staffCountryCode': responseData['staff']['countryCode'],
+      'clubName': responseData['club']['name'],
+      'hasmembership': responseData['club']['hasMembership']
     });
 
     prefs.setString('staffDataInStorage', staffDataInStorage);
@@ -102,15 +106,11 @@ class AuthProvider with ChangeNotifier {
       staffData.staffName = extractedUserData['staffName'];
       staffData.staffPhone = extractedUserData['staffPhone'];
       staffData.staffCountryCode = extractedUserData['staffCountryCode'];
+      staffData.clubName = extractedUserData['clubName'];
+      staffData.hasMembership = extractedUserData['hasMembership'];
 
       currentStaffData = staffData;
 
-      // print(currentStaffData.staffClubId);
-      // print(currentStaffData.staffCountryCode);
-      // print(currentStaffData.staffEmail);
-      // print(currentStaffData.staffId);
-      // print(currentStaffData.staffName);
-      // print(currentStaffData.staffPhone);
       notifyListeners();
       return true;
     } else {

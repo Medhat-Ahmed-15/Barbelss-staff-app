@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/providers/localLanguageProvider.dart';
 import 'package:gym_staff_app/screens/changeLanguageScreen.dart';
+import 'package:gym_staff_app/screens/forgotPassword_screen.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
 import 'package:gym_staff_app/screens/loginScreen.dart';
 import 'package:gym_staff_app/screens/memberDetailsScreen.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
           builder: (ctx, authProviderObj, localLanguageProviderObj, _) =>
               OverlaySupport.global(
                 child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
                   supportedLocales: L10n.all,
                   localizationsDelegates: const [
                     AppLocalizations.delegate, // Add this line
@@ -90,6 +92,8 @@ class MyApp extends StatelessWidget {
                   locale: localLanguageProviderObj.locale,
                   routes: {
                     LoginScreen.routeName: (ctx) => LoginScreen(),
+                    ForgotPasswordScreen.routeName: (ctx) =>
+                        ForgotPasswordScreen(),
                     MemberPersonalDataScreen.routeName: (ctx) =>
                         MemberPersonalDataScreen(),
                     MemberPackageDetailsScreen.routeName: (ctx) =>

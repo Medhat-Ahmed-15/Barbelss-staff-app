@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../assistant/assistantFunction.dart';
 import '../widgets/feedBackDialog.dart';
@@ -18,6 +18,7 @@ class MemberPersonalDataScreen extends StatefulWidget {
 
 class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
   bool allowVerification = pickedMember.canAuthenticate;
+  bool loading = false;
 
   void toggleSwitch(bool value) async {
     try {
@@ -135,6 +136,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15, right: 15),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
                           radius: 36.0,
@@ -168,7 +170,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                             Text(
                               pickedMember.memberName,
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  // fontWeight: FontWeight.bold,
                                   fontSize: 18.0,
                                   color: Colors.grey),
                             ),
@@ -176,7 +178,6 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                         ),
                         Expanded(child: Container()),
                         Container(
-                          width: 100,
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: pickedMember.isBlocked == true
@@ -259,7 +260,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           Text(
                             pickedMember.memberEmail,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                                // fontWeight: FontWeight.bold,
                                 fontSize: 18.0,
                                 color: Colors.grey),
                           ),
@@ -281,7 +282,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           Text(
                             pickedMember.memberPhone,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                                //  fontWeight: FontWeight.bold,
                                 fontSize: 18.0,
                                 color: Colors.grey),
                           ),
@@ -454,46 +455,127 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15, right: 15),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 56,
-                      decoration: const BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black54,
-                              offset: Offset(0, 4),
-                              blurRadius: 5.0)
-                        ],
-                      ),
-                      child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.redAccent),
-                            overlayColor: MaterialStateProperty.all(
-                                Theme.of(context).scaffoldBackgroundColor),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ))),
-                        onPressed: () async {},
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                            bottom: 10,
+                  loading == true
+                      ? Center(
+                          child: LoadingAnimationWidget.fourRotatingDots(
+                            color: Theme.of(context).primaryColor,
+                            size: 50,
                           ),
-                          child: Text(
-                            AppLocalizations.of(context).blockMember,
-                            style: TextStyle(
-                                color:
-                                    Theme.of(context).textTheme.headline1.color,
-                                fontSize: 18),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 56,
+                            decoration: const BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black54,
+                                    offset: Offset(0, 4),
+                                    blurRadius: 5.0)
+                              ],
+                            ),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      pickedMember.isBlocked == true
+                                          ? Colors.green
+                                          : Colors.redAccent),
+                                  overlayColor: MaterialStateProperty.all(
+                                      Theme.of(context)
+                                          .scaffoldBackgroundColor),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ))),
+                              onPressed: () async {
+                                try {
+                                  setState(() {
+                                    loading = true;
+                                  });
+                                  await blockMember(context);
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) =>
+                                        FeedBackDialog(
+                                            titleText:
+                                                'Member is blocked successfully',
+                                            gif: 'assets/gifs/success.json',
+                                            enableButton: true,
+                                            buttonText:
+                                                AppLocalizations.of(context)
+                                                    .doneTitle,
+                                            callBackFunction: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            buttonColor:
+                                                Theme.of(context).primaryColor),
+                                  );
+
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                } on GetRequestException catch (error) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) =>
+                                        FeedBackDialog(
+                                            titleText: error.toStringMessage(),
+                                            gif: 'assets/gifs/fail.json',
+                                            enableButton: true,
+                                            buttonText:
+                                                AppLocalizations.of(context)
+                                                    .doneTitle,
+                                            callBackFunction: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            buttonColor: Colors.redAccent),
+                                  );
+                                } on SocketException catch (error) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) =>
+                                        FeedBackDialog(
+                                            titleText:
+                                                AppLocalizations.of(context)
+                                                    .connectionStatusMessage,
+                                            gif: 'assets/gifs/fail.json',
+                                            enableButton: true,
+                                            buttonText:
+                                                AppLocalizations.of(context)
+                                                    .doneTitle,
+                                            callBackFunction: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            buttonColor: Colors.redAccent),
+                                  );
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 10,
+                                  bottom: 10,
+                                ),
+                                child: Text(
+                                  pickedMember.isBlocked == true
+                                      ? 'Unblock Member'
+                                      : AppLocalizations.of(context)
+                                          .blockMember,
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          .color,
+                                      fontSize: 18),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

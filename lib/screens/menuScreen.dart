@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/menuItem.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
@@ -44,6 +45,26 @@ class _MenuScreenState extends State<MenuScreen> {
             }),
             const Spacer(
               flex: 3,
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Text(
+                'Barbells',
+                style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 15, bottom: 15),
+              child: Text(
+                'version: 1.0.0+1',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              ),
             ),
           ],
         ),

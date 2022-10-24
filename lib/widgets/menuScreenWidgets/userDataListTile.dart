@@ -25,6 +25,15 @@ class userDataListTile extends StatelessWidget {
             color: Theme.of(context).textTheme.headline1.color,
             fontWeight: FontWeight.bold),
       ),
+      subtitle: Text(
+        '${currentStaffData.clubName} Gym',
+        style: const TextStyle(
+          color: Colors.grey,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
     );
   }
 }

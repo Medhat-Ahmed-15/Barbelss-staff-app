@@ -67,6 +67,7 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                   "memberName": widget.name.toString(),
                   "memberEmail": widget.email.toString(),
                   "memberPhone": widget.phone.toString(),
+                  "memberId": pickedMember.memberId,
                   "uuid": qrCodeUUID
                 }),
 

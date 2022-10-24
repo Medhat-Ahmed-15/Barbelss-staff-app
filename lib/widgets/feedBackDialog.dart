@@ -1,11 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
-import 'package:gym_staff_app/globalVariables.dart';
-import 'package:gym_staff_app/widgets/shimmerEffect.dart';
 import 'package:lottie/lottie.dart' as lot;
-
-import '../assistant/assistantFunction.dart';
 
 class FeedBackDialog extends StatefulWidget {
   String titleText;

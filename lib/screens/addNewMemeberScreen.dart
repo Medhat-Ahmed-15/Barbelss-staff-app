@@ -36,11 +36,12 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
   String phoneCode = '20';
   String gender = '';
 
-  bool isAuthenticate = false;
+  bool isAuthenticate = true;
   bool maleChosen = false;
   bool femaleChosen = false;
   bool responseFomQrDialog = true;
   bool loading = false;
+  bool isInit = true;
 
   FocusNode emailFocusNode = FocusNode();
   FocusNode nameFocusNode = FocusNode();
@@ -53,10 +54,10 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
   StepperType stepperType = StepperType.vertical;
 
   next() {
-    currentStep + 1 != 5
+    currentStep + 1 != 4
         ? goTo(currentStep + 1)
         : setState(() {
-            complete = true;
+            currentStep = 0;
           });
   }
 
@@ -144,6 +145,17 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         return;
       }
 
+      await addNewMember(
+          context: context,
+          email: emailController.text.trim(),
+          gender: gender.trim(),
+          name: nameController.text.trim(),
+          age: int.parse(ageController.text),
+          phone: phoneController.text,
+          isAuthenticate: isAuthenticate,
+          membership: int.parse(membershipController.text.trim()),
+          phoneCode: phoneCode);
+
       if (isAuthenticate == true) {
         responseFomQrDialog = await showDialog(
           context: context,
@@ -157,16 +169,8 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         );
       }
       if (responseFomQrDialog == true) {
-        await addNewMember(
-            context: context,
-            email: emailController.text,
-            gender: gender,
-            name: nameController.text,
-            age: int.parse(ageController.text),
-            phone: phoneController.text,
-            isAuthenticate: isAuthenticate,
-            phoneCode: phoneCode);
-
+        await updateMemberVerification(
+            context: context, verificationStatus: isAuthenticate);
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -318,7 +322,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
     ageController.dispose();
   }
 
-  List<Step> steps(BuildContext context) {
+  List<Step> getSteps(BuildContext context) {
     List<Step> steps = [
       //Name  Email  Phone age******************
       Step(
@@ -845,7 +849,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         ),
       ),
     ];
-
     return steps;
   }
 
@@ -885,7 +888,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                     colorScheme: ColorScheme.light(
                         primary: Theme.of(context).primaryColor)),
                 child: Stepper(
-                  steps: steps(context),
+                  steps: getSteps(context),
                   type: stepperType,
                   currentStep: currentStep,
                   onStepContinue: next,

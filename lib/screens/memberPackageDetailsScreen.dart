@@ -45,7 +45,6 @@ class _MemberPackageDetailsScreenState
               empty = true;
             });
           } else {
-            print('msh empty');
             setState(() {
               loadingMemberAttendencesData = false;
               connectionError = false;

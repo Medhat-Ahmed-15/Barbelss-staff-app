@@ -51,7 +51,9 @@ class MemberAttendencesDataTile extends StatelessWidget {
                   ),
                   Text(
                     memberAttendencesData.staffName,
-                    style: const TextStyle(color: Colors.grey, fontSize: 20),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                    ),
                   ),
                   const SizedBox(
                     height: 10,
@@ -67,7 +69,7 @@ class MemberAttendencesDataTile extends StatelessWidget {
                         width: 10,
                       ),
                       Text(
-                        AppLocalizations.of(context).attendenceDate,
+                        AppLocalizations.of(context).attendenceTme,
                         style: TextStyle(
                           color: Theme.of(context).textTheme.headline2.color,
                           fontSize: 16,
@@ -77,13 +79,19 @@ class MemberAttendencesDataTile extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    convertDateToDayInNumberMonthInText(
-                            memberAttendencesData.createdAt) +
-                        " " +
-                        convertTimeTo12HFormat(memberAttendencesData.createdAt),
-                    style: const TextStyle(color: Colors.grey, fontSize: 20),
+                    convertTimeTo12HFormat(memberAttendencesData.createdAt),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                    ),
                   ),
                 ],
+              ),
+              trailing: Text(
+                convertDateToDayInNumberMonthInText(
+                    memberAttendencesData.createdAt),
+                style: const TextStyle(
+                  color: Colors.grey,
+                ),
               ),
               contentPadding: const EdgeInsets.all(4),
             ),

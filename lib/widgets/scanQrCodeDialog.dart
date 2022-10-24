@@ -24,15 +24,12 @@ class _ScanQrCodeDialogState extends State<ScanQrCodeDialog> {
               //controller: MobileScannerController(),
               onDetect: (barcode, args) async {
                 if (barcode.rawValue == null) {
-                  print('Failed To Scan');
                   Navigator.of(context).pop('Failed To Scan');
                 } else {
-                  print('Scanned ');
                   if (await Vibration.hasCustomVibrationsSupport()) {
                     Vibration.vibrate();
                   }
                   final String data = barcode.rawValue;
-                  print('Data:: ${data}');
                   Navigator.of(context).pop(data);
                 }
               }),

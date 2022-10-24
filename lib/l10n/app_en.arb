@@ -251,7 +251,7 @@
       "description": " "
     },
 
-    "attendenceDate": "Attendance Date",
+    "attendenceTme": "Attendance Time",
     "@language": {
       "description": " "
     },
