@@ -233,8 +233,6 @@ Future<void> addNewMember(
     bool isAuthenticate,
     int membership,
     BuildContext context}) async {
-  //Saving in mobile database
-
   String url =
       'http://159.223.172.150/api/v1/members?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -259,8 +257,6 @@ Future<void> addNewMember(
           "staffId": currentStaffData.staffId,
           "canAuthenticate": isAuthenticate,
           "languageCode": localeLanguage == const Locale('en') ? "en" : "ar",
-          // "QRCodeURL": qrCodeURL,
-          // "QRCodeUUID": qrCodeUUID
         }));
     final responseData = json.decode(response.body);
     print(
@@ -279,6 +275,11 @@ Future<void> addNewMember(
     memberData.memberEmail = responseData['newMember']['email'];
     memberData.memberPhone = responseData['newMember']['phone'];
     memberData.countryCode = responseData['newMember']['countryCode'];
+    memberData.staffId = responseData['newMember']['staffId'];
+    memberData.membership = responseData['newMember']['membership'];
+    memberData.gender = responseData['newMember']['gender'];
+    memberData.canAuthenticate = responseData['newMember']['canAuthenticate'];
+    memberData.isBlocked = responseData['newMember']['isBlocked'];
 
     pickedMember = memberData;
 

@@ -451,7 +451,24 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               context: context,
               barrierDismissible: true,
               builder: (BuildContext context) => FeedBackDialog(
-                  titleText: 'Sorry member is blocked',
+                  titleText: AppLocalizations.of(context).sorryMemberIsBlocked,
+                  gif: 'assets/gifs/fail.json',
+                  enableButton: true,
+                  buttonText: AppLocalizations.of(context).doneTitle,
+                  callBackFunction: () {
+                    Navigator.of(context).pop();
+                  },
+                  buttonColor: Colors.redAccent),
+            );
+            return;
+          }
+
+          if (allMemberRegistrationsList[0].isFreezed == true) {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) => FeedBackDialog(
+                  titleText: AppLocalizations.of(context).packageIsfreezed,
                   gif: 'assets/gifs/fail.json',
                   enableButton: true,
                   buttonText: AppLocalizations.of(context).doneTitle,
@@ -555,7 +572,25 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                 context: context,
                 barrierDismissible: true,
                 builder: (BuildContext context) => FeedBackDialog(
-                    titleText: 'Sorry member is blocked',
+                    titleText:
+                        AppLocalizations.of(context).sorryMemberIsBlocked,
+                    gif: 'assets/gifs/fail.json',
+                    enableButton: true,
+                    buttonText: AppLocalizations.of(context).doneTitle,
+                    callBackFunction: () {
+                      Navigator.of(context).pop();
+                    },
+                    buttonColor: Colors.redAccent),
+              );
+              return;
+            }
+
+            if (allMemberRegistrationsList[0].isFreezed == true) {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) => FeedBackDialog(
+                    titleText: AppLocalizations.of(context).packageIsfreezed,
                     gif: 'assets/gifs/fail.json',
                     enableButton: true,
                     buttonText: AppLocalizations.of(context).doneTitle,

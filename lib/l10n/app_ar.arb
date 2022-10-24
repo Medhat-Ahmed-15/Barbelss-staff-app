@@ -171,7 +171,15 @@
 
      "memberId": "معرف العضو",
 
-     "ageMustBeSpecified": "يجب تحديد العمر"
+     "ageMustBeSpecified": "يجب تحديد العمر",
+
+     "memberAddedWithoutVerify": "تمت إضافة العضو بنجاح بدون التحقق",
+
+     "membershipIsRequired": "العضوية مطلوبة",
+
+     "sorryMemberIsBlocked": "العضوية مطلوبة",
+
+     "packageIsfreezed": "عذرا ، الحزمة مجمدة"
 
 
 

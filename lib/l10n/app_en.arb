@@ -430,6 +430,26 @@
      "ageMustBeSpecified": "Age must be specified",
     "@language": {
       "description": " "
+    },
+
+    "memberAddedWithoutVerify": "Member added successfully without verification",
+    "@language": {
+      "description": " "
+    },
+
+    "membershipIsRequired": "Membership is required",
+    "@language": {
+      "description": " "
+    },
+
+    "sorryMemberIsBlocked": "Sorry member is blocked",
+    "@language": {
+      "description": " "
+    },
+
+    "packageIsfreezed": "Sorry package is freezed",
+    "@language": {
+      "description": " "
     }
 
 

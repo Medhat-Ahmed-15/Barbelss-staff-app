@@ -101,38 +101,17 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                       onPressed: () async {
                         //export image
 
-                        try {
-                          setState(() {
-                            loading = true;
-                          });
+                        setState(() {
+                          loading = true;
+                        });
 
-                          var response = await extractImageAndPutInFirebase(
-                              globalKey, widget.phone);
-                          Navigator.of(context).pop(response);
+                        var response = await extractImageAndPutInFirebase(
+                            globalKey, widget.phone);
+                        Navigator.of(context).pop(response);
 
-                          setState(() {
-                            loading = false;
-                          });
-                        } catch (error) {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) => FeedBackDialog(
-                                titleText: error.toString(),
-                                gif: 'assets/gifs/fail.json',
-                                enableButton: true,
-                                buttonText:
-                                    AppLocalizations.of(context).doneTitle,
-                                callBackFunction: () {
-                                  Navigator.of(context).pop();
-                                },
-                                buttonColor: Colors.redAccent),
-                          );
-
-                          setState(() {
-                            loading = false;
-                          });
-                        }
+                        setState(() {
+                          loading = false;
+                        });
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(

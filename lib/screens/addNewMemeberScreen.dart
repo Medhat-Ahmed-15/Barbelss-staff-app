@@ -50,11 +50,9 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
   FocusNode ageFocusNode = FocusNode();
 
   int currentStep = 0;
-  bool complete = false;
-  StepperType stepperType = StepperType.vertical;
 
   next() {
-    currentStep + 1 != 4
+    currentStep + 1 != (currentStaffData.hasMembership == true ? 4 : 3)
         ? goTo(currentStep + 1)
         : setState(() {
             currentStep = 0;
@@ -85,6 +83,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           phoneErrorText = '';
           emailErrorText = '';
           ageErrorText = '';
+          membershipErrorText = '';
           loading = false;
           currentStep = 0;
         });
@@ -98,6 +97,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           phoneErrorText = '';
           emailErrorText = '';
           ageErrorText = '';
+          membershipErrorText = '';
           loading = false;
           currentStep = 0;
         });
@@ -112,6 +112,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           nameErrorText = '';
           loading = false;
           emailErrorText = '';
+          membershipErrorText = '';
           currentStep = 0;
         });
 
@@ -125,6 +126,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           ageErrorText = '';
           loading = false;
           emailErrorText = '';
+          membershipErrorText = '';
           currentStep = 0;
         });
 
@@ -139,38 +141,107 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           loading = false;
           ageErrorText = '';
           emailErrorText = '';
+          membershipErrorText = '';
           currentStep = 0;
         });
 
         return;
       }
 
-      await addNewMember(
-          context: context,
-          email: emailController.text.trim(),
-          gender: gender.trim(),
-          name: nameController.text.trim(),
-          age: int.parse(ageController.text),
-          phone: phoneController.text,
-          isAuthenticate: isAuthenticate,
-          membership: int.parse(membershipController.text.trim()),
-          phoneCode: phoneCode);
+      if (currentStaffData.hasMembership == true &&
+          membershipController.text.isEmpty) {
+        setState(() {
+          nameErrorText = '';
+          phoneErrorText = '';
+          emailErrorText = '';
+          ageErrorText = '';
+          membershipErrorText =
+              AppLocalizations.of(context).membershipIsRequired;
+          loading = false;
+          currentStep = 3;
+        });
+
+        return;
+      }
 
       if (isAuthenticate == true) {
+        await addNewMember(
+            context: context,
+            email: emailController.text.trim(),
+            gender: gender.trim(),
+            name: nameController.text.trim(),
+            age: int.parse(ageController.text),
+            phone: phoneController.text,
+            membership: currentStaffData.hasMembership == true
+                ? int.parse(membershipController.text.trim())
+                : 0,
+            phoneCode: phoneCode);
+
         responseFomQrDialog = await showDialog(
           context: context,
           barrierDismissible: true,
           builder: (BuildContext context) => QrCodeDialog(
-            addedName,
-            addedEmail,
-            addedPhone,
+            nameController.text.trim(),
+            emailController.text.trim(),
+            phoneController.text,
             context,
           ),
         );
-      }
-      if (responseFomQrDialog == true) {
-        await updateMemberVerification(
-            context: context, verificationStatus: isAuthenticate);
+        if (responseFomQrDialog == true) {
+          await updateMemberVerification(
+              context: context, verificationStatus: isAuthenticate);
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => FeedBackDialog(
+                titleText:
+                    AppLocalizations.of(context).memberAddedSuccessfullyTitle,
+                gif: 'assets/gifs/success.json',
+                enableButton: true,
+                buttonText: AppLocalizations.of(context).enrollNowTitle,
+                callBackFunction: () {
+                  Navigator.of(context).pushNamed(
+                    PlansScreen.routeName,
+                  );
+                },
+                buttonColor: Theme.of(context).primaryColor),
+          );
+        } else {
+          await updateMemberVerification(
+              context: context, verificationStatus: false);
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => FeedBackDialog(
+                titleText:
+                    AppLocalizations.of(context).memberAddedWithoutVerify,
+                gif: 'assets/gifs/success.json',
+                enableButton: true,
+                buttonText: AppLocalizations.of(context).enrollNowTitle,
+                callBackFunction: () {
+                  Navigator.of(context).pushNamed(
+                    PlansScreen.routeName,
+                  );
+                },
+                buttonColor: Theme.of(context).primaryColor),
+          );
+          setState(() {
+            isAuthenticate = false;
+          });
+        }
+      } else {
+        await addNewMember(
+            context: context,
+            email: emailController.text.trim(),
+            gender: gender.trim(),
+            name: nameController.text.trim(),
+            age: int.parse(ageController.text),
+            phone: phoneController.text,
+            membership: currentStaffData.hasMembership == true
+                ? int.parse(membershipController.text.trim())
+                : 0,
+            phoneCode: phoneCode);
+
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -187,21 +258,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
               },
               buttonColor: Theme.of(context).primaryColor),
         );
-      } else {
-        showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context) => FeedBackDialog(
-              titleText: 'Something went wrong',
-              gif: 'assets/gifs/fail.json',
-              enableButton: true,
-              buttonText: AppLocalizations.of(context).doneTitle,
-              callBackFunction: () {
-                Navigator.of(context).pop();
-              },
-              buttonColor: Colors.redAccent),
-        );
-        isAuthenticate = false;
       }
 
       setState(() {
@@ -234,6 +290,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           emailErrorText = '';
           ageErrorText = '';
           genderErrorText = '';
+          membershipErrorText = '';
           loading = false;
           currentStep = 0;
         });
@@ -244,6 +301,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           nameErrorText = '';
           emailErrorText = '';
           genderErrorText = '';
+          membershipErrorText = '';
           ageErrorText = '';
           currentStep = 0;
           loading = false;
@@ -254,19 +312,19 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           emailErrorText = '';
           phoneErrorText = '';
           genderErrorText = '';
+          membershipErrorText = '';
           currentStep = 0;
           ageErrorText = '';
           loading = false;
         });
       } else if (addNewMemberFieldKey == 'email') {
-        print("catch email:::   $errorMessage ");
-
         setState(() {
           emailErrorText = errorMessage;
           nameErrorText = '';
           phoneErrorText = '';
           ageErrorText = '';
           genderErrorText = '';
+          membershipErrorText = '';
           currentStep = 0;
           loading = false;
         });
@@ -277,6 +335,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           nameErrorText = '';
           phoneErrorText = '';
           genderErrorText = '';
+          membershipErrorText = '';
           currentStep = 0;
           loading = false;
         });
@@ -286,8 +345,20 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           emailErrorText = '';
           nameErrorText = '';
           phoneErrorText = '';
+          membershipErrorText = '';
           genderErrorText = errorMessage;
           currentStep = 1;
+          loading = false;
+        });
+      } else if (addNewMemberFieldKey == 'membership') {
+        setState(() {
+          ageErrorText = '';
+          emailErrorText = '';
+          nameErrorText = '';
+          phoneErrorText = '';
+          membershipErrorText = errorMessage;
+          genderErrorText = '';
+          currentStep = 3;
           loading = false;
         });
       } else {
@@ -751,72 +822,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           ],
         ),
       ),
-      //Membership TextField
-      Step(
-        title: Text(AppLocalizations.of(context).memberId,
-            style: TextStyle(
-                color: Theme.of(context).textTheme.headline2.color,
-                fontSize: 22,
-                fontWeight: FontWeight.bold)),
-        isActive: true,
-        state: StepState.indexed,
-        content: TextField(
-          controller: membershipController,
-          onTap: () {
-            setState(() {
-              membershipErrorText = '';
-            });
-          },
-          focusNode: membershipFocusNode,
-          style: TextStyle(color: Theme.of(context).primaryColor),
-          cursorColor: Theme.of(context).primaryColor,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            prefixIcon: Icon(
-              Icons.assignment_ind_rounded,
-              color: membershipFocusNode.hasFocus
-                  ? Theme.of(context).primaryColor
-                  : Colors.black54,
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: membershipFocusNode.hasFocus
-                    ? Theme.of(context).primaryColor
-                    : Colors.black54,
-              ),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(30.0),
-              ),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: membershipFocusNode.hasFocus
-                    ? Theme.of(context).primaryColor
-                    : Colors.black54,
-              ),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(30.0),
-              ),
-            ),
-            errorBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: Colors.redAccent,
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(30.0),
-              ),
-            ),
-            labelText: AppLocalizations.of(context).membership,
-            hintText: 'ex: 19203...',
-            errorText: membershipErrorText == '' ? null : membershipErrorText,
-            labelStyle: TextStyle(
-              color: membershipFocusNode.hasFocus
-                  ? Theme.of(context).primaryColor
-                  : Colors.black54,
-            ),
-          ),
-        ),
-      ),
       //Verification************************************************************************************
       Step(
         title: Text(AppLocalizations.of(context).memberVerification,
@@ -849,6 +854,77 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         ),
       ),
     ];
+
+    if (currentStaffData.hasMembership == true) {
+      steps.add(
+        Step(
+          title: Text(AppLocalizations.of(context).memberId,
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.headline2.color,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold)),
+          isActive: true,
+          state: StepState.indexed,
+          content: TextField(
+            controller: membershipController,
+            onTap: () {
+              setState(() {
+                membershipErrorText = '';
+              });
+            },
+            focusNode: membershipFocusNode,
+            style: TextStyle(color: Theme.of(context).primaryColor),
+            cursorColor: Theme.of(context).primaryColor,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                Icons.assignment_ind_rounded,
+                color: membershipFocusNode.hasFocus
+                    ? Theme.of(context).primaryColor
+                    : Colors.black54,
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: membershipFocusNode.hasFocus
+                      ? Theme.of(context).primaryColor
+                      : Colors.black54,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(30.0),
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: membershipFocusNode.hasFocus
+                      ? Theme.of(context).primaryColor
+                      : Colors.black54,
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(30.0),
+                ),
+              ),
+              errorBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.redAccent,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30.0),
+                ),
+              ),
+              labelText: AppLocalizations.of(context).membership,
+              hintText: 'ex: 19203...',
+              errorText: membershipErrorText == '' ? null : membershipErrorText,
+              labelStyle: TextStyle(
+                color: membershipFocusNode.hasFocus
+                    ? Theme.of(context).primaryColor
+                    : Colors.black54,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return steps;
   }
 
@@ -889,7 +965,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                         primary: Theme.of(context).primaryColor)),
                 child: Stepper(
                   steps: getSteps(context),
-                  type: stepperType,
                   currentStep: currentStep,
                   onStepContinue: next,
                   onStepCancel: cancel,

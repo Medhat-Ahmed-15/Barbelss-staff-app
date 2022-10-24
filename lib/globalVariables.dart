@@ -12,11 +12,6 @@ String qrCodeURL = '';
 String qrCodeUUID = '';
 String addNewMemberFieldKey;
 String loginFieldKey;
-String addedName = '';
-String addedEmail = '';
-String addedMembership = '';
-String addedPhone = '';
-String addedPhoneCode = '';
 String freezeButtonText = '';
 
 bool addedVerifyMember = false;

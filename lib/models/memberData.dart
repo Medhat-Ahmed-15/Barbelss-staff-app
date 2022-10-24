@@ -10,6 +10,7 @@ class MemberData {
   String gender;
   String staffId;
   String birthYear;
+  int membership;
   String qrCodeURL;
   String qrCodeUUID;
   bool canAuthenticate;
@@ -20,6 +21,7 @@ class MemberData {
       {this.clubId,
       this.countryCode,
       this.memberEmail,
+      this.membership,
       this.qrCodeURL,
       this.qrCodeUUID,
       this.staffId,
@@ -42,6 +44,7 @@ class MemberData {
     birthYear = json['birthYear'];
     isBlocked = json['isBlocked'];
     createdAt = json['createdAt'];
+    membership = json['membership'];
     memberPhone = json['phone'];
     countryCode = json['countryCode'];
     qrCodeURL = json['QRCodeURL'];
