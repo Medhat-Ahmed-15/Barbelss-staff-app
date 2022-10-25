@@ -70,8 +70,20 @@ class MemberPackageDataTile extends StatelessWidget {
                   } on SocketException {
                     stopBackgroundLoading();
 
-                    throw SocketException(
-                        AppLocalizations.of(context).connectionStatusMessage);
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) => FeedBackDialog(
+                          titleText: AppLocalizations.of(context)
+                              .connectionStatusMessage,
+                          gif: 'assets/gifs/fail.json',
+                          enableButton: true,
+                          buttonText: AppLocalizations.of(context).doneTitle,
+                          callBackFunction: () {
+                            Navigator.of(context).pop();
+                          },
+                          buttonColor: Colors.redAccent),
+                    );
                   } on GetRequestException catch (error) {
                     stopBackgroundLoading();
                     showDialog(

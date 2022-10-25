@@ -40,7 +40,7 @@ class AuthProvider with ChangeNotifier {
     final responseData = json.decode(response.body);
     print(responseData);
 
-    if (responseData['message'] != null) {
+    if (responseData['accepted'] == false) {
       loginFieldKey = responseData['field'];
       throw GetRequestException(responseData['message']);
     }
@@ -60,13 +60,6 @@ class AuthProvider with ChangeNotifier {
 
     currentStaffData = staffData;
 
-    // print(currentStaffData.staffClubId);
-    // print(currentStaffData.staffCountryCode);
-    // print(currentStaffData.staffEmail);
-    // print(currentStaffData.staffId);
-    // print(currentStaffData.staffName);
-    // print(currentStaffData.staffPhone);
-
     notifyListeners();
 
     final prefs = await SharedPreferences.getInstance();
@@ -80,7 +73,7 @@ class AuthProvider with ChangeNotifier {
       'staffPhone': responseData['staff']['phone'],
       'staffCountryCode': responseData['staff']['countryCode'],
       'clubName': responseData['club']['name'],
-      'hasmembership': responseData['club']['hasMembership']
+      'hasMembership': responseData['club']['hasMembership']
     });
 
     prefs.setString('staffDataInStorage', staffDataInStorage);

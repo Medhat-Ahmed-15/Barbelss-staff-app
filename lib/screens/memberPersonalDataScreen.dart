@@ -197,7 +197,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                             children: [
                               Text(
                                 pickedMember.isBlocked == true
-                                    ? AppLocalizations.of(context).inActiveTitle
+                                    ? AppLocalizations.of(context).blocked
                                     : AppLocalizations.of(context).activeTitle,
                                 style: TextStyle(
                                   color: Theme.of(context)
@@ -463,7 +463,8 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           ),
                         )
                       : Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
+                          padding: const EdgeInsets.only(
+                              left: 15, right: 15, bottom: 20),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             height: 56,
@@ -500,9 +501,13 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                                     barrierDismissible: true,
                                     builder: (BuildContext context) =>
                                         FeedBackDialog(
-                                            titleText:
-                                                'Member is blocked successfully',
-                                            gif: 'assets/gifs/success.json',
+                                            titleText: pickedMember.isBlocked ==
+                                                    false
+                                                ? 'Member is unblocked successfully'
+                                                : 'Member is blocked successfully',
+                                            gif: pickedMember.isBlocked == false
+                                                ? 'assets/gifs/unblock.json'
+                                                : 'assets/gifs/block.json',
                                             enableButton: true,
                                             buttonText:
                                                 AppLocalizations.of(context)
@@ -534,7 +539,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                                             },
                                             buttonColor: Colors.redAccent),
                                   );
-                                } on SocketException catch (error) {
+                                } on SocketException {
                                   showDialog(
                                     context: context,
                                     barrierDismissible: true,

@@ -39,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
     super.didChangeDependencies();
     if (isInit == true) {
       try {
-        await getAllMembers();
+        await getAllMembers(context);
         if (allMembersList.isEmpty) {
           setState(() {
             loadingMembersData = false;
@@ -70,9 +70,9 @@ class _SearchScreenState extends State<SearchScreen> {
     isInit = false;
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh(BuildContext context) async {
     try {
-      await getAllMembers();
+      await getAllMembers(context);
 
       if (allMembersList.isEmpty) {
         setState(() {
@@ -206,7 +206,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               empty = false;
                               loadingMembersData = true;
                             });
-                            await getAllMembers();
+                            await getAllMembers(context);
 
                             for (var memberData in allMembersList) {
                               if (memberData.memberPhone.startsWith(value)) {
@@ -324,7 +324,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               .headline2
                                               .color)))),
                           onPressed: () async {
-                            refresh();
+                            refresh(context);
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(
@@ -332,7 +332,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               bottom: 10,
                             ),
                             child: Text(
-                              'Try again',
+                              AppLocalizations.of(context).tryAgain,
                               style: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
@@ -367,7 +367,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: Theme.of(context).primaryColor,
                             strokeWidth: 5,
                             onRefresh: () {
-                              return refresh();
+                              return refresh(context);
                             },
                             child: Scrollbar(
                               thumbVisibility: true,

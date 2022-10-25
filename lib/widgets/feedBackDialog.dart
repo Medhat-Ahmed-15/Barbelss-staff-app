@@ -43,13 +43,13 @@ class _FeedBackDialogState extends State<FeedBackDialog> {
           children: [
             const SizedBox(height: 30.0),
             SizedBox(
-              width: 200,
-              height: 200,
+              width: 170,
+              height: 170,
               child: lot.LottieBuilder.asset(widget.gif),
             ),
             const SizedBox(height: 18.0),
             Text(
-              widget.titleText,
+              widget.titleText ?? 'error',
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 18.0,

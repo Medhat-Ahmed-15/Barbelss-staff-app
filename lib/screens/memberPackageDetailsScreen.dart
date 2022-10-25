@@ -36,7 +36,7 @@ class _MemberPackageDetailsScreenState
         freezeButtonText = allMemberRegistrationsList[0].isFreezed == false
             ? AppLocalizations.of(context).freeze
             : AppLocalizations.of(context).reactivate;
-        getAllMemberAttendences(pickedMemberPackage.registrationId)
+        getAllMemberAttendences(pickedMemberPackage.registrationId, context)
             .then((value) {
           if (allMemberAttendencesList.isEmpty) {
             setState(() {
@@ -63,12 +63,13 @@ class _MemberPackageDetailsScreenState
     }
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh(BuildContext context) async {
     try {
       freezeButtonText = allMemberRegistrationsList[0].isFreezed == false
           ? AppLocalizations.of(context).freeze
           : AppLocalizations.of(context).reactivate;
-      await getAllMemberAttendences(pickedMemberPackage.registrationId);
+      await getAllMemberAttendences(
+          pickedMemberPackage.registrationId, context);
       if (allMemberAttendencesList.isEmpty) {
         setState(() {
           loadingMemberAttendencesData = false;
@@ -152,7 +153,7 @@ class _MemberPackageDetailsScreenState
                                     color: Theme.of(context).primaryColor,
                                     strokeWidth: 5,
                                     onRefresh: () {
-                                      return refresh();
+                                      return refresh(context);
                                     },
                                     child: Scrollbar(
                                       thumbVisibility: true,

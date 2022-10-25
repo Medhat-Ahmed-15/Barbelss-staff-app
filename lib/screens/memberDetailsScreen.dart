@@ -371,9 +371,8 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             right: 10,
             child: IconButton(
               onPressed: () async {
-                Navigator.of(context).pushNamed(
-                  PlansScreen.routeName,
-                );
+                await Navigator.of(context).pushNamed(PlansScreen.routeName);
+                await refresh();
               },
               icon: Icon(
                 Icons.add,

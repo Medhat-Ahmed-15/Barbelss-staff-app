@@ -84,11 +84,11 @@ void showErrorDialog(
 
 //Get All Members/////////////////////////////////////////////////////////////////////////////
 
-Future<void> getAllMembers() async {
+Future<void> getAllMembers(BuildContext context) async {
   var connection = await Connectivity().checkConnectivity();
 
   if (connection == ConnectivityResult.none) {
-    throw const SocketException('Error');
+    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
   }
 
   String url =
@@ -109,7 +109,7 @@ Future<void> getAllMembers() async {
       'All Members Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
 
   if (decodeData['accepted'] == false) {
-    throw GetRequestException(decodeData['message']);
+    throw GetRequestException(decodeData['message'] ?? 'error');
   }
 
   var allMembers = decodeData['members'];
@@ -157,7 +157,7 @@ Future<void> getAllMemberRegistartions() async {
   } on SocketException {
     print(
         'Get all member registraions socket exception (assistanFUnctions.dart)');
-    throw const SocketException('Error connecting to internet');
+    throw SocketException('error');
   }
 }
 
@@ -264,7 +264,7 @@ Future<void> addNewMember(
 
     if (responseData['accepted'] == false) {
       addNewMemberFieldKey = responseData['field'];
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
 
     MemberData memberData = MemberData();
@@ -345,7 +345,7 @@ Future<void> registerPlan(
     print(responseData);
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
   } on SocketException {
     print(
@@ -377,7 +377,7 @@ Future<void> confirmArrival(
         'Confirm Arrival Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
   } on SocketException {
     print('Confirm Arrival socket exception (assistantFunction.dart)');
@@ -406,7 +406,7 @@ Future<void> cancelAttendence(
     print(responseData);
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
   } on SocketException {
     print('Cancel Arrival socket exception (assistantFunction.dart)');
@@ -436,7 +436,7 @@ Future<void> deleteRegistration(
       'Delete Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   if (responseData['accepted'] == false) {
-    throw GetRequestException(responseData['message']);
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 
@@ -489,7 +489,7 @@ Future<void> updateMemberQrCode({BuildContext context}) async {
         'Update Member Qr Code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
 
     sendVerificationCodeToWhatsApp(context);
@@ -520,7 +520,7 @@ Future<void> sendVerificationCodeToWhatsApp(BuildContext context) async {
         'Send QrCode Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
   } on SocketException {
     print('Send QrCode socket exception (assistantFunction.dart)');
@@ -551,7 +551,7 @@ Future<void> freezeRegistration(
         'Freeze Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
   } on SocketException {
     print('Freeze registration socket exception (assistantFunction.dart)');
@@ -580,7 +580,7 @@ Future<void> reactivateRegestration(
         'Reactivate Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
   } on SocketException {
     print('Reactivate registration socket exception (assistantFunction.dart)');
@@ -590,7 +590,8 @@ Future<void> reactivateRegestration(
 
 //Get All Member Attendences/////////////////////////////////////////////////////////////////////////////
 
-Future<void> getAllMemberAttendences(String registrationId) async {
+Future<void> getAllMemberAttendences(
+    String registrationId, BuildContext context) async {
   String url =
       'http://159.223.172.150/api/v1/attendances/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -617,7 +618,7 @@ Future<void> getAllMemberAttendences(String registrationId) async {
   } on SocketException {
     print(
         'Get all member attendences socket exception (assistanFUnctions.dart)');
-    throw const SocketException('Error connecting to internet');
+    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
   }
 }
 
@@ -653,7 +654,8 @@ Future<void> updateMemberVerification(
       print(
           'Response::::::::::: ${responseData['whatsappMessage']['message']}');
 
-      throw GetRequestException(responseData['whatsappMessage']['message']);
+      throw GetRequestException(
+          responseData['whatsappMessage']['message'] ?? 'error');
     }
 
     MemberData memberData = MemberData();
@@ -702,7 +704,7 @@ Future<void> addAttendanceBymember(
 
     if (responseData['accepted'] == false) {
       throw GetRequestException(
-          '${responseData['message']}\n${responseData['note']}');
+          '${responseData['message'] ?? 'error'}\n${responseData['note'] ?? 'error'}');
     }
   } on SocketException {
     print('Add Attendance By Member exception (assistantFunction.dart)');
@@ -727,7 +729,7 @@ Future<void> memberForgetPassword(String email, BuildContext context) async {
     print(responseData);
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
   } on SocketException {
     throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
@@ -760,7 +762,7 @@ Future<void> blockMember(
     print(responseData);
 
     if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ?? 'error');
     }
 
     MemberData memberData = MemberData();

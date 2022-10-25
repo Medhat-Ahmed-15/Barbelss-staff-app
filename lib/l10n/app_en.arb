@@ -131,7 +131,7 @@
       "description": " "
     },
 
-    "inActiveTitle": "Inactive",
+    "inActiveTitle": "Expired",
     "@language": {
       "description": " "
     },
@@ -448,6 +448,16 @@
     },
 
     "packageIsfreezed": "Sorry package is freezed",
+    "@language": {
+      "description": " "
+    },
+
+    "blocked": "Blocked",
+    "@language": {
+      "description": " "
+    },
+
+    "tryAgain": "Try Again",
     "@language": {
       "description": " "
     }

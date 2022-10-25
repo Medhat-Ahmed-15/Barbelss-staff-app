@@ -179,7 +179,11 @@
 
      "sorryMemberIsBlocked": "العضوية مطلوبة",
 
-     "packageIsfreezed": "عذرا ، الحزمة مجمدة"
+     "packageIsfreezed": "عذرا ، الحزمة مجمدة",
+
+     "blocked": "محظور",
+
+     "tryAgain": "حاول ثانية"
 
 
 

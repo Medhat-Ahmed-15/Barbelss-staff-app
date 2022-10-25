@@ -24,6 +24,8 @@ class _PlansScreenState extends State<PlansScreen> {
   bool empty = false;
   bool isInit = false;
 
+  String screenComingFrom;
+
   @override
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
@@ -55,6 +57,8 @@ class _PlansScreenState extends State<PlansScreen> {
 
   @override
   Widget build(BuildContext context) {
+    screenComingFrom = ModalRoute.of(context).settings.arguments as String;
+    print('Screen Coming From::: $screenComingFrom');
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
@@ -163,7 +167,8 @@ class _PlansScreenState extends State<PlansScreen> {
                                   ),
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    return PlanDataTile(allPlansList[index]);
+                                    return PlanDataTile(
+                                        allPlansList[index], screenComingFrom);
                                   },
                                   itemCount: allPlansList.length,
                                   itemWidth: 300.0,

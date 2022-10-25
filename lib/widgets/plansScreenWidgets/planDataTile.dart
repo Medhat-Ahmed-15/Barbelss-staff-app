@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
+import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/planData.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -14,8 +15,9 @@ import '../feedBackDialog.dart';
 
 class PlanDataTile extends StatefulWidget {
   PlanData planData;
+  String screenComingFrom;
 
-  PlanDataTile(this.planData);
+  PlanDataTile(this.planData, this.screenComingFrom);
 
   @override
   State<PlanDataTile> createState() => _PlanDataTileState();
@@ -192,6 +194,27 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ))),
                             onPressed: () async {
+                              if (pickedMember.isBlocked == true) {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext context) =>
+                                      FeedBackDialog(
+                                          titleText:
+                                              AppLocalizations.of(context)
+                                                  .sorryMemberIsBlocked,
+                                          gif: 'assets/gifs/fail.json',
+                                          enableButton: true,
+                                          buttonText:
+                                              AppLocalizations.of(context)
+                                                  .doneTitle,
+                                          callBackFunction: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          buttonColor: Colors.redAccent),
+                                );
+                                return;
+                              }
                               try {
                                 setState(() {
                                   loading = true;
@@ -220,10 +243,16 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                               AppLocalizations.of(context)
                                                   .doneTitle,
                                           callBackFunction: () {
-                                            Navigator.of(context)
-                                                .pushNamedAndRemoveUntil(
-                                                    MainScreen.routeName,
-                                                    ModalRoute.withName('/'));
+                                            if (widget.screenComingFrom ==
+                                                'addMemberScreen') {
+                                              Navigator.of(context)
+                                                  .pushNamedAndRemoveUntil(
+                                                      MainScreen.routeName,
+                                                      ModalRoute.withName('/'));
+                                            } else {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            }
                                           },
                                           buttonColor:
                                               Theme.of(context).primaryColor),

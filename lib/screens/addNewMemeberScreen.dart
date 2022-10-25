@@ -200,9 +200,8 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                 enableButton: true,
                 buttonText: AppLocalizations.of(context).enrollNowTitle,
                 callBackFunction: () {
-                  Navigator.of(context).pushNamed(
-                    PlansScreen.routeName,
-                  );
+                  Navigator.of(context).pushNamed(PlansScreen.routeName,
+                      arguments: 'addMemberScreen');
                 },
                 buttonColor: Theme.of(context).primaryColor),
           );
@@ -219,9 +218,8 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                 enableButton: true,
                 buttonText: AppLocalizations.of(context).enrollNowTitle,
                 callBackFunction: () {
-                  Navigator.of(context).pushNamed(
-                    PlansScreen.routeName,
-                  );
+                  Navigator.of(context).pushNamed(PlansScreen.routeName,
+                      arguments: 'addMemberScreen');
                 },
                 buttonColor: Theme.of(context).primaryColor),
           );
@@ -252,9 +250,8 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
               enableButton: true,
               buttonText: AppLocalizations.of(context).enrollNowTitle,
               callBackFunction: () {
-                Navigator.of(context).pushNamed(
-                  PlansScreen.routeName,
-                );
+                Navigator.of(context).pushNamed(PlansScreen.routeName,
+                    arguments: 'addMemberScreen');
               },
               buttonColor: Theme.of(context).primaryColor),
         );
