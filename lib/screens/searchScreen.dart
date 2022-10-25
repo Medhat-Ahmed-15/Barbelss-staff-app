@@ -3,20 +3,20 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:gym_staff_app/screens/addNewMemeberScreen.dart';
-import 'package:lottie/lottie.dart' as lot;
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:gym_staff_app/widgets/FOurDotsLoading.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/models/memberData.dart';
 import 'package:gym_staff_app/widgets/searchScreenWidgets/memberDataTile.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../globalVariables.dart';
+import '../widgets/EmptyAnimationWidget.dart';
+import '../widgets/InternetConnectionError.dart';
+import '../widgets/ListCountSubTitle.dart';
 import '../widgets/feedBackDialog.dart';
 import '../widgets/scanQrCodeDialog.dart';
+import '../widgets/searchScreenWidgets/upperContainer.dart';
 
 class SearchScreen extends StatefulWidget {
   static const routeName = '/SearchScreen';
@@ -39,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
     super.didChangeDependencies();
     if (isInit == true) {
       try {
-        await getAllMembers(context);
+        await getAllMembers();
         if (allMembersList.isEmpty) {
           setState(() {
             loadingMembersData = false;
@@ -65,14 +65,21 @@ class _SearchScreenState extends State<SearchScreen> {
           loadingMembersData = false;
           empty = true;
         });
+      } catch (error) {
+        showToast(AppLocalizations.of(context).somethingWentWrong, context);
       }
     }
     isInit = false;
   }
 
-  Future<void> refresh(BuildContext context) async {
+  Future<void> refresh() async {
     try {
-      await getAllMembers(context);
+      setState(() {
+        loadingMembersData = true;
+        connectionError = false;
+        empty = false;
+      });
+      await getAllMembers();
 
       if (allMembersList.isEmpty) {
         setState(() {
@@ -99,6 +106,8 @@ class _SearchScreenState extends State<SearchScreen> {
         loadingMembersData = false;
         empty = true;
       });
+    } catch (error) {
+      showToast(AppLocalizations.of(context).somethingWentWrong, context);
     }
   }
 
@@ -115,58 +124,7 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Stack(
         children: [
           //upper container containing burger button and title
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 150,
-              decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Colors.black54,
-                        offset: Offset(0, 4),
-                        blurRadius: 5.0)
-                  ],
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(0))),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 60,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          ZoomDrawer.of(context).toggle();
-                        },
-                        icon: Icon(
-                          Icons.menu,
-                          color: Theme.of(context).iconTheme.color,
-                          size: 25,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context, AddNewMemberScreen.routeName);
-                        },
-                        icon: Icon(
-                          Icons.add,
-                          color: Theme.of(context).iconTheme.color,
-                          size: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+          const upperContainer(),
           //search textfield
           Positioned(
             child: Padding(
@@ -206,7 +164,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               empty = false;
                               loadingMembersData = true;
                             });
-                            await getAllMembers(context);
+                            await getAllMembers();
 
                             for (var memberData in allMembersList) {
                               if (memberData.memberPhone.startsWith(value)) {
@@ -232,11 +190,19 @@ class _SearchScreenState extends State<SearchScreen> {
                               loadingMembersData = false;
                               empty = false;
                             });
-                          } on GetRequestException catch (error) {
+                          } on GetRequestException {
                             setState(() {
                               connectionError = false;
-                              loadingMembersData = true;
-                              empty = false;
+                              loadingMembersData = false;
+                              empty = true;
+                            });
+                          } catch (error) {
+                            showToast(
+                                AppLocalizations.of(context).somethingWentWrong,
+                                context);
+
+                            setState(() {
+                              loadingMembersData = false;
                             });
                           }
                         },
@@ -250,40 +216,12 @@ class _SearchScreenState extends State<SearchScreen> {
           //number of members
           Positioned(
             child: Padding(
-                padding: EdgeInsets.only(
-                    top: 200,
-                    left: localeLanguage == const Locale('en') ? 50 : 0,
-                    right: localeLanguage != const Locale('en') ? 50 : 0),
-                child: Row(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).searchResultsContains,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '${empty == true ? 0 : allMembersList.length}',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      AppLocalizations.of(context).members,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                )),
+              padding: EdgeInsets.only(
+                  top: 200,
+                  left: localeLanguage == const Locale('en') ? 50 : 0,
+                  right: localeLanguage != const Locale('en') ? 50 : 0),
+              child: ListCountSubTitle(empty, 'members'),
+            ),
           ),
 
           //Members List
@@ -294,80 +232,16 @@ class _SearchScreenState extends State<SearchScreen> {
               right: 15,
             ),
             child: connectionError == true
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(child: Container()),
-                      Align(
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: 250,
-                          height: 250,
-                          child:
-                              lot.LottieBuilder.asset('assets/gifs/error.json'),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 150,
-                        height: 45,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).scaffoldBackgroundColor),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .headline2
-                                              .color)))),
-                          onPressed: () async {
-                            refresh(context);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                              bottom: 10,
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context).tryAgain,
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline2
-                                      .color,
-                                  fontSize: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(child: Container()),
-                    ],
-                  )
+                ? InternetConnectionError(refresh)
                 : loadingMembersData == true
-                    ? Center(
-                        child: LoadingAnimationWidget.fourRotatingDots(
-                          color: Theme.of(context).primaryColor,
-                          size: 50,
-                        ),
-                      )
+                    ? FourDotsLoading()
                     : empty == true
-                        ? Align(
-                            alignment: Alignment.center,
-                            child: SizedBox(
-                              width: 200,
-                              height: 200,
-                              child: lot.LottieBuilder.asset(
-                                  'assets/gifs/empty.json'),
-                            ),
-                          )
+                        ? const EmptyAnimationWidget()
                         : RefreshIndicator(
                             color: Theme.of(context).primaryColor,
                             strokeWidth: 5,
                             onRefresh: () {
-                              return refresh(context);
+                              return refresh();
                             },
                             child: Scrollbar(
                               thumbVisibility: true,
@@ -387,12 +261,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ? Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(
-                      color: Theme.of(context).primaryColor,
-                      size: 50,
-                    ),
-                  ),
+                  child: FourDotsLoading(),
                   color: Colors.black38,
                 )
               : const SizedBox(
@@ -495,6 +364,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       },
                       buttonColor: Colors.redAccent),
                 );
+              } catch (error) {
+                showToast(
+                    AppLocalizations.of(context).somethingWentWrong, context);
               }
             }
           }

@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
 import '../Exceptions/getRequest_exception.dart';
 import '../assistant/assistantFunction.dart';
 import '../widgets/feedBackDialog.dart';

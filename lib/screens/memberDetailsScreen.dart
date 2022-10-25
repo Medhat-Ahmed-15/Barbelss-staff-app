@@ -1,22 +1,20 @@
 // ignore_for_file: file_names
-import 'dart:convert';
 import 'dart:io';
 import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
-import 'package:gym_staff_app/screens/memberPersonalDataScreen.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
+import 'package:gym_staff_app/widgets/EmptyAnimationWidget.dart';
+import 'package:gym_staff_app/widgets/InternetConnectionError.dart';
+import 'package:gym_staff_app/widgets/ListCountSubTitle.dart';
 import 'package:gym_staff_app/widgets/feedBackDialog.dart';
-import 'package:gym_staff_app/widgets/pickFreezingTimeDialog.dart';
-import 'package:gym_staff_app/widgets/scanQrCodeDialog.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:lottie/lottie.dart' as lot;
+import 'package:gym_staff_app/widgets/fourDotsLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/widgets/memberDetailsScreenWidgets/memberPackageDataTile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../widgets/qrCodeDialog.dart';
+import '../widgets/memberDetailsScreenWidgets/CentralCard.dart';
 
 class MemberDetailsScreen extends StatefulWidget {
   static const routeName = '/MemberDetailsScreen';
@@ -64,6 +62,8 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
         loadingMemberRegistrationsData = false;
         empty = false;
       });
+    } catch (error) {
+      showToast(AppLocalizations.of(context).somethingWentWrong, context);
     }
   }
 
@@ -81,6 +81,11 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
 
   Future<void> refresh() async {
     try {
+      setState(() {
+        loadingMemberRegistrationsData = true;
+        connectionError = false;
+        empty = false;
+      });
       await getAllMemberRegistartions();
       if (allMemberRegistrationsList.isEmpty) {
         setState(() {
@@ -101,6 +106,8 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
         loadingMemberRegistrationsData = false;
         empty = false;
       });
+    } catch (error) {
+      showToast(AppLocalizations.of(context).somethingWentWrong, context);
     }
   }
 
@@ -113,41 +120,13 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
           //number of registrations
           Positioned(
             child: Padding(
-                padding: EdgeInsets.only(
-                  top: 370,
-                  left: localeLanguage == const Locale('en') ? 60 : 0,
-                  right: localeLanguage != const Locale('en') ? 55 : 0,
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).searchResultsContains,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '${empty == true || allMemberRegistrationsList == null ? 0 : allMemberRegistrationsList.length}',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      AppLocalizations.of(context).registrations,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                )),
+              padding: EdgeInsets.only(
+                top: 370,
+                left: localeLanguage == const Locale('en') ? 60 : 0,
+                right: localeLanguage != const Locale('en') ? 55 : 0,
+              ),
+              child: ListCountSubTitle(empty, 'registrations'),
+            ),
           ),
           //registartions list
           Column(
@@ -161,40 +140,14 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, top: 130),
                   child: connectionError == true
-                      ? Column(
-                          children: [
-                            Expanded(child: Container()),
-                            Align(
-                              alignment: Alignment.center,
-                              child: SizedBox(
-                                width: 250,
-                                height: 250,
-                                child: lot.LottieBuilder.asset(
-                                    'assets/gifs/error.json'),
-                              ),
-                            ),
-                            Text(AppLocalizations.of(context)
-                                .connectionStatusMessage),
-                            Expanded(child: Container()),
-                          ],
-                        )
+                      ? InternetConnectionError(refresh)
                       : loadingMemberRegistrationsData == true
-                          ? Center(
-                              child: LoadingAnimationWidget.fourRotatingDots(
-                                color: Theme.of(context).primaryColor,
-                                size: 50,
-                              ),
-                            )
+                          ? FourDotsLoading()
                           : empty == true
                               ? Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SizedBox(
-                                      width: 200,
-                                      height: 200,
-                                      child: lot.LottieBuilder.asset(
-                                          'assets/gifs/empty.json'),
-                                    ),
+                                    const EmptyAnimationWidget(),
                                     const SizedBox(
                                       height: 10,
                                     ),
@@ -214,12 +167,13 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                                     RoundedRectangleBorder>(
                                                 RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(18.0),
+                                                        BorderRadius.circular(10.0),
                                                     side: BorderSide(color: Theme.of(context).primaryColor)))),
                                         onPressed: () async {
-                                          Navigator.of(context).pushNamed(
+                                          await Navigator.of(context).pushNamed(
                                             PlansScreen.routeName,
                                           );
+                                          await refresh();
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.only(
@@ -276,78 +230,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             ],
           ),
           //central card
-          Positioned(
-            top: 150,
-            left: 50,
-            right: 50,
-            child: Container(
-              width: 100,
-              height: 200,
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Colors.black54,
-                        offset: Offset(0, 4),
-                        blurRadius: 5.0)
-                  ],
-                  color: Theme.of(context).scaffoldBackgroundColor),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Theme.of(context).primaryColor,
-                      radius: 45,
-                      child: Text(
-                        pickedMember.memberName.contains(' ')
-                            ? pickedMember.memberName[0].toUpperCase() +
-                                pickedMember.memberName
-                                    .split(' ')[1][0]
-                                    .toUpperCase()
-                            : pickedMember.memberName[0].toUpperCase(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1.color,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      pickedMember.memberName,
-                      style: const TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, MemberPersonalDataScreen.routeName);
-                      },
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          AppLocalizations.of(context).showMore,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          const CentralCard(),
           //back arrow
           Positioned(
             top: 40,
@@ -385,12 +268,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               ? Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(
-                      color: Theme.of(context).primaryColor,
-                      size: 50,
-                    ),
-                  ),
+                  child: FourDotsLoading(),
                   color: Colors.black38,
                 )
               : const SizedBox(
@@ -415,7 +293,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   ],
                   colorStartAnimation: Theme.of(context).primaryColor,
                   colorEndAnimation: Theme.of(context).primaryColor,
-                  animatedIconData: AnimatedIcons.view_list,
+                  animatedIconData: AnimatedIcons.list_view,
                 ),
     );
   }
@@ -425,7 +303,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
     return SizedBox(
       width: 200,
       child: FloatingActionButton.extended(
-        heroTag: 'btn3',
+        heroTag: 'confirmButton',
         key: UniqueKey(),
         onPressed: () async {
           if (enableConfirming == false) {
@@ -542,6 +420,8 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             setState(() {
               confirmationLoading = false;
             });
+          } catch (error) {
+            showToast(AppLocalizations.of(context).somethingWentWrong, context);
           }
         },
         label: Text(
@@ -564,7 +444,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
     return SizedBox(
       width: 200,
       child: FloatingActionButton.extended(
-          heroTag: 'btn2',
+          heroTag: 'cancelButton',
           onPressed: () async {
             if (pickedMember.isBlocked == true) {
               showDialog(
@@ -663,6 +543,9 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               setState(() {
                 confirmationLoading = false;
               });
+            } catch (error) {
+              showToast(
+                  AppLocalizations.of(context).somethingWentWrong, context);
             }
           },
           label: Text(

@@ -183,7 +183,21 @@
 
      "blocked": "محظور",
 
-     "tryAgain": "حاول ثانية"
+     "tryAgain": "حاول ثانية",
+
+     "passwordIsRequired": "كلمة المرور مطلوبة",
+
+     "forgotYourPassword": "نسيت رقمك السري",
+
+     "forgotYourPasswordSubtitle": "نحتاج إلى عنوان بريدك الإلكتروني لنرسل لك رمز إعادة تعيين كلمة المرور.",
+
+     "send": "إرسال",
+
+     "emailIsrRequired": "البريد الالكتروني مطلوب",
+
+     "emailIssentSuccessfully": "تم إرسال البريد الإلكتروني بنجاح",
+
+     "unblockMember": "إلغاء حظر العضو"
 
 
 

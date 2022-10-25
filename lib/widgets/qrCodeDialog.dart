@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -101,13 +102,35 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                       onPressed: () async {
                         //export image
 
-                        setState(() {
-                          loading = true;
-                        });
+                        try {
+                          setState(() {
+                            loading = true;
+                          });
 
-                        var response = await extractImageAndPutInFirebase(
-                            globalKey, widget.phone);
-                        Navigator.of(context).pop(response);
+                          var response = await extractImageAndPutInFirebase(
+                              globalKey, widget.phone);
+                          Navigator.of(context).pop(response);
+                        } on SocketException {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) => FeedBackDialog(
+                                titleText: AppLocalizations.of(context)
+                                    .connectionStatusMessage,
+                                gif: 'assets/gifs/fail.json',
+                                enableButton: true,
+                                buttonText:
+                                    AppLocalizations.of(context).doneTitle,
+                                callBackFunction: () {
+                                  Navigator.of(context).pop();
+                                },
+                                buttonColor: Colors.redAccent),
+                          );
+                        } catch (error) {
+                          showToast(
+                              AppLocalizations.of(context).somethingWentWrong,
+                              context);
+                        }
 
                         setState(() {
                           loading = false;

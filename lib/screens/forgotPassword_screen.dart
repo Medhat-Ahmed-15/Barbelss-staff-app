@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/globalVariables.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:gym_staff_app/widgets/FOurDotsLoading.dart';
 import '../assistant/assistantFunction.dart';
 import '../widgets/feedBackDialog.dart';
 
@@ -27,7 +27,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Future<void> sendResetPasswordMail(String email) async {
     if (emailController.text.isEmpty) {
       setState(() {
-        emailErrorMessage = 'Email is required';
+        emailErrorMessage = AppLocalizations.of(context).emailIsrRequired;
       });
       return;
     }
@@ -112,7 +112,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ),
           title: Text(
-            'Forgot your password',
+            AppLocalizations.of(context).forgotYourPassword,
             style: TextStyle(
                 color: Theme.of(context).textTheme.headline1.color,
                 fontSize: 25,
@@ -129,7 +129,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 height: 30,
               ),
               Text(
-                'We need your email adress so we can send you the password reset code.',
+                AppLocalizations.of(context).forgotYourPasswordSubtitle,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
@@ -194,12 +194,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 height: 50,
               ),
               loading == true
-                  ? Center(
-                      child: LoadingAnimationWidget.fourRotatingDots(
-                        color: Theme.of(context).primaryColor,
-                        size: 50,
-                      ),
-                    )
+                  ? FourDotsLoading()
                   : Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: SizedBox(
@@ -228,7 +223,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 barrierDismissible: true,
                                 builder: (BuildContext context) =>
                                     FeedBackDialog(
-                                        titleText: 'Email is sent successfully',
+                                        titleText: AppLocalizations.of(context)
+                                            .emailIssentSuccessfully,
                                         gif: 'assets/gifs/success.json',
                                         enableButton: true,
                                         buttonText: AppLocalizations.of(context)
@@ -283,6 +279,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               setState(() {
                                 loading = false;
                               });
+                            } catch (error) {
+                              showToast(
+                                  AppLocalizations.of(context)
+                                      .somethingWentWrong,
+                                  context);
+
+                              setState(() {
+                                loading = false;
+                              });
                             }
                           },
                           child: Padding(
@@ -291,7 +296,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               bottom: 10,
                             ),
                             child: Text(
-                              'Send',
+                              AppLocalizations.of(context).send,
                               style: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme

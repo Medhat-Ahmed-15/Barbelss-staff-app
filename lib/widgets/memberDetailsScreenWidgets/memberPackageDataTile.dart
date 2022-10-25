@@ -1,15 +1,12 @@
 // ignore_for_file: file_names
 
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/memberRegistrationsResponseData.dart';
-import 'package:gym_staff_app/screens/memberDetailsScreen.dart';
 import 'package:gym_staff_app/screens/memberPackageDetailsScreen.dart';
-
 import '../../Exceptions/getRequest_exception.dart';
 import '../feedBackDialog.dart';
 
@@ -99,6 +96,9 @@ class MemberPackageDataTile extends StatelessWidget {
                           },
                           buttonColor: Colors.redAccent),
                     );
+                  } catch (error) {
+                    showToast(AppLocalizations.of(context).somethingWentWrong,
+                        context);
                   }
 
                   await refresh();

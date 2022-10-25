@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
@@ -12,10 +11,10 @@ import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/providers/localLanguageProvider.dart';
 import 'package:gym_staff_app/screens/forgotPassword_screen.dart';
 import 'package:gym_staff_app/widgets/feedBackDialog.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../globalVariables.dart';
+import '../widgets/FourDotsLoading.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/LoginScreen';
@@ -46,14 +45,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> login(BuildContext context) async {
     if (phoneController.text.trim().isEmpty) {
       setState(() {
-        phoneErrorMessage = 'Phone is required';
+        phoneErrorMessage = AppLocalizations.of(context).phoneNumberIsRequired;
         passwordErrorMessage = null;
       });
       return;
     }
     if (passwordController.text.trim().isEmpty) {
       setState(() {
-        passwordErrorMessage = 'Password is required';
+        passwordErrorMessage = AppLocalizations.of(context).passwordIsRequired;
         phoneErrorMessage = null;
       });
       return;
@@ -78,11 +77,14 @@ class _LoginScreenState extends State<LoginScreen> {
       if (loginFieldKey == 'phone') {
         setState(() {
           phoneErrorMessage = errorMessage;
+          passwordErrorMessage = '';
+
           loading = false;
         });
       } else {
         setState(() {
           passwordErrorMessage = errorMessage;
+          phoneErrorMessage = '';
           loading = false;
         });
       }
@@ -105,6 +107,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       setState(() {
         loading = false;
+      });
+    } catch (error) {
+      showToast(AppLocalizations.of(context).somethingWentWrong, context);
+
+      setState(() {
+        loadingScreen = false;
       });
     }
   }
@@ -144,12 +152,89 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       });
     } catch (error) {
-      showToast('Error changing language ', context);
+      showToast(AppLocalizations.of(context).somethingWentWrong, context);
 
       setState(() {
         loadingScreen = false;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+  }
+
+  Widget textField({
+    bool passwordText,
+    String textFieldName,
+    TextEditingController controller,
+    TextInputType keyboardType,
+    FocusNode focusNode,
+    IconData prefixIcon,
+    Widget sufixIcon,
+    String labelText,
+    String hintText,
+    String errorText,
+  }) {
+    return TextField(
+      obscureText: passwordText,
+      controller: controller,
+      onTap: () {
+        setState(() {
+          textFieldName == 'phone'
+              ? phoneErrorMessage = ''
+              : passwordErrorMessage = '';
+        });
+      },
+      focusNode: focusNode,
+      style: TextStyle(
+        color: Theme.of(context).textTheme.headline2.color,
+      ),
+      cursorColor: Theme.of(context).primaryColor,
+      decoration: InputDecoration(
+        suffixIcon: sufixIcon,
+        prefixIcon: Icon(prefixIcon,
+            color: focusNode.hasFocus
+                ? Theme.of(context).primaryColor
+                : Colors.black54),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+              color: focusNode.hasFocus
+                  ? Theme.of(context).primaryColor
+                  : Colors.black54),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(30.0),
+          ),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+              color: focusNode.hasFocus
+                  ? Theme.of(context).primaryColor
+                  : Colors.black54),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(30.0),
+          ),
+        ),
+        errorBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.redAccent),
+          borderRadius: BorderRadius.all(
+            Radius.circular(30.0),
+          ),
+        ),
+        labelText: labelText,
+        errorText: errorText == '' ? null : errorText,
+        labelStyle: TextStyle(
+          color: focusNode.hasFocus
+              ? Theme.of(context).primaryColor
+              : Colors.black54,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 
   @override
@@ -196,63 +281,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: phoneController,
-                            keyboardType: TextInputType.phone,
-                            onTap: () {
-                              setState(() {
-                                phoneErrorMessage = '';
-                              });
-                            },
-                            focusNode: phoneFocusNode,
-                            style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline2.color,
-                            ),
-                            cursorColor: Theme.of(context).primaryColor,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.phone,
-                                  color: phoneFocusNode.hasFocus
-                                      ? Theme.of(context).primaryColor
-                                      : Colors.black54),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: phoneFocusNode.hasFocus
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.black54),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(30.0),
-                                ),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: phoneFocusNode.hasFocus
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.black54),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(30.0),
-                                ),
-                              ),
-                              errorBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.redAccent),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(30.0),
-                                ),
-                              ),
-                              labelText:
-                                  AppLocalizations.of(context).phoneTitle,
-                              hintText: '$phonehHintText ex: 1282923670',
-                              errorText: phoneErrorMessage == ''
-                                  ? null
-                                  : phoneErrorMessage,
-                              labelStyle: TextStyle(
-                                color: phoneFocusNode.hasFocus
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.black54,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                          child:
+                              //phone textField
+
+                              textField(
+                                  controller: phoneController,
+                                  errorText: phoneErrorMessage,
+                                  focusNode: phoneFocusNode,
+                                  hintText: '$phonehHintText ex: 1282923670',
+                                  keyboardType: TextInputType.phone,
+                                  labelText:
+                                      AppLocalizations.of(context).phoneTitle,
+                                  passwordText: false,
+                                  prefixIcon: Icons.phone,
+                                  sufixIcon: null,
+                                  textFieldName: 'phone'),
                         ),
                         InkWell(
                           onTap: () {
@@ -331,72 +374,27 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     //Password TextField
-                    TextField(
-                      obscureText: obscureText,
-                      controller: passwordController,
-                      onTap: () {
-                        setState(() {
-                          passwordErrorMessage = '';
-                        });
-                      },
-                      focusNode: passwordFocusNode,
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.headline2.color,
-                      ),
-                      cursorColor: Theme.of(context).primaryColor,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
+                    textField(
+                        controller: passwordController,
+                        errorText: passwordErrorMessage,
+                        focusNode: passwordFocusNode,
+                        hintText: '',
+                        keyboardType: TextInputType.text,
+                        labelText: AppLocalizations.of(context).passwordTitle,
+                        passwordText: obscureText,
+                        prefixIcon: Icons.lock,
+                        sufixIcon: IconButton(
                           icon: const Icon(Icons.remove_red_eye),
                           onPressed: () {
                             setState(() {
-                              obscureText = obscureText;
+                              obscureText = !obscureText;
                             });
                           },
                           color: passwordFocusNode.hasFocus
                               ? Theme.of(context).primaryColor
                               : Colors.black54,
                         ),
-                        prefixIcon: Icon(Icons.lock,
-                            color: passwordFocusNode.hasFocus
-                                ? Theme.of(context).primaryColor
-                                : Colors.black54),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: passwordFocusNode.hasFocus
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.black54),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(30.0),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                              color: passwordFocusNode.hasFocus
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.black54),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(30.0),
-                          ),
-                        ),
-                        errorBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.redAccent),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(30.0),
-                          ),
-                        ),
-                        labelText: AppLocalizations.of(context).passwordTitle,
-                        errorText: passwordErrorMessage == ''
-                            ? null
-                            : passwordErrorMessage,
-                        labelStyle: TextStyle(
-                          color: passwordFocusNode.hasFocus
-                              ? Theme.of(context).primaryColor
-                              : Colors.black54,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-
+                        textFieldName: 'password'),
                     const SizedBox(
                       height: 10,
                     ),
@@ -421,12 +419,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 80,
                     ),
                     loading == true
-                        ? Center(
-                            child: LoadingAnimationWidget.fourRotatingDots(
-                              color: Theme.of(context).primaryColor,
-                              size: 50,
-                            ),
-                          )
+                        ? FourDotsLoading()
                         : Padding(
                             padding: const EdgeInsets.only(
                               left: 8,

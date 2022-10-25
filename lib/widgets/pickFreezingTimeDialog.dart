@@ -181,8 +181,6 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                                 context: context,
                                 duration:
                                     '${durationController.text.trim()} $dropdownValue');
-                            freezeButtonText =
-                                AppLocalizations.of(context).reactivate;
 
                             //   await refresh();
                             Navigator.of(context).pop(true);
@@ -216,6 +214,14 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                                   },
                                   buttonColor: Colors.redAccent),
                             );
+
+                            setState(() {
+                              loading = false;
+                            });
+                          } catch (error) {
+                            showToast(
+                                AppLocalizations.of(context).somethingWentWrong,
+                                context);
                           }
                         },
                         child: Padding(

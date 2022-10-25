@@ -460,6 +460,41 @@
     "tryAgain": "Try Again",
     "@language": {
       "description": " "
+    },
+
+    "passwordIsRequired": "Password is required",
+    "@language": {
+      "description": " "
+    },
+
+    "forgotYourPassword": "Forgot your password",
+    "@language": {
+      "description": " "
+    },
+
+    "forgotYourPasswordSubtitle": "We need your email address to send you the password reset code.",
+    "@language": {
+      "description": " "
+    },
+
+    "send": "Send",
+    "@language": {
+      "description": " "
+    },
+
+    "emailIsrRequired": "Email is required",
+    "@language": {
+      "description": " "
+    },
+
+    "emailIssentSuccessfully": "Email is sent successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "unblockMember": "Unblock Member",
+    "@language": {
+      "description": " "
     }
 
 

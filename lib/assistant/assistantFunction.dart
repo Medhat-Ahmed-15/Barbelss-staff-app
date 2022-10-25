@@ -84,13 +84,7 @@ void showErrorDialog(
 
 //Get All Members/////////////////////////////////////////////////////////////////////////////
 
-Future<void> getAllMembers(BuildContext context) async {
-  var connection = await Connectivity().checkConnectivity();
-
-  if (connection == ConnectivityResult.none) {
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
-  }
-
+Future<void> getAllMembers() async {
   String url =
       'http://159.223.172.150/api/v1/members/clubs/${currentStaffData.staffClubId}/search?phone=&countryCode=?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -127,38 +121,32 @@ Future<void> getAllMemberRegistartions() async {
   String url =
       'http://159.223.172.150/api/v1/registrations/clubs/${currentStaffData.staffClubId}/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    var res = await http.get(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-access-token': token
-      },
-    );
+  var res = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+  );
 
-    String jSonData = res.body;
-    var decodeData = jsonDecode(jSonData);
+  String jSonData = res.body;
+  var decodeData = jsonDecode(jSonData);
 
-    print(
-        'All Member Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
+  print(
+      'All Member Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
 
-    if (decodeData['accepted'] == false) {
-      throw GetRequestException('Error');
-    }
-
-    var allMemberRegistrations = decodeData['memberRegistrations'];
-
-    allMemberRegistrationsList = (allMemberRegistrations as List)
-        .map((index) => MemberRegistrationsResponseData.fromjson(index))
-        .toList();
-
-    print(
-        'All member registartions legnth:: ${allMemberRegistrationsList.length}');
-  } on SocketException {
-    print(
-        'Get all member registraions socket exception (assistanFUnctions.dart)');
-    throw SocketException('error');
+  if (decodeData['accepted'] == false) {
+    throw GetRequestException('Error');
   }
+
+  var allMemberRegistrations = decodeData['memberRegistrations'];
+
+  allMemberRegistrationsList = (allMemberRegistrations as List)
+      .map((index) => MemberRegistrationsResponseData.fromjson(index))
+      .toList();
+
+  print(
+      'All member registartions legnth:: ${allMemberRegistrationsList.length}');
 }
 
 // Convert date to day in numbers month in text//////////////////////////////////////////////////////////////////////
@@ -362,26 +350,21 @@ Future<void> confirmArrival(
   String url =
       'http://159.223.172.150/api/v1/attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "registrationId": registrationId,
-          "staffId": currentStaffData.staffId
-        }));
-    final responseData = json.decode(response.body);
-    print(
-        'Confirm Arrival Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "registrationId": registrationId,
+        "staffId": currentStaffData.staffId
+      }));
+  final responseData = json.decode(response.body);
+  print(
+      'Confirm Arrival Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-  } on SocketException {
-    print('Confirm Arrival socket exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 
@@ -474,31 +457,24 @@ Future<void> updateMemberQrCode({BuildContext context}) async {
   String url =
       'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.patch(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "QRCodeURL": qrCodeURL,
-          "QRCodeUUID": qrCodeUUID,
-        }));
-    final responseData = jsonDecode(response.body.toString());
-    print(
-        'Update Member Qr Code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final response = await http.patch(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "QRCodeURL": qrCodeURL,
+        "QRCodeUUID": qrCodeUUID,
+      }));
+  final responseData = jsonDecode(response.body.toString());
+  print(
+      'Update Member Qr Code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-
-    sendVerificationCodeToWhatsApp(context);
-  } on SocketException {
-    print('update Member Qr Code socket exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
-  } catch (e) {
-    print(e);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
+
+  sendVerificationCodeToWhatsApp(context);
 }
 
 //Send Verification Code To Whatsapp Registration//////////////////////////////////////////////////////////////////////////
@@ -535,27 +511,22 @@ Future<void> freezeRegistration(
   String url =
       'http://159.223.172.150/api/v1/freeze-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "registrationId": registrationId,
-          "staffId": currentStaffData.staffId,
-          "freezeDuration": duration
-        }));
-    final responseData = json.decode(response.body);
-    print(
-        'Freeze Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "registrationId": registrationId,
+        "staffId": currentStaffData.staffId,
+        "freezeDuration": duration
+      }));
+  final responseData = json.decode(response.body);
+  print(
+      'Freeze Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-  } on SocketException {
-    print('Freeze registration socket exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 
@@ -566,60 +537,48 @@ Future<void> reactivateRegestration(
   String url =
       'http://159.223.172.150/api/v1/freeze-registrations/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.patch(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "staffId": currentStaffData.staffId,
-        }));
-    final responseData = json.decode(response.body);
-    print(
-        'Reactivate Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final response = await http.patch(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "staffId": currentStaffData.staffId,
+      }));
+  final responseData = json.decode(response.body);
+  print(
+      'Reactivate Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-  } on SocketException {
-    print('Reactivate registration socket exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 
 //Get All Member Attendences/////////////////////////////////////////////////////////////////////////////
 
-Future<void> getAllMemberAttendences(
-    String registrationId, BuildContext context) async {
+Future<void> getAllMemberAttendences(String registrationId) async {
   String url =
       'http://159.223.172.150/api/v1/attendances/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    var res = await http.get(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-access-token': token
-      },
-    );
+  var res = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+  );
 
-    final responseData = json.decode(res.body);
-    print(
-        'All Member Attendences Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final responseData = json.decode(res.body);
+  print(
+      'All Member Attendences Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    var allMemberAttendences = responseData['attendances'];
+  var allMemberAttendences = responseData['attendances'];
 
-    allMemberAttendencesList = (allMemberAttendences as List)
-        .map((index) => MemberAttendencesData.fromjson(index))
-        .toList();
+  allMemberAttendencesList = (allMemberAttendences as List)
+      .map((index) => MemberAttendencesData.fromjson(index))
+      .toList();
 
-    print('All member attendences legnth:: ${allMemberAttendencesList.length}');
-  } on SocketException {
-    print(
-        'Get all member attendences socket exception (assistanFUnctions.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
-  }
+  print('All member attendences legnth:: ${allMemberAttendencesList.length}');
 }
 
 //Update Verify Member Registration//////////////////////////////////////////////////////////////////////////
@@ -690,25 +649,20 @@ Future<void> addAttendanceBymember(
   String url =
       'http://159.223.172.150/api/v1/attendances/members/$memberId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-access-token': token
-      },
-    );
-    final responseData = json.decode(response.body);
-    print(
-        'Add Attendance By Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final response = await http.post(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+  );
+  final responseData = json.decode(response.body);
+  print(
+      'Add Attendance By Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(
-          '${responseData['message'] ?? 'error'}\n${responseData['note'] ?? 'error'}');
-    }
-  } on SocketException {
-    print('Add Attendance By Member exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(
+        '${responseData['message'] ?? 'error'}\n${responseData['note'] ?? 'error'}');
   }
 }
 //Forget Password Package///////////////////////////////////////////////
@@ -717,22 +671,18 @@ Future<void> memberForgetPassword(String email, BuildContext context) async {
   String url =
       'http://159.223.172.150/api/v1/auth/reset-password/mail/staff?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({"email": email}));
+  final response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({"email": email}));
 
-    final responseData = json.decode(response.body);
-    print(responseData);
+  final responseData = json.decode(response.body);
+  print(responseData);
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-  } on SocketException {
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 
@@ -744,45 +694,41 @@ Future<void> blockMember(
   String url =
       'http://159.223.172.150/api/v1/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.patch(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-access-token': token
+  final response = await http.patch(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+    body: json.encode(
+      {
+        "isBlocked": !pickedMember.isBlocked,
       },
-      body: json.encode(
-        {
-          "isBlocked": !pickedMember.isBlocked,
-        },
-      ),
-    );
+    ),
+  );
 
-    final responseData = json.decode(response.body);
-    print(responseData);
+  final responseData = json.decode(response.body);
+  print(responseData);
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-
-    MemberData memberData = MemberData();
-    memberData.memberId = responseData['member']['_id'];
-    memberData.clubId = responseData['member']['clubId'];
-    memberData.memberName = responseData['member']['name'];
-    memberData.staffId = responseData['member']['staffId'];
-    memberData.gender = responseData['member']['gender'];
-    memberData.memberEmail = responseData['member']['email'];
-    memberData.birthYear = responseData['member']['birthYear'];
-    memberData.isBlocked = responseData['member']['isBlocked'];
-    memberData.createdAt = responseData['member']['createdAt'];
-    memberData.memberPhone = responseData['member']['phone'];
-    memberData.countryCode = responseData['member']['countryCode'];
-    memberData.qrCodeURL = responseData['member']['QRCodeURL'];
-    memberData.qrCodeUUID = responseData['member']['QRCodeUUID'];
-    memberData.canAuthenticate = responseData['member']['canAuthenticate'];
-
-    pickedMember = memberData;
-  } on SocketException {
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
+
+  MemberData memberData = MemberData();
+  memberData.memberId = responseData['member']['_id'];
+  memberData.clubId = responseData['member']['clubId'];
+  memberData.memberName = responseData['member']['name'];
+  memberData.staffId = responseData['member']['staffId'];
+  memberData.gender = responseData['member']['gender'];
+  memberData.memberEmail = responseData['member']['email'];
+  memberData.birthYear = responseData['member']['birthYear'];
+  memberData.isBlocked = responseData['member']['isBlocked'];
+  memberData.createdAt = responseData['member']['createdAt'];
+  memberData.memberPhone = responseData['member']['phone'];
+  memberData.countryCode = responseData['member']['countryCode'];
+  memberData.qrCodeURL = responseData['member']['QRCodeURL'];
+  memberData.qrCodeUUID = responseData['member']['QRCodeUUID'];
+  memberData.canAuthenticate = responseData['member']['canAuthenticate'];
+
+  pickedMember = memberData;
 }

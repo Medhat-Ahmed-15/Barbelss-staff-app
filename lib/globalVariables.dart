@@ -12,7 +12,6 @@ String qrCodeURL = '';
 String qrCodeUUID = '';
 String addNewMemberFieldKey;
 String loginFieldKey;
-String freezeButtonText = '';
 
 bool addedVerifyMember = false;
 bool showConnectedToInternetPopUp = false;

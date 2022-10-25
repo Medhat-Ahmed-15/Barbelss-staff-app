@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/memberData.dart';
 import 'package:gym_staff_app/screens/memberDetailsScreen.dart';
-
 import '../../assistant/assistantFunction.dart';
 
 class MemberDataTile extends StatefulWidget {
