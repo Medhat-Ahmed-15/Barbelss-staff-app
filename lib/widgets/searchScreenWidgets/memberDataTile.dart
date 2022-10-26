@@ -9,8 +9,9 @@ import '../../assistant/assistantFunction.dart';
 
 class MemberDataTile extends StatefulWidget {
   MemberData memberData;
+  Function refresh;
 
-  MemberDataTile(this.memberData);
+  MemberDataTile(this.memberData, this.refresh);
   @override
   State<MemberDataTile> createState() => _MemberDataTileState();
 }
@@ -120,13 +121,15 @@ class _MemberDataTileState extends State<MemberDataTile> {
                     color: Colors.grey,
                   ),
                 ),
-                onTap: () {
+                onTap: () async {
                   pickedMember = widget.memberData;
                   print('Current member id:: ${pickedMember.memberId}');
                   print(
                       'Current member validation:: ${pickedMember.canAuthenticate}');
 
-                  Navigator.pushNamed(context, MemberDetailsScreen.routeName);
+                  await Navigator.pushNamed(
+                      context, MemberDetailsScreen.routeName);
+                  await widget.refresh();
                 },
               ),
             ),

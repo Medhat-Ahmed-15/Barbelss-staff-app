@@ -107,29 +107,11 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                             loading = true;
                           });
 
-                          var response = await extractImageAndPutInFirebase(
+                          await extractImageAndPutInFirebase(
                               globalKey, widget.phone);
-                          Navigator.of(context).pop(response);
-                        } on SocketException {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) => FeedBackDialog(
-                                titleText: AppLocalizations.of(context)
-                                    .connectionStatusMessage,
-                                gif: 'assets/gifs/fail.json',
-                                enableButton: true,
-                                buttonText:
-                                    AppLocalizations.of(context).doneTitle,
-                                callBackFunction: () {
-                                  Navigator.of(context).pop();
-                                },
-                                buttonColor: Colors.redAccent),
-                          );
+                          Navigator.of(context).pop(true);
                         } catch (error) {
-                          showToast(
-                              AppLocalizations.of(context).somethingWentWrong,
-                              context);
+                          rethrow;
                         }
 
                         setState(() {

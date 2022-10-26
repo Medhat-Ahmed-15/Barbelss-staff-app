@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/providers/localLanguageProvider.dart';
+import 'package:gym_staff_app/screens/aboutScreen.dart';
 import 'package:gym_staff_app/screens/changeLanguageScreen.dart';
 import 'package:gym_staff_app/screens/forgotPassword_screen.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
@@ -92,6 +93,7 @@ class MyApp extends StatelessWidget {
                   locale: localLanguageProviderObj.locale,
                   routes: {
                     LoginScreen.routeName: (ctx) => LoginScreen(),
+                    AboutScreen.routeName: (ctx) => AboutScreen(),
                     ForgotPasswordScreen.routeName: (ctx) =>
                         ForgotPasswordScreen(),
                     MemberPersonalDataScreen.routeName: (ctx) =>

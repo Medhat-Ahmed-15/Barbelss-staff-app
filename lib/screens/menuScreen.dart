@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/menuItem.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
+import 'package:gym_staff_app/screens/aboutScreen.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
 import 'package:gym_staff_app/screens/settingsScreen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,8 +24,6 @@ class _MenuScreenState extends State<MenuScreen> {
   ];
 
   bool loadingUserData = false;
-
-  bool isInit = true;
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +98,8 @@ class _MenuScreenState extends State<MenuScreen> {
           } else if (item.title == 'Log Out') {
             Navigator.of(context).pushReplacementNamed('/');
             Provider.of<AuthProvider>(context, listen: false).SignOut();
+          } else {
+            Navigator.of(context).pushNamed(AboutScreen.routeName);
           }
         },
       );

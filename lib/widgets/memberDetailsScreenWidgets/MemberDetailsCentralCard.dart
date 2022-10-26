@@ -3,8 +3,8 @@ import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../screens/memberPersonalDataScreen.dart';
 
-class CentralCard extends StatelessWidget {
-  const CentralCard({
+class MemberDetailsCentralCard extends StatelessWidget {
+  const MemberDetailsCentralCard({
     Key key,
   }) : super(key: key);
 
@@ -54,25 +54,17 @@ class CentralCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 20),
               ),
-              const SizedBox(
-                height: 5,
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(
-                      context, MemberPersonalDataScreen.routeName);
-                },
-                child: Align(
-                  alignment: Alignment.center,
+              TextButton(
                   child: Text(
                     AppLocalizations.of(context).showMore,
-                    textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold),
                   ),
-                ),
-              ),
+                  onPressed: () {
+                    Navigator.pushNamed(
+                        context, MemberPersonalDataScreen.routeName);
+                  }),
             ],
           ),
         ),

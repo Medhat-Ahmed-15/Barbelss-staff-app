@@ -41,7 +41,9 @@ class MiddleContent extends StatelessWidget {
               ),
             ),
             Text(
-              pickedMember.memberEmail,
+              pickedMember.memberEmail == ''
+                  ? AppLocalizations.of(context).emailHasNotBeenSpecified
+                  : pickedMember.memberEmail,
               style: const TextStyle(
                   // fontWeight: FontWeight.bold,
                   fontSize: 18.0,

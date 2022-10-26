@@ -41,7 +41,7 @@
       "description": " "
     },
 
-    "aboutUsIconTitle": "About Us",
+    "aboutUsIconTitle": "About App",
     "@language": {
       "description": " "
     },
@@ -493,6 +493,37 @@
     },
 
     "unblockMember": "Unblock Member",
+    "@language": {
+      "description": " "
+    },
+
+    "memberIsBlockedSuccessfullly": "Member is blocked successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "memberIsUnBlockedSuccessfullly": "Member is unblocked successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "loginSubtitleOne": "Manage and track",
+    "@language": {
+      "description": " "
+    },
+
+    "loginSubtitleTwo": "your member registrations with us",
+    "@language": {
+      "description": " "
+    },
+
+
+    "appName": "arbells",
+    "@language": {
+      "description": " "
+    },
+
+    "emailHasNotBeenSpecified": "The email has not been specified",
     "@language": {
       "description": " "
     }

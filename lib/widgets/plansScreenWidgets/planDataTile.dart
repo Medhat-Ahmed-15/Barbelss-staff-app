@@ -9,8 +9,7 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/planData.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-
+import 'package:gym_staff_app/widgets/FourDotsLoading.dart';
 import '../feedBackDialog.dart';
 
 class PlanDataTile extends StatefulWidget {
@@ -173,13 +172,8 @@ class _PlanDataTileState extends State<PlanDataTile> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: loading == true
-                      ? Center(
-                          child: LoadingAnimationWidget.fourRotatingDots(
-                            color: Theme.of(context).primaryColor,
-                            size: 50,
-                          ),
-                        )
-                      : Container(
+                      ? FourDotsLoading()
+                      : SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: 56,
                           child: ElevatedButton(
@@ -301,6 +295,11 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                 setState(() {
                                   loading = false;
                                 });
+                              } catch (error) {
+                                showToast(
+                                    AppLocalizations.of(context)
+                                        .somethingWentWrong,
+                                    context);
                               }
                             },
                             child: Padding(

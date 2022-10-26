@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
@@ -227,57 +226,50 @@ Future<void> addNewMember(
   print('CURRENT STAFF ID:: ${currentStaffData.staffId}');
   print('CURRENT URL:: $qrCodeURL');
 
-  try {
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "clubId": currentStaffData.staffClubId,
-          "name": name,
-          "email": email,
-          "phone": phone,
-          "gender": gender,
-          "age": age,
-          "membership": membership,
-          "countryCode": phoneCode,
-          "staffId": currentStaffData.staffId,
-          "canAuthenticate": isAuthenticate,
-          "languageCode": localeLanguage == const Locale('en') ? "en" : "ar",
-        }));
-    final responseData = json.decode(response.body);
-    print(
-        'Add New Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "clubId": currentStaffData.staffClubId,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "gender": gender,
+        "age": age,
+        "membership": membership,
+        "countryCode": phoneCode,
+        "staffId": currentStaffData.staffId,
+        "canAuthenticate": isAuthenticate,
+        "languageCode": localeLanguage == const Locale('en') ? "en" : "ar",
+      }));
+  final responseData = json.decode(response.body);
+  print(
+      'Add New Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
-    if (responseData['accepted'] == false) {
-      addNewMemberFieldKey = responseData['field'];
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-
-    MemberData memberData = MemberData();
-
-    memberData.memberId = responseData['newMember']['_id'];
-    memberData.clubId = responseData['newMember']['clubId'];
-    memberData.memberName = responseData['newMember']['name'];
-    memberData.memberEmail = responseData['newMember']['email'];
-    memberData.memberPhone = responseData['newMember']['phone'];
-    memberData.countryCode = responseData['newMember']['countryCode'];
-    memberData.staffId = responseData['newMember']['staffId'];
-    memberData.membership = responseData['newMember']['membership'];
-    memberData.gender = responseData['newMember']['gender'];
-    memberData.canAuthenticate = responseData['newMember']['canAuthenticate'];
-    memberData.isBlocked = responseData['newMember']['isBlocked'];
-
-    pickedMember = memberData;
-
-    print('Current member id:: ${pickedMember.memberId}');
-  } on SocketException {
-    print('Add New Member socket exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
-  } catch (error) {
-    rethrow;
+  if (responseData['accepted'] == false) {
+    addNewMemberFieldKey = responseData['field'];
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
+
+  MemberData memberData = MemberData();
+
+  memberData.memberId = responseData['newMember']['_id'];
+  memberData.clubId = responseData['newMember']['clubId'];
+  memberData.memberName = responseData['newMember']['name'];
+  memberData.memberEmail = responseData['newMember']['email'];
+  memberData.memberPhone = responseData['newMember']['phone'];
+  memberData.countryCode = responseData['newMember']['countryCode'];
+  memberData.staffId = responseData['newMember']['staffId'];
+  memberData.membership = responseData['newMember']['membership'];
+  memberData.gender = responseData['newMember']['gender'];
+  memberData.canAuthenticate = responseData['newMember']['canAuthenticate'];
+  memberData.isBlocked = responseData['newMember']['isBlocked'];
+
+  pickedMember = memberData;
+
+  print('Current member id:: ${pickedMember.memberId}');
 }
 
 //Get All Plans/////////////////////////////////////////////////////////////////
@@ -316,29 +308,23 @@ Future<void> registerPlan(
   String url =
       'http://159.223.172.150/api/v1/registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "clubId": currentStaffData.staffClubId,
-          "memberId": pickedMember.memberId,
-          "staffId": currentStaffData.staffId,
-          "packageId": planId,
-          "paid": planPrice
-        }));
-    final responseData = json.decode(response.body);
-    print(responseData);
+  final response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "clubId": currentStaffData.staffClubId,
+        "memberId": pickedMember.memberId,
+        "staffId": currentStaffData.staffId,
+        "packageId": planId,
+        "paid": planPrice
+      }));
+  final responseData = json.decode(response.body);
+  print(responseData);
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-  } on SocketException {
-    print(
-        'Register Member in a new package socket exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 
@@ -374,26 +360,21 @@ Future<void> cancelAttendence(
   String url =
       'http://159.223.172.150/api/v1/cancelled-attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "clubId": currentStaffData.staffClubId,
-          "registrationId": registrationId,
-          "staffId": currentStaffData.staffId
-        }));
-    final responseData = json.decode(response.body);
-    print(responseData);
+  final response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "clubId": currentStaffData.staffClubId,
+        "registrationId": registrationId,
+        "staffId": currentStaffData.staffId
+      }));
+  final responseData = json.decode(response.body);
+  print(responseData);
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-  } on SocketException {
-    print('Cancel Arrival socket exception (assistantFunction.dart)');
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 
@@ -425,37 +406,31 @@ Future<void> deleteRegistration(
 
 //Extract Qr Image///////////////////////////////////////////////////////////
 
-Future<bool> extractImageAndPutInFirebase(
+Future<void> extractImageAndPutInFirebase(
     GlobalKey globalKey, String phone) async {
-  try {
 //Get the render object from context.
-    final RenderRepaintBoundary boundary =
-        globalKey.currentContext.findRenderObject();
-    //Convert to the image
-    var image = await boundary.toImage(pixelRatio: 1);
-    final byteData = await image.toByteData(format: ImageByteFormat.png);
-    final imageBytes = byteData.buffer.asUint8List(); //convert to unsigned
-    Reference storageRef = FirebaseStorage.instance.ref();
+  final RenderRepaintBoundary boundary =
+      globalKey.currentContext.findRenderObject();
+  //Convert to the image
+  var image = await boundary.toImage(pixelRatio: 1);
+  final byteData = await image.toByteData(format: ImageByteFormat.png);
+  final imageBytes = byteData.buffer.asUint8List(); //convert to unsigned
+  Reference storageRef = FirebaseStorage.instance.ref();
 
-    var sref =
-        storageRef.child("IMG_${currentStaffData.staffClubId}_$phone.png");
+  var sref = storageRef.child("IMG_${currentStaffData.staffClubId}_$phone.png");
 
-    await sref.putData(imageBytes, SettableMetadata(contentType: "image/png"));
+  await sref.putData(imageBytes, SettableMetadata(contentType: "image/png"));
 
-    qrCodeURL = await sref.getDownloadURL();
-    log('CURRENT URL2:: $qrCodeURL');
-    print('CURRENT URL2:: $qrCodeURL');
-    return true;
-  } catch (error) {
-    return false;
-  }
+  qrCodeURL = await sref.getDownloadURL();
+  log('CURRENT URL2:: $qrCodeURL');
+  print('CURRENT URL2:: $qrCodeURL');
 }
 
 //Delete Registration//////////////////////////////////////////////////////////////////////////
 
 Future<void> updateMemberQrCode({BuildContext context}) async {
   String url =
-      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code?lang=lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   final response = await http.patch(Uri.parse(url),
       headers: <String, String>{
@@ -466,7 +441,7 @@ Future<void> updateMemberQrCode({BuildContext context}) async {
         "QRCodeURL": qrCodeURL,
         "QRCodeUUID": qrCodeUUID,
       }));
-  final responseData = jsonDecode(response.body.toString());
+  final responseData = jsonDecode(response.body);
   print(
       'Update Member Qr Code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
@@ -481,7 +456,7 @@ Future<void> updateMemberQrCode({BuildContext context}) async {
 
 Future<void> sendVerificationCodeToWhatsApp(BuildContext context) async {
   String url =
-      'http://159.223.172.150/api/v1/auth/members/${pickedMember.memberId}/language/en/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/language/${localeLanguage == const Locale('en') ? 'en' : 'ar'}/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   try {
     final response = await http.post(
@@ -499,7 +474,6 @@ Future<void> sendVerificationCodeToWhatsApp(BuildContext context) async {
       throw GetRequestException(responseData['message'] ?? 'error');
     }
   } on SocketException {
-    print('Send QrCode socket exception (assistantFunction.dart)');
     throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
   }
 }

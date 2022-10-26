@@ -60,10 +60,6 @@ dependencies:
   uuid: ^3.0.6
   flutter_custom_clippers: ^2.0.0
   blur: ^3.1.0
-  fab_circular_menu: ^1.0.2
-  sqflite: ^2.0.3+1
-  connectivity_plus: ^2.3.8
-  internet_connection_checker: ^0.0.1+4
   overlay_support: ^2.0.1
   flutter_native_splash: ^2.2.9
 
@@ -98,6 +94,11 @@ flutter:
     - assets/images/male.png
     - assets/images/b8.png
     - assets/images/female.png
+    - assets/images/barbellsLogo.png
+    - assets/images/twitter.png
+    - assets/images/facebook.png
+    - assets/images/instagram.png
+    - assets/images/linkedin.png
     - assets/gifs/empty.json
     - assets/gifs/error.json
     - assets/gifs/success.json

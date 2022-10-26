@@ -5,12 +5,13 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/widgets/FourDotsLoading.dart';
 import 'package:gym_staff_app/widgets/InternetConnectionError.dart';
+import 'package:gym_staff_app/widgets/memberPackageDetailsScreenWidgets/MemberPackageDetailsScreenCentralCard.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../widgets/EmptyAnimationWidget.dart';
 import '../widgets/ListCountSubTitle.dart';
 import '../widgets/feedBackDialog.dart';
-import '../widgets/memberDetailsScreenWidgets/CentralCard.dart';
+import '../widgets/memberDetailsScreenWidgets/MemberDetailsCentralCard.dart';
 import '../widgets/memberPackageDetailsScreenWidgets/BackButtonAndScreenTitle.dart';
 import '../widgets/memberPackageDetailsScreenWidgets/memberAttendencesDataTile.dart';
 import '../widgets/pickFreezingTimeDialog.dart';
@@ -100,6 +101,7 @@ class _MemberPackageDetailsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Stack(
           children: [
@@ -176,7 +178,7 @@ class _MemberPackageDetailsScreenState
             //Back Button And Screen title
             const BackButtonAndScreenTitle(),
             //Central Card
-            const CentralCard(),
+            const MemberPackageDetailsScreenCentralCard(),
             confirmationLoading == true
                 ? Container(
                     width: MediaQuery.of(context).size.width,
@@ -196,9 +198,7 @@ class _MemberPackageDetailsScreenState
         ),
         floatingActionButton: connectionError == true
             ? const Text('')
-            : empty == true
-                ? const Text('')
-                : freezeOrReactivateFloatingButton());
+            : freezeOrReactivateFloatingButton());
   }
 
   Widget freezeOrReactivateFloatingButton() {

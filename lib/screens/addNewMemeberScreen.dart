@@ -50,6 +50,92 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
 
   int currentStep = 0;
 
+  Widget textField({
+    String textFieldName,
+    TextEditingController controller,
+    TextInputType keyboardType,
+    FocusNode focusNode,
+    IconData prefixIcon,
+    String labelText,
+    String hintText,
+    String errorText,
+  }) {
+    return TextField(
+      controller: controller,
+      onTap: () {
+        if (textFieldName == 'name') {
+          setState(() {
+            nameErrorText = '';
+          });
+        } else if (textFieldName == 'email') {
+          setState(() {
+            emailErrorText = '';
+          });
+        } else if (textFieldName == 'age') {
+          setState(() {
+            ageErrorText = '';
+          });
+        } else if (textFieldName == 'membership') {
+          setState(() {
+            membershipErrorText = '';
+          });
+        } else {
+          setState(() {
+            phoneErrorText = '';
+          });
+        }
+      },
+      focusNode: focusNode,
+      style: TextStyle(color: Theme.of(context).primaryColor),
+      cursorColor: Theme.of(context).primaryColor,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          prefixIcon,
+          color: focusNode.hasFocus
+              ? Theme.of(context).primaryColor
+              : Colors.black54,
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: focusNode.hasFocus
+                ? Theme.of(context).primaryColor
+                : Colors.black54,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(30.0),
+          ),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: focusNode.hasFocus
+                ? Theme.of(context).primaryColor
+                : Colors.black54,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(30.0),
+          ),
+        ),
+        errorBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.redAccent,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(30.0),
+          ),
+        ),
+        labelText: labelText,
+        hintText: hintText,
+        errorText: errorText == '' ? null : errorText,
+        labelStyle: TextStyle(
+          color: focusNode.hasFocus
+              ? Theme.of(context).primaryColor
+              : Colors.black54,
+        ),
+      ),
+    );
+  }
+
   next() {
     currentStep + 1 != (currentStaffData.hasMembership == true ? 4 : 3)
         ? goTo(currentStep + 1)
@@ -176,7 +262,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                 : 0,
             phoneCode: phoneCode);
 
-        responseFomQrDialog = await showDialog(
+        await showDialog(
           context: context,
           barrierDismissible: true,
           builder: (BuildContext context) => QrCodeDialog(
@@ -186,46 +272,23 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
             context,
           ),
         );
-        if (responseFomQrDialog == true) {
-          await updateMemberVerification(
-              context: context, verificationStatus: isAuthenticate);
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) => FeedBackDialog(
-                titleText:
-                    AppLocalizations.of(context).memberAddedSuccessfullyTitle,
-                gif: 'assets/gifs/success.json',
-                enableButton: true,
-                buttonText: AppLocalizations.of(context).enrollNowTitle,
-                callBackFunction: () {
-                  Navigator.of(context).pushNamed(PlansScreen.routeName,
-                      arguments: 'addMemberScreen');
-                },
-                buttonColor: Theme.of(context).primaryColor),
-          );
-        } else {
-          await updateMemberVerification(
-              context: context, verificationStatus: false);
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) => FeedBackDialog(
-                titleText:
-                    AppLocalizations.of(context).memberAddedWithoutVerify,
-                gif: 'assets/gifs/success.json',
-                enableButton: true,
-                buttonText: AppLocalizations.of(context).enrollNowTitle,
-                callBackFunction: () {
-                  Navigator.of(context).pushNamed(PlansScreen.routeName,
-                      arguments: 'addMemberScreen');
-                },
-                buttonColor: Theme.of(context).primaryColor),
-          );
-          setState(() {
-            isAuthenticate = false;
-          });
-        }
+        await updateMemberVerification(
+            context: context, verificationStatus: isAuthenticate);
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) => FeedBackDialog(
+              titleText:
+                  AppLocalizations.of(context).memberAddedSuccessfullyTitle,
+              gif: 'assets/gifs/success.json',
+              enableButton: true,
+              buttonText: AppLocalizations.of(context).enrollNowTitle,
+              callBackFunction: () {
+                Navigator.of(context).pushNamed(PlansScreen.routeName,
+                    arguments: 'addMemberScreen');
+              },
+              buttonColor: Theme.of(context).primaryColor),
+        );
       } else {
         await addNewMember(
             context: context,
@@ -241,7 +304,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
 
         showDialog(
           context: context,
-          barrierDismissible: false,
+          barrierDismissible: true,
           builder: (BuildContext context) => FeedBackDialog(
               titleText:
                   AppLocalizations.of(context).memberAddedSuccessfullyTitle,
@@ -259,12 +322,12 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
       setState(() {
         loading = false;
       });
-    } on SocketException catch (error) {
+    } on SocketException {
       showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) => FeedBackDialog(
-            titleText: error.toString(),
+            titleText: AppLocalizations.of(context).connectionStatusMessage,
             gif: 'assets/gifs/fail.json',
             enableButton: true,
             buttonText: AppLocalizations.of(context).doneTitle,
@@ -358,23 +421,25 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           loading = false;
         });
       } else {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) => FeedBackDialog(
+              titleText: errorMessage,
+              gif: 'assets/gifs/fail.json',
+              enableButton: true,
+              buttonText: AppLocalizations.of(context).doneTitle,
+              callBackFunction: () {
+                Navigator.of(context).pop();
+              },
+              buttonColor: Colors.redAccent),
+        );
         setState(() {
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) => FeedBackDialog(
-                titleText: errorMessage,
-                gif: 'assets/gifs/fail.json',
-                enableButton: true,
-                buttonText: AppLocalizations.of(context).doneTitle,
-                callBackFunction: () {
-                  Navigator.of(context).pop();
-                },
-                buttonColor: Colors.redAccent),
-          );
           loading = false;
         });
       }
+    } catch (error) {
+      showToast(AppLocalizations.of(context).somethingWentWrong, context);
     }
   }
 
@@ -403,231 +468,49 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         content: Column(
           children: [
             //Name
-            TextField(
-              controller: nameController,
-              onTap: () {
-                setState(() {
-                  nameErrorText = '';
-                });
-              },
-              focusNode: nameFocusNode,
-              style: TextStyle(color: Theme.of(context).primaryColor),
-              cursorColor: Theme.of(context).primaryColor,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.person,
-                  color: nameFocusNode.hasFocus
-                      ? Theme.of(context).primaryColor
-                      : Colors.black54,
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: nameFocusNode.hasFocus
-                        ? Theme.of(context).primaryColor
-                        : Colors.black54,
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: nameFocusNode.hasFocus
-                        ? Theme.of(context).primaryColor
-                        : Colors.black54,
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                ),
-                errorBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.redAccent,
-                  ),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                ),
+            textField(
+                controller: nameController,
+                errorText: nameErrorText,
+                focusNode: nameFocusNode,
+                hintText: null,
+                keyboardType: TextInputType.text,
                 labelText: AppLocalizations.of(context).nameHint,
-                errorText: nameErrorText == '' ? null : nameErrorText,
-                labelStyle: TextStyle(
-                  color: nameFocusNode.hasFocus
-                      ? Theme.of(context).primaryColor
-                      : Colors.black54,
-                ),
-              ),
-            ),
-            // //Email
-            TextField(
-              controller: emailController,
-              onTap: () {
-                setState(() {
-                  emailErrorText = '';
-                });
-              },
-              focusNode: emailFocusNode,
-              style: TextStyle(color: Theme.of(context).primaryColor),
-              cursorColor: Theme.of(context).primaryColor,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.email,
-                  color: emailFocusNode.hasFocus
-                      ? Theme.of(context).primaryColor
-                      : Colors.black54,
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: emailFocusNode.hasFocus
-                        ? Theme.of(context).primaryColor
-                        : Colors.black54,
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30),
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: emailFocusNode.hasFocus
-                        ? Theme.of(context).primaryColor
-                        : Colors.black54,
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                ),
-                errorBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.redAccent),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                ),
-                labelText: AppLocalizations.of(context).emailTitle,
-                errorText: emailErrorText == '' ? null : emailErrorText,
+                prefixIcon: Icons.person,
+                textFieldName: 'name'),
+            //Email
+            textField(
+                controller: emailController,
+                errorText: emailErrorText,
+                focusNode: emailFocusNode,
                 hintText: AppLocalizations.of(context).optionalTitle,
-                labelStyle: TextStyle(
-                  color: emailFocusNode.hasFocus
-                      ? Theme.of(context).primaryColor
-                      : Colors.black54,
-                ),
-              ),
-            ),
+                keyboardType: TextInputType.text,
+                labelText: AppLocalizations.of(context).emailTitle,
+                prefixIcon: Icons.email,
+                textFieldName: 'email'),
             //Age
-            TextField(
-              controller: ageController,
-              onTap: () {
-                setState(() {
-                  ageErrorText = '';
-                });
-              },
-              focusNode: ageFocusNode,
-              style: TextStyle(color: Theme.of(context).primaryColor),
-              cursorColor: Theme.of(context).primaryColor,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.numbers,
-                  color: ageFocusNode.hasFocus
-                      ? Theme.of(context).primaryColor
-                      : Colors.black54,
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: ageFocusNode.hasFocus
-                        ? Theme.of(context).primaryColor
-                        : Colors.black54,
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30),
-                  ),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: ageFocusNode.hasFocus
-                        ? Theme.of(context).primaryColor
-                        : Colors.black54,
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                ),
-                errorBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.redAccent),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(30.0),
-                  ),
-                ),
+            textField(
+                controller: ageController,
+                errorText: ageErrorText,
+                focusNode: ageFocusNode,
+                hintText: null,
+                keyboardType: TextInputType.number,
                 labelText: AppLocalizations.of(context).age,
-                errorText: ageErrorText == '' ? null : ageErrorText,
-                labelStyle: TextStyle(
-                  color: ageFocusNode.hasFocus
-                      ? Theme.of(context).primaryColor
-                      : Colors.black54,
-                ),
-              ),
-            ),
+                prefixIcon: Icons.numbers,
+                textFieldName: 'age'),
             //Phone
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: phoneController,
-                    obscureText: false,
-                    onTap: () {
-                      setState(() {
-                        phoneErrorText = '';
-                      });
-                    },
-                    focusNode: phoneFocusNode,
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                    cursorColor: Theme.of(context).primaryColor,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.phone,
-                        color: phoneFocusNode.hasFocus
-                            ? Theme.of(context).primaryColor
-                            : Colors.black54,
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: phoneFocusNode.hasFocus
-                              ? Theme.of(context).primaryColor
-                              : Colors.black54,
-                        ),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(30.0),
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: phoneFocusNode.hasFocus
-                              ? Theme.of(context).primaryColor
-                              : Colors.black54,
-                        ),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(30.0),
-                        ),
-                      ),
-                      errorBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.redAccent,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30.0),
-                        ),
-                      ),
-                      labelText: AppLocalizations.of(context).phoneHint,
+                  child: textField(
+                      controller: phoneController,
+                      errorText: phoneErrorText,
+                      focusNode: phoneFocusNode,
                       hintText: '$phonehHintText ex: 1282923670',
-                      errorText: phoneErrorText == '' ? null : phoneErrorText,
-                      labelStyle: TextStyle(
-                        color: phoneFocusNode.hasFocus
-                            ? Theme.of(context).primaryColor
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
+                      keyboardType: TextInputType.phone,
+                      labelText: AppLocalizations.of(context).phoneHint,
+                      prefixIcon: Icons.phone,
+                      textFieldName: 'phone'),
                 ),
                 InkWell(
                   onTap: () {
@@ -861,62 +744,15 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                   fontWeight: FontWeight.bold)),
           isActive: true,
           state: StepState.indexed,
-          content: TextField(
-            controller: membershipController,
-            onTap: () {
-              setState(() {
-                membershipErrorText = '';
-              });
-            },
-            focusNode: membershipFocusNode,
-            style: TextStyle(color: Theme.of(context).primaryColor),
-            cursorColor: Theme.of(context).primaryColor,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              prefixIcon: Icon(
-                Icons.assignment_ind_rounded,
-                color: membershipFocusNode.hasFocus
-                    ? Theme.of(context).primaryColor
-                    : Colors.black54,
-              ),
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: membershipFocusNode.hasFocus
-                      ? Theme.of(context).primaryColor
-                      : Colors.black54,
-                ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(30.0),
-                ),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: membershipFocusNode.hasFocus
-                      ? Theme.of(context).primaryColor
-                      : Colors.black54,
-                ),
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(30.0),
-                ),
-              ),
-              errorBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.redAccent,
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(30.0),
-                ),
-              ),
-              labelText: AppLocalizations.of(context).membership,
+          content: textField(
+              controller: membershipController,
+              errorText: membershipErrorText,
+              focusNode: membershipFocusNode,
               hintText: 'ex: 19203...',
-              errorText: membershipErrorText == '' ? null : membershipErrorText,
-              labelStyle: TextStyle(
-                color: membershipFocusNode.hasFocus
-                    ? Theme.of(context).primaryColor
-                    : Colors.black54,
-              ),
-            ),
-          ),
+              keyboardType: TextInputType.number,
+              labelText: AppLocalizations.of(context).membership,
+              prefixIcon: Icons.assignment_ind_rounded,
+              textFieldName: 'membership'),
         ),
       );
     }

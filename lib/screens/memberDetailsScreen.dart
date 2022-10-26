@@ -14,7 +14,7 @@ import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/widgets/memberDetailsScreenWidgets/memberPackageDataTile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../widgets/memberDetailsScreenWidgets/CentralCard.dart';
+import '../widgets/memberDetailsScreenWidgets/MemberDetailsCentralCard.dart';
 
 class MemberDetailsScreen extends StatefulWidget {
   static const routeName = '/MemberDetailsScreen';
@@ -230,7 +230,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             ],
           ),
           //central card
-          const CentralCard(),
+          const MemberDetailsCentralCard(),
           //back arrow
           Positioned(
             top: 40,

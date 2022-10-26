@@ -17,7 +17,7 @@
 
     "settingsIconTitle": "إعدادات",
 
-    "aboutUsIconTitle": "معلومات عنا",
+    "aboutUsIconTitle": "حول التطبيق",
 
     "logOutIconTitle": "تسجيل خروج",
 
@@ -177,7 +177,7 @@
 
      "membershipIsRequired": "العضوية مطلوبة",
 
-     "sorryMemberIsBlocked": "العضوية مطلوبة",
+     "sorryMemberIsBlocked": "آسف عضو محظور",
 
      "packageIsfreezed": "عذرا ، الحزمة مجمدة",
 
@@ -197,7 +197,19 @@
 
      "emailIssentSuccessfully": "تم إرسال البريد الإلكتروني بنجاح",
 
-     "unblockMember": "إلغاء حظر العضو"
+     "unblockMember": "إلغاء حظر العضو",
+
+     "memberIsBlockedSuccessfullly": "تم حظر العضو بنجاح",
+
+     "memberIsUnBlockedSuccessfullly": "تم إلغاء حظر العضو بنجاح",
+
+     "loginSubtitleOne": "إدارة وتتبع",
+
+     "loginSubtitleTwo": "تسجيلات أعضائك معنا",
+
+     "appName": "باربلس",
+
+     "emailHasNotBeenSpecified": "لم يتم تحديد البريد الإلكتروني"
 
 
 

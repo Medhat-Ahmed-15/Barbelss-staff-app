@@ -249,7 +249,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: ListView.builder(
                                 padding: const EdgeInsets.all(0),
                                 itemBuilder: (context, index) {
-                                  return MemberDataTile(allMembersList[index]);
+                                  return MemberDataTile(
+                                      allMembersList[index], refresh);
                                 },
                                 itemCount: allMembersList.length,
                               ),

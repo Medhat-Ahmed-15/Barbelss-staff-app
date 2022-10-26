@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class CentralCard extends StatelessWidget {
-  const CentralCard({
+class MemberPackageDetailsScreenCentralCard extends StatelessWidget {
+  const MemberPackageDetailsScreenCentralCard({
     Key key,
   }) : super(key: key);
 

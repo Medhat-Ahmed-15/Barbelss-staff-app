@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
@@ -41,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String phoneCode = '20';
   bool loading = false;
   double containerheight = 500;
+  bool isInit = true;
 
   Future<void> login(BuildContext context) async {
     if (phoneController.text.trim().isEmpty) {
@@ -161,6 +163,24 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    if (isInit == true) {
+      Fluttertoast.showToast(
+          msg:
+              ' \n \n Screen Width:  ${MediaQuery.of(context).size.width} \n \n Screen Height:  ${MediaQuery.of(context).size.height}  \n \n',
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 20.0);
+
+      isInit = false;
+    }
+  }
+
+  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
@@ -182,6 +202,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }) {
     return TextField(
       obscureText: passwordText,
+      keyboardType:
+          textFieldName == 'phone' ? TextInputType.phone : TextInputType.text,
       controller: controller,
       onTap: () {
         setState(() {
@@ -467,7 +489,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Positioned(
               top: 100,
-              left: 15,
+              left: localeLanguage == const Locale('en') ? 15 : 0,
+              right: localeLanguage != const Locale('en') ? 15 : 0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -478,9 +501,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 50,
                         width: 50,
                       ),
-                      const Text(
-                        'arbells',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context).appName,
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 50,
                           fontWeight: FontWeight.bold,
@@ -489,10 +512,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   Text(
-                    'Manage and track\nyour member registrations with us',
+                    AppLocalizations.of(context).loginSubtitleOne,
                     style: TextStyle(
                       color: Theme.of(context).scaffoldBackgroundColor,
-                      fontSize: 15,
+                      fontSize: localeLanguage == const Locale('en') ? 15 : 20,
+                    ),
+                  ),
+                  Text(
+                    AppLocalizations.of(context).loginSubtitleTwo,
+                    style: TextStyle(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      fontSize: localeLanguage == const Locale('en') ? 15 : 20,
                     ),
                   ),
                 ],

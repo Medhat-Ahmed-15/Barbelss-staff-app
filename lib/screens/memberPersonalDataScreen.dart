@@ -331,8 +331,10 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                                     FeedBackDialog(
                                         titleText: pickedMember.isBlocked ==
                                                 false
-                                            ? 'Member is unblocked successfully'
-                                            : 'Member is blocked successfully',
+                                            ? AppLocalizations.of(context)
+                                                .memberIsUnBlockedSuccessfullly
+                                            : AppLocalizations.of(context)
+                                                .memberIsBlockedSuccessfullly,
                                         gif: pickedMember.isBlocked == false
                                             ? 'assets/gifs/unblock.json'
                                             : 'assets/gifs/block.json',
