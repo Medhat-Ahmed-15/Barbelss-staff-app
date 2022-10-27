@@ -125,25 +125,26 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           //upper container containing burger button and title
           const upperContainer(),
-          //search textfield
+          //search textfield and list count
           Positioned(
             child: Padding(
               padding: const EdgeInsets.only(
                 top: 120,
-                left: 15,
-                right: 15,
               ),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  boxShadow: kElevationToShadow[1],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 8, bottom: 8),
+                      width: MediaQuery.of(context).size.width,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        boxShadow: kElevationToShadow[1],
+                      ),
                       child: TextField(
                         controller: searchController,
                         cursorColor: Theme.of(context).primaryColor,
@@ -208,19 +209,13 @@ class _SearchScreenState extends State<SearchScreen> {
                         },
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ListCountSubTitle(empty, 'members'),
+                  ),
+                ],
               ),
-            ),
-          ),
-          //number of members
-          Positioned(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: 200,
-                  left: localeLanguage == const Locale('en') ? 50 : 0,
-                  right: localeLanguage != const Locale('en') ? 50 : 0),
-              child: ListCountSubTitle(empty, 'members'),
             ),
           ),
 

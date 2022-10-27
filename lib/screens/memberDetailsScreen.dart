@@ -117,17 +117,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
-          //number of registrations
-          Positioned(
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 370,
-                left: localeLanguage == const Locale('en') ? 60 : 0,
-                right: localeLanguage != const Locale('en') ? 55 : 0,
-              ),
-              child: ListCountSubTitle(empty, 'registrations'),
-            ),
-          ),
           //registartions list
           Column(
             children: [
@@ -230,7 +219,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             ],
           ),
           //central card
-          const MemberDetailsCentralCard(),
+          MemberDetailsCentralCard(empty),
           //back arrow
           Positioned(
             top: 40,

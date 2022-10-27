@@ -122,6 +122,26 @@ class _MyAboutScreenState extends State<AboutScreen> {
                             width: 30,
                           ),
                         ],
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Powered by',
+                            style: TextStyle(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                fontSize: 12),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Text(
+                            'Agile',
+                            style: TextStyle(color: Colors.blue, fontSize: 12),
+                          ),
+                        ],
                       )
                     ],
                   ),

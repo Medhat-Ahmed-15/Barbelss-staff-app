@@ -19,6 +19,7 @@ bool showConnectedToInternetPopUp = false;
 var localeLanguage = const Locale('en');
 
 StaffData currentStaffData;
+Key memberDetailsScreenCentralCardKey;
 
 List<MemberData> allMembersList = [];
 List<MemberRegistrationsResponseData> allMemberRegistrationsList;

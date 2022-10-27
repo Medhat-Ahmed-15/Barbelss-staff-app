@@ -205,7 +205,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                             value: allowVerification,
                             activeColor:
                                 Theme.of(context).scaffoldBackgroundColor,
-                            activeTrackColor: Theme.of(context).primaryColor,
+                            activeTrackColor: Colors.green,
                             inactiveThumbColor:
                                 Theme.of(context).scaffoldBackgroundColor,
                             inactiveTrackColor: Colors.grey[300],

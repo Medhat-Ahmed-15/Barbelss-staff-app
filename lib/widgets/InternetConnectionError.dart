@@ -9,16 +9,12 @@ class InternetConnectionError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(child: Container()),
-        Align(
-          alignment: Alignment.center,
-          child: SizedBox(
-            width: 250,
-            height: 250,
-            child: lot.LottieBuilder.asset('assets/gifs/error.json'),
-          ),
+        SizedBox(
+          width: 250,
+          height: 250,
+          child: lot.LottieBuilder.asset('assets/gifs/error.json'),
         ),
         SizedBox(
           width: 150,

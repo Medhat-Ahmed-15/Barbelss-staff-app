@@ -56,7 +56,7 @@ class _MemberDataTileState extends State<MemberDataTile> {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.only(right: 15, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: ListTile(

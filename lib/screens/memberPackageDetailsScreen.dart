@@ -167,10 +167,8 @@ class _MemberPackageDetailsScreenState
             //List count subtuitle
             Positioned(
               child: Padding(
-                padding: EdgeInsets.only(
+                padding: const EdgeInsets.only(
                   top: 370,
-                  left: localeLanguage == const Locale('en') ? 60 : 0,
-                  right: localeLanguage != const Locale('en') ? 55 : 0,
                 ),
                 child: ListCountSubTitle(empty, 'attendences'),
               ),

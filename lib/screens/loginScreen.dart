@@ -41,7 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String countryFlag = '🇪🇬';
   String phoneCode = '20';
   bool loading = false;
-  double containerheight = 500;
+  double containerheight;
+  double titleHeight;
   bool isInit = true;
 
   Future<void> login(BuildContext context) async {
@@ -167,6 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     if (isInit == true) {
+      containerheight = MediaQuery.of(context).size.height * 0.6;
+      titleHeight = MediaQuery.of(context).size.height * 0.1;
       Fluttertoast.showToast(
           msg:
               ' \n \n Screen Width:  ${MediaQuery.of(context).size.width} \n \n Screen Height:  ${MediaQuery.of(context).size.height}  \n \n',
@@ -249,6 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         labelText: labelText,
         errorText: errorText == '' ? null : errorText,
+        hintText: hintText,
         labelStyle: TextStyle(
           color: focusNode.hasFocus
               ? Theme.of(context).primaryColor
@@ -263,11 +267,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).viewInsets.bottom != 0) {
       setState(() {
-        containerheight = 600;
+        containerheight = MediaQuery.of(context).size.height * 0.7;
+        titleHeight = 0;
       });
     } else {
       setState(() {
-        containerheight = 500;
+        containerheight = MediaQuery.of(context).size.height * 0.6;
+        titleHeight = MediaQuery.of(context).size.height * 0.1;
       });
     }
     return Scaffold(
@@ -276,12 +282,53 @@ class _LoginScreenState extends State<LoginScreen> {
         body: Stack(
           children: [
             Positioned(
+              top: titleHeight,
+              left: localeLanguage == const Locale('en') ? 15 : 0,
+              right: localeLanguage != const Locale('en') ? 15 : 0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/b8.png',
+                        height: 50,
+                        width: 50,
+                      ),
+                      Text(
+                        AppLocalizations.of(context).appName,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    AppLocalizations.of(context).loginSubtitleOne,
+                    style: TextStyle(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      fontSize: localeLanguage == const Locale('en') ? 15 : 20,
+                    ),
+                  ),
+                  Text(
+                    AppLocalizations.of(context).loginSubtitleTwo,
+                    style: TextStyle(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      fontSize: localeLanguage == const Locale('en') ? 15 : 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
               bottom: 0,
               left: 0,
               right: 0,
               child: Container(
                 height: containerheight,
-                padding: const EdgeInsets.only(top: 50, left: 8, right: 8),
+                padding: const EdgeInsets.only(top: 10, left: 8, right: 8),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
@@ -487,47 +534,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            Positioned(
-              top: 100,
-              left: localeLanguage == const Locale('en') ? 15 : 0,
-              right: localeLanguage != const Locale('en') ? 15 : 0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/b8.png',
-                        height: 50,
-                        width: 50,
-                      ),
-                      Text(
-                        AppLocalizations.of(context).appName,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    AppLocalizations.of(context).loginSubtitleOne,
-                    style: TextStyle(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      fontSize: localeLanguage == const Locale('en') ? 15 : 20,
-                    ),
-                  ),
-                  Text(
-                    AppLocalizations.of(context).loginSubtitleTwo,
-                    style: TextStyle(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      fontSize: localeLanguage == const Locale('en') ? 15 : 20,
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ));
   }

@@ -64,7 +64,8 @@ class MyApp extends StatelessWidget {
                     // This is the theme of your application.
                     primaryColor: const Color.fromRGBO(6, 24, 40, 1),
                     scaffoldBackgroundColor:
-                        const Color.fromRGBO(247, 249, 249, 6),
+                        //  const Color.fromRGBO(247, 249, 249, 6),
+                        Colors.grey[100],
                     textTheme: TextTheme(
                       headline1: const TextStyle(color: Colors.white),
                       headline2: TextStyle(color: Colors.grey.shade900),
