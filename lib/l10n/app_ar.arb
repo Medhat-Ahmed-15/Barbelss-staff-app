@@ -37,7 +37,7 @@
 
     "languageTitle": "لغة",
 
-    "termsAndConditionsTitle": "البنود و الظروف",
+    "termsAndConditionsTitle": "تعليمات الاستخدام",
 
     "chooseAPlanTitle": "اختر خطة",
 
@@ -209,7 +209,13 @@
 
      "appName": "باربلس",
 
-     "emailHasNotBeenSpecified": "لم يتم تحديد البريد الإلكتروني"
+     "emailHasNotBeenSpecified": "لم يتم تحديد البريد الإلكتروني",
+
+     "invalidPhoneNumber": "رقم الهاتف غير صحيح",
+
+     "club": "النادي",
+
+     "privacyPolicy": "سياسة الخصوصية"
 
 
 

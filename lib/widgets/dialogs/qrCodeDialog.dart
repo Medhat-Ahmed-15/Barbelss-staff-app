@@ -7,12 +7,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
-import 'package:gym_staff_app/widgets/feedBackDialog.dart';
+import 'package:gym_staff_app/widgets/dialogs/feedBackDialog.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
-
-import '../screens/plansScreen.dart';
 
 class QrCodeDialog extends StatefulWidget {
   String name;

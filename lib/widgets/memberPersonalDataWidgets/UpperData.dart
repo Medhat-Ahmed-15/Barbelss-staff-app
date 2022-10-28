@@ -9,91 +9,85 @@ class UpperContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('STATUS:: ${pickedMember.isBlocked}');
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CircleAvatar(
-            radius: 36.0,
-            backgroundColor: Theme.of(context).primaryColor,
-            child: const CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 34.0,
-              child: Icon(
-                Icons.person,
-                color: Colors.grey,
-                size: 50,
-              ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(child: Container()),
+        CircleAvatar(
+          radius: 36.0,
+          backgroundColor: Theme.of(context).primaryColor,
+          child: const CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 34.0,
+            child: Icon(
+              Icons.person,
+              color: Colors.grey,
+              size: 50,
             ),
           ),
-          const SizedBox(
-            width: 15.0,
+        ),
+        Expanded(child: Container()),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context).nameHint,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.0,
+                  color: Theme.of(context).primaryColor),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              pickedMember.memberName,
+              style: const TextStyle(
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                  color: Colors.grey),
+            ),
+          ],
+        ),
+        Expanded(child: Container()),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: pickedMember.isBlocked == true
+                ? Colors.redAccent
+                : Colors.green,
+            boxShadow: const [
+              BoxShadow(
+                  color: Colors.black54, offset: Offset(0, 4), blurRadius: 5.0)
+            ],
+            borderRadius: BorderRadius.circular(3),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                AppLocalizations.of(context).nameHint,
+                pickedMember.isBlocked == true
+                    ? AppLocalizations.of(context).blocked
+                    : AppLocalizations.of(context).activeTitle,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.0,
-                    color: Theme.of(context).primaryColor),
+                  color: Theme.of(context).textTheme.headline1.color,
+                ),
               ),
               const SizedBox(
-                height: 5,
+                width: 10,
               ),
-              Text(
-                pickedMember.memberName,
-                style: const TextStyle(
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                    color: Colors.grey),
-              ),
+              Icon(
+                pickedMember.isBlocked == true
+                    ? Icons.cancel_outlined
+                    : Icons.check,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              )
             ],
           ),
-          Expanded(child: Container()),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: pickedMember.isBlocked == true
-                  ? Colors.redAccent
-                  : Colors.green,
-              boxShadow: const [
-                BoxShadow(
-                    color: Colors.black54,
-                    offset: Offset(0, 4),
-                    blurRadius: 5.0)
-              ],
-              borderRadius: BorderRadius.circular(3),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  pickedMember.isBlocked == true
-                      ? AppLocalizations.of(context).blocked
-                      : AppLocalizations.of(context).activeTitle,
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1.color,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Icon(
-                  pickedMember.isBlocked == true
-                      ? Icons.cancel_outlined
-                      : Icons.check,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+        Expanded(child: Container()),
+      ],
     );
   }
 }

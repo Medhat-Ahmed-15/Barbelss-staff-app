@@ -9,8 +9,8 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/planData.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
-import 'package:gym_staff_app/widgets/FourDotsLoading.dart';
-import '../feedBackDialog.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
+import '../dialogs/feedBackDialog.dart';
 
 class PlanDataTile extends StatefulWidget {
   PlanData planData;

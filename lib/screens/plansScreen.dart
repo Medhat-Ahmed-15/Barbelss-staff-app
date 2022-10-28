@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper_tv/flutter_swiper.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
-import 'package:gym_staff_app/widgets/EmptyAnimationWidget.dart';
-import 'package:gym_staff_app/widgets/FourDotsLoading.dart';
-import 'package:gym_staff_app/widgets/InternetConnectionError.dart';
 import 'package:gym_staff_app/widgets/plansScreenWidgets/planDataTile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:lottie/lottie.dart' as lot;
+
+import '../widgets/other/EmptyAnimationWidget.dart';
+import '../widgets/other/FourDotsLoading.dart';
+import '../widgets/other/InternetConnectionError.dart';
 
 class PlansScreen extends StatefulWidget {
   static const routeName = '/PlansScreen';
@@ -94,7 +95,6 @@ class _PlansScreenState extends State<PlansScreen> {
   @override
   Widget build(BuildContext context) {
     screenComingFrom = ModalRoute.of(context).settings.arguments as String;
-    print('Screen Coming From::: $screenComingFrom');
     return Scaffold(
       appBar: AppBar(
         actions: [

@@ -38,11 +38,11 @@ class AuthProvider with ChangeNotifier {
           'password': password,
         }));
     final responseData = json.decode(response.body);
-    print(responseData);
 
     if (responseData['accepted'] == false) {
       loginFieldKey = responseData['field'];
-      throw GetRequestException(responseData['message']);
+      throw GetRequestException(responseData['message'] ??
+          AppLocalizations.of(context).invalidPhoneNumber);
     }
 
     _token = responseData['token'];
@@ -82,15 +82,12 @@ class AuthProvider with ChangeNotifier {
   //Auto Sigin>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   Future<bool> tryAutoSignIn() async {
-    print('entered auto sign in');
     final prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('staffDataInStorage')) {
       final extractedUserData = json
           .decode(prefs.getString('staffDataInStorage')) as Map<String, Object>;
       _token = extractedUserData['token'];
       token = _token;
-
-      print('TOKEN:: ${token}');
 
       StaffData staffData = StaffData();
       staffData.staffId = extractedUserData['staffId'];

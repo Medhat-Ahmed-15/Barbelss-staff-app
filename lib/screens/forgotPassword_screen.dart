@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/globalVariables.dart';
-import 'package:gym_staff_app/widgets/FOurDotsLoading.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import '../assistant/assistantFunction.dart';
-import '../widgets/feedBackDialog.dart';
+import '../widgets/dialogs/feedBackDialog.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   static const routeName = '/ForgotPasswordScreen';

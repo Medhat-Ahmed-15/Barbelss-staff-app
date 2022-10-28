@@ -5,17 +5,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:gym_staff_app/widgets/FOurDotsLoading.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/models/memberData.dart';
+import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
+import 'package:gym_staff_app/widgets/other/ListCountSubTitle.dart';
 import 'package:gym_staff_app/widgets/searchScreenWidgets/memberDataTile.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../globalVariables.dart';
-import '../widgets/EmptyAnimationWidget.dart';
-import '../widgets/InternetConnectionError.dart';
-import '../widgets/ListCountSubTitle.dart';
-import '../widgets/feedBackDialog.dart';
-import '../widgets/scanQrCodeDialog.dart';
+import '../widgets/dialogs/feedBackDialog.dart';
+import '../widgets/dialogs/scanQrCodeDialog.dart';
+import '../widgets/other/InternetConnectionError.dart';
 import '../widgets/searchScreenWidgets/upperContainer.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -238,17 +238,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             onRefresh: () {
                               return refresh();
                             },
-                            child: Scrollbar(
-                              thumbVisibility: true,
-                              interactive: true,
-                              child: ListView.builder(
-                                padding: const EdgeInsets.all(0),
-                                itemBuilder: (context, index) {
-                                  return MemberDataTile(
-                                      allMembersList[index], refresh);
-                                },
-                                itemCount: allMembersList.length,
-                              ),
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(0),
+                              itemBuilder: (context, index) {
+                                return MemberDataTile(
+                                    allMembersList[index], refresh);
+                              },
+                              itemCount: allMembersList.length,
                             ),
                           ),
           ),

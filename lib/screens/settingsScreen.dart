@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -29,8 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           onPressed: () {
-            // ZoomDrawer.of(context).toggle();
-            Navigator.of(context).pop();
+            ZoomDrawer.of(context).toggle();
           },
           icon: Icon(
             Icons.menu,
@@ -111,6 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(
               height: 40,
             ),
+
             //Phone Nummber
             Padding(
               padding: const EdgeInsets.only(
@@ -120,13 +121,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(206, 206, 206, 1),
-                      offset: Offset(1, 3),
-                      blurRadius: 1.0,
-                    )
-                  ],
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 width: MediaQuery.of(context).size.width,
@@ -158,8 +152,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.grey[300],
             ),
 
             //Id
@@ -171,13 +168,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(206, 206, 206, 1),
-                      offset: Offset(1, 3),
-                      blurRadius: 1.0,
-                    )
-                  ],
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 width: MediaQuery.of(context).size.width,
@@ -209,23 +199,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
+
             const SizedBox(
               height: 20,
             ),
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.grey[300],
+            ),
+            //Club Name
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 15,
+                right: 15,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: ListTile(
+                    leading: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context).club,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        Text(
+                          currentStaffData.clubName,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0,
+                              color: Colors.grey[600]),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
 
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.grey[300],
+            ),
             //Language
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(206, 206, 206, 1),
-                      offset: Offset(1, 3),
-                      blurRadius: 1.0,
-                    )
-                  ],
                   color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(15.0),
                 ),
@@ -255,52 +291,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-
-            const SizedBox(
-              height: 20,
-            ),
-
-            //Terms and Conditions
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(206, 206, 206, 1),
-                      offset: Offset(1, 3),
-                      blurRadius: 1.0,
-                    )
-                  ],
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: InkWell(
-                    splashColor: Colors.blue,
-                    hoverColor: Colors.blue,
-                    highlightColor: Colors.blue,
-                    onTap: () {
-                      // Navigator.of(context)
-                      //     .pushNamed(ChangeLanguageScreen.routeName);
-                    },
-                    child: ListTile(
-                      leading: Text(
-                        AppLocalizations.of(context).termsAndConditionsTitle,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.0,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      trailing: Icon(Icons.navigate_next,
-                          size: 30, color: Theme.of(context).primaryColor),
-                    ),
-                  ),
-                ),
-              ),
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.grey[300],
             ),
           ],
         ),

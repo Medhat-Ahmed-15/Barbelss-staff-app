@@ -91,7 +91,7 @@
       "description": " "
     },
 
-    "termsAndConditionsTitle": "Terms & Conditions",
+    "termsAndConditionsTitle": "Terms of use",
     "@language": {
       "description": " "
     },
@@ -524,6 +524,21 @@
     },
 
     "emailHasNotBeenSpecified": "The email has not been specified",
+    "@language": {
+      "description": " "
+    },
+
+    "invalidPhoneNumber": "Invalid phone number",
+    "@language": {
+      "description": " "
+    },
+
+    "club": "Club",
+    "@language": {
+      "description": " "
+    },
+
+    "privacyPolicy": "Privacy Policy",
     "@language": {
       "description": " "
     }

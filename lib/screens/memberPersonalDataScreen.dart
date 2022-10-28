@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:gym_staff_app/widgets/FourDotsLoading.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../assistant/assistantFunction.dart';
-import '../widgets/feedBackDialog.dart';
+import '../widgets/dialogs/feedBackDialog.dart';
+import '../widgets/dialogs/qrCodeDialog.dart';
 import '../widgets/memberPersonalDataWidgets/MiddleContent.dart';
 import '../widgets/memberPersonalDataWidgets/UpperData.dart';
-import '../widgets/qrCodeDialog.dart';
 
 class MemberPersonalDataScreen extends StatefulWidget {
   static const routeName = '/MemberPersonalDataScreen';
@@ -22,6 +22,10 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
   bool allowVerification = pickedMember.canAuthenticate;
   bool resendQrCodeLoading = false;
   bool blockOrUnBlockLoading = false;
+  bool arabicChosen = false;
+  bool englishChosen = true;
+
+  String whatsAppMessageLang = 'en';
 
   void toggleSwitch(bool value) async {
     try {
@@ -38,7 +42,9 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
         );
         if (response == true) {
           await updateMemberVerification(
-              context: context, verificationStatus: value);
+              context: context,
+              verificationStatus: value,
+              whatsAppMessageLang: whatsAppMessageLang);
           setState(() {
             allowVerification = value;
           });
@@ -122,9 +128,55 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
     );
   }
 
+  Widget languageButton(
+    String textName,
+  ) {
+    return InkWell(
+      onTap: () {
+        if (textName == "English") {
+          whatsAppMessageLang = 'en';
+          setState(() {
+            arabicChosen = false;
+            englishChosen = true;
+          });
+        } else {
+          whatsAppMessageLang = 'ar';
+          setState(() {
+            arabicChosen = true;
+            englishChosen = false;
+          });
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        height: 40,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Theme.of(context).primaryColor),
+            boxShadow: const [
+              BoxShadow(
+                  color: Colors.black54, offset: Offset(0, 1), blurRadius: 1.0)
+            ],
+            color: textName == 'English' && englishChosen == true
+                ? Theme.of(context).primaryColor
+                : textName == 'العربية' && arabicChosen == true
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).scaffoldBackgroundColor),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            textName,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Colors.grey, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('STATUS 1');
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
@@ -167,7 +219,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                   //middle content containing email and phone
                   const MiddleContent(),
                   const SizedBox(
-                    height: 50,
+                    height: 30,
                   ),
                   //Verification
                   Padding(
@@ -190,32 +242,52 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                                 blurRadius: 5.0)
                           ],
                           color: Theme.of(context).scaffoldBackgroundColor),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
                         children: [
-                          Text(
-                            AppLocalizations.of(context).allowVerification,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                                color: Colors.grey),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context).allowVerification,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
+                                    color: Colors.grey),
+                              ),
+                              Switch(
+                                onChanged: toggleSwitch,
+                                value: allowVerification,
+                                activeColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                activeTrackColor: Colors.green,
+                                inactiveThumbColor:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                inactiveTrackColor: Colors.grey[300],
+                              )
+                            ],
                           ),
-                          Switch(
-                            onChanged: toggleSwitch,
-                            value: allowVerification,
-                            activeColor:
-                                Theme.of(context).scaffoldBackgroundColor,
-                            activeTrackColor: Colors.green,
-                            inactiveThumbColor:
-                                Theme.of(context).scaffoldBackgroundColor,
-                            inactiveTrackColor: Colors.grey[300],
+                          Row(
+                            children: [
+                              Text(
+                                AppLocalizations.of(context).languageTitle,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
+                                    color: Colors.grey),
+                              ),
+                              Expanded(child: Container()),
+                              languageButton('English'),
+                              Expanded(child: Container()),
+                              languageButton('العربية'),
+                              Expanded(child: Container()),
+                            ],
                           )
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(
-                    height: 100,
+                    height: 50,
                   ),
 
                   //Resend Qr Code
@@ -237,10 +309,10 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                               ),
                             );
 
-                            print('RESPONSE:::  ${response}');
-
                             if (response == true) {
-                              await updateMemberQrCode(context: context);
+                              await updateMemberQrCode(
+                                  context: context,
+                                  whatsAppMessageLang: whatsAppMessageLang);
 
                               showDialog(
                                 context: context,
@@ -260,6 +332,10 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                                             Theme.of(context).primaryColor),
                               );
 
+                              setState(() {
+                                resendQrCodeLoading = false;
+                              });
+                            } else {
                               setState(() {
                                 resendQrCodeLoading = false;
                               });

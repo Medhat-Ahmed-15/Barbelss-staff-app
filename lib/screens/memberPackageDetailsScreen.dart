@@ -3,18 +3,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
-import 'package:gym_staff_app/widgets/FourDotsLoading.dart';
-import 'package:gym_staff_app/widgets/InternetConnectionError.dart';
 import 'package:gym_staff_app/widgets/memberPackageDetailsScreenWidgets/MemberPackageDetailsScreenCentralCard.dart';
+import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
+import 'package:gym_staff_app/widgets/other/InternetConnectionError.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Exceptions/getRequest_exception.dart';
-import '../widgets/EmptyAnimationWidget.dart';
-import '../widgets/ListCountSubTitle.dart';
-import '../widgets/feedBackDialog.dart';
-import '../widgets/memberDetailsScreenWidgets/MemberDetailsCentralCard.dart';
+import '../widgets/dialogs/feedBackDialog.dart';
+import '../widgets/dialogs/pickFreezingTimeDialog.dart';
 import '../widgets/memberPackageDetailsScreenWidgets/BackButtonAndScreenTitle.dart';
 import '../widgets/memberPackageDetailsScreenWidgets/memberAttendencesDataTile.dart';
-import '../widgets/pickFreezingTimeDialog.dart';
 
 class MemberPackageDetailsScreen extends StatefulWidget {
   static const routeName = '/MemberPackageDetailsScreen';
@@ -80,7 +78,6 @@ class _MemberPackageDetailsScreenState
           empty = true;
         });
       } else {
-        print('msh empty');
         setState(() {
           loadingMemberAttendencesData = false;
           connectionError = false;
@@ -110,12 +107,12 @@ class _MemberPackageDetailsScreenState
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 270,
+                  height: MediaQuery.of(context).size.height * 0.3,
                   color: Theme.of(context).primaryColor,
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 130),
+                    padding: const EdgeInsets.only(top: 150),
                     child: connectionError == true
                         ? InternetConnectionError(refresh)
                         : loadingMemberAttendencesData == true
@@ -136,27 +133,23 @@ class _MemberPackageDetailsScreenState
                                     onRefresh: () {
                                       return refresh();
                                     },
-                                    child: Scrollbar(
-                                      thumbVisibility: true,
-                                      interactive: true,
-                                      child: ListView.separated(
-                                        padding: const EdgeInsets.all(0),
-                                        itemBuilder: (context, index) {
-                                          return MemberAttendencesDataTile(
-                                              allMemberAttendencesList[index]);
-                                        },
-                                        itemCount:
-                                            allMemberAttendencesList.length,
-                                        separatorBuilder:
-                                            (BuildContext context, int index) {
-                                          return Divider(
-                                            thickness: 1,
-                                            endIndent: 10,
-                                            indent: 10,
-                                            color: Colors.grey[300],
-                                          );
-                                        },
-                                      ),
+                                    child: ListView.separated(
+                                      padding: const EdgeInsets.all(0),
+                                      itemBuilder: (context, index) {
+                                        return MemberAttendencesDataTile(
+                                            allMemberAttendencesList[index]);
+                                      },
+                                      itemCount:
+                                          allMemberAttendencesList.length,
+                                      separatorBuilder:
+                                          (BuildContext context, int index) {
+                                        return Divider(
+                                          thickness: 1,
+                                          endIndent: 10,
+                                          indent: 10,
+                                          color: Colors.grey[300],
+                                        );
+                                      },
                                     ),
                                   ),
                   ),
@@ -164,19 +157,10 @@ class _MemberPackageDetailsScreenState
               ],
             ),
 
-            //List count subtuitle
-            Positioned(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 370,
-                ),
-                child: ListCountSubTitle(empty, 'attendences'),
-              ),
-            ),
             //Back Button And Screen title
             const BackButtonAndScreenTitle(),
-            //Central Card
-            const MemberPackageDetailsScreenCentralCard(),
+            //Central Card and list count
+            MemberPackageDetailsScreenCentralCard(empty),
             confirmationLoading == true
                 ? Container(
                     width: MediaQuery.of(context).size.width,

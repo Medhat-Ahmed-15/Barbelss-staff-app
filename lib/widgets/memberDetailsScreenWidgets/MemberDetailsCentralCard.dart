@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:gym_staff_app/widgets/other/ListCountSubTitle.dart';
 import '../../screens/memberPersonalDataScreen.dart';
-import '../ListCountSubTitle.dart';
 
 class MemberDetailsCentralCard extends StatelessWidget {
   bool empty = false;
@@ -74,6 +74,9 @@ class MemberDetailsCentralCard extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+          const SizedBox(
+            height: 10,
           ),
           ListCountSubTitle(empty, 'registrations')
         ],

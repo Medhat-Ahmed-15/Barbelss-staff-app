@@ -75,6 +75,26 @@ class MiddleContent extends StatelessWidget {
               endIndent: 20,
               indent: 20,
             ),
+            ///////////////////////////
+
+            Text(
+              AppLocalizations.of(context).id,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.0,
+                  color: Theme.of(context).primaryColor),
+            ),
+            Text(
+              pickedMember.memberId,
+              style: const TextStyle(
+                  //  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                  color: Colors.grey),
+            ),
+            const Divider(
+              endIndent: 20,
+              indent: 20,
+            ),
           ],
         ),
       ),

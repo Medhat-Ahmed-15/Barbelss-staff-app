@@ -27,7 +27,6 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
 
   @override
   void didChangeDependencies() {
-    print('Entered here');
     if (isInit == true) {
       if (localeLanguage.languageCode == 'ar') {
         setState(() {

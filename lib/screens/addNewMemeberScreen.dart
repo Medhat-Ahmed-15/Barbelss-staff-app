@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
+import 'package:gym_staff_app/widgets/dialogs/qrCodeDialog.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../assistant/assistantFunction.dart';
-import '../widgets/feedBackDialog.dart';
-import '../widgets/qrCodeDialog.dart';
+import '../widgets/dialogs/feedBackDialog.dart';
 
 class AddNewMemberScreen extends StatefulWidget {
   static const routeName = '/AddNewMemberScreen';
@@ -34,13 +34,15 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
   String countryFlag = '🇪🇬';
   String phoneCode = '20';
   String gender = '';
+  String whatsAppMessageLang = 'en';
 
   bool isAuthenticate = true;
   bool maleChosen = false;
   bool femaleChosen = false;
+  bool arabicChosen = false;
+  bool englishChosen = true;
   bool responseFomQrDialog = true;
   bool loading = false;
-  bool isInit = true;
 
   FocusNode emailFocusNode = FocusNode();
   FocusNode nameFocusNode = FocusNode();
@@ -162,7 +164,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
       setState(() {
         loading = true;
       });
-      if (nameController.text.isEmpty) {
+      if (nameController.text.trim().isEmpty) {
         setState(() {
           nameErrorText = AppLocalizations.of(context).memberNameIsrequired;
           phoneErrorText = '';
@@ -190,7 +192,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         return;
       }
 
-      if (ageController.text.isEmpty) {
+      if (ageController.text.trim().isEmpty) {
         setState(() {
           ageErrorText = AppLocalizations.of(context).ageMustBeSpecified;
           phoneErrorText = '';
@@ -204,7 +206,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         return;
       }
 
-      if (phoneController.text.isEmpty) {
+      if (phoneController.text.substring(1).trim().isEmpty) {
         setState(() {
           phoneErrorText = AppLocalizations.of(context).phoneNumberIsRequired;
           nameErrorText = '';
@@ -218,10 +220,9 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         return;
       }
 
-      if (phoneController.text.length != 10) {
+      if (phoneController.text.substring(1).trim().length != 10) {
         setState(() {
-          phoneErrorText =
-              AppLocalizations.of(context).phoneNumberMustBe10Digit;
+          phoneErrorText = AppLocalizations.of(context).invalidPhoneNumber;
           nameErrorText = '';
           loading = false;
           ageErrorText = '';
@@ -234,7 +235,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
       }
 
       if (currentStaffData.hasMembership == true &&
-          membershipController.text.isEmpty) {
+          membershipController.text.trim().isEmpty) {
         setState(() {
           nameErrorText = '';
           phoneErrorText = '';
@@ -253,14 +254,15 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         await addNewMember(
             context: context,
             email: emailController.text.trim(),
-            gender: gender.trim(),
+            gender: gender,
             name: nameController.text.trim(),
-            age: int.parse(ageController.text),
-            phone: phoneController.text,
+            age: int.parse(ageController.text.trim()),
+            phone: phoneController.text.substring(1).trim(),
             membership: currentStaffData.hasMembership == true
                 ? int.parse(membershipController.text.trim())
                 : 0,
-            phoneCode: phoneCode);
+            phoneCode: phoneCode,
+            whatsAppMessageLang: whatsAppMessageLang);
 
         await showDialog(
           context: context,
@@ -268,12 +270,14 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
           builder: (BuildContext context) => QrCodeDialog(
             nameController.text.trim(),
             emailController.text.trim(),
-            phoneController.text,
+            phoneController.text.substring(1).trim(),
             context,
           ),
         );
         await updateMemberVerification(
-            context: context, verificationStatus: isAuthenticate);
+            context: context,
+            verificationStatus: isAuthenticate,
+            whatsAppMessageLang: whatsAppMessageLang);
         showDialog(
           context: context,
           barrierDismissible: true,
@@ -293,14 +297,15 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         await addNewMember(
             context: context,
             email: emailController.text.trim(),
-            gender: gender.trim(),
+            gender: gender,
             name: nameController.text.trim(),
-            age: int.parse(ageController.text),
-            phone: phoneController.text,
+            age: int.parse(ageController.text.trim()),
+            phone: phoneController.text.substring(1).trim(),
             membership: currentStaffData.hasMembership == true
                 ? int.parse(membershipController.text.trim())
                 : 0,
-            phoneCode: phoneCode);
+            phoneCode: phoneCode,
+            whatsAppMessageLang: whatsAppMessageLang);
 
         showDialog(
           context: context,
@@ -454,6 +459,53 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
     ageController.dispose();
   }
 
+  Widget languageButton(
+    String textName,
+  ) {
+    return InkWell(
+      onTap: () {
+        if (textName == "English") {
+          whatsAppMessageLang = 'en';
+          setState(() {
+            arabicChosen = false;
+            englishChosen = true;
+          });
+        } else {
+          whatsAppMessageLang = 'ar';
+          setState(() {
+            arabicChosen = true;
+            englishChosen = false;
+          });
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        height: 40,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Theme.of(context).primaryColor),
+            boxShadow: const [
+              BoxShadow(
+                  color: Colors.black54, offset: Offset(0, 1), blurRadius: 1.0)
+            ],
+            color: textName == 'English' && englishChosen == true
+                ? Theme.of(context).primaryColor
+                : textName == 'العربية' && arabicChosen == true
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).scaffoldBackgroundColor),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            textName,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Colors.grey, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+
   List<Step> getSteps(BuildContext context) {
     List<Step> steps = [
       //Name  Email  Phone age******************
@@ -506,7 +558,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                       controller: phoneController,
                       errorText: phoneErrorText,
                       focusNode: phoneFocusNode,
-                      hintText: '$phonehHintText ex: 1282923670',
+                      hintText: '$phonehHintText ex: 01282923670',
                       keyboardType: TextInputType.phone,
                       labelText: AppLocalizations.of(context).phoneHint,
                       prefixIcon: Icons.phone,
@@ -617,10 +669,8 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                         decoration: BoxDecoration(
                             color: Theme.of(context).scaffoldBackgroundColor,
                             border: Border.all(
-                                color: maleChosen == true
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context).primaryColor,
-                                width: maleChosen == true ? 5 : 1),
+                                color: Theme.of(context).primaryColor,
+                                width: maleChosen == true ? 7 : 1),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(15)),
                             boxShadow: const [
@@ -660,10 +710,8 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                         decoration: BoxDecoration(
                             color: Theme.of(context).scaffoldBackgroundColor,
                             border: Border.all(
-                                color: femaleChosen == true
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context).primaryColor,
-                                width: femaleChosen == true ? 5 : 1),
+                                color: Theme.of(context).primaryColor,
+                                width: femaleChosen == true ? 7 : 1),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(15)),
                             boxShadow: const [
@@ -710,24 +758,45 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                 fontWeight: FontWeight.bold)),
         isActive: true,
         state: StepState.indexed,
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              '${AppLocalizations.of(context).verifymember}: ',
-              style: const TextStyle(fontSize: 17.0),
+        content: Column(
+          children: [
+            ListTile(
+              leading: Text(
+                '${AppLocalizations.of(context).verifymember}: ',
+                style: const TextStyle(fontSize: 17.0),
+              ),
+              trailing: Switch(
+                onChanged: (bool value) {
+                  setState(() {
+                    isAuthenticate = value;
+                  });
+                },
+                value: isAuthenticate,
+                activeColor: Theme.of(context).scaffoldBackgroundColor,
+                activeTrackColor: Colors.green,
+                inactiveThumbColor: Theme.of(context).scaffoldBackgroundColor,
+                inactiveTrackColor: Colors.grey[300],
+              ),
             ),
-            Switch(
-              onChanged: (bool value) {
-                setState(() {
-                  isAuthenticate = value;
-                });
-              },
-              value: isAuthenticate,
-              activeColor: Theme.of(context).scaffoldBackgroundColor,
-              activeTrackColor: Theme.of(context).primaryColor,
-              inactiveThumbColor: Theme.of(context).scaffoldBackgroundColor,
-              inactiveTrackColor: Colors.grey[300],
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              height: isAuthenticate == true ? 50 : 0,
+              child: ListTile(
+                leading: Text(
+                  '${AppLocalizations.of(context).languageTitle}:',
+                  style: const TextStyle(fontSize: 17.0),
+                ),
+                title: Row(
+                  children: [
+                    Expanded(child: Container()),
+                    languageButton('English'),
+                    Expanded(child: Container()),
+                    languageButton('العربية'),
+                    Expanded(child: Container()),
+                  ],
+                ),
+              ),
             )
           ],
         ),
@@ -791,7 +860,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
             SizedBox(
               child: Theme(
                 data: ThemeData(
-                    accentColor: Theme.of(context).primaryColor,
                     primarySwatch: primaryColor,
                     colorScheme: ColorScheme.light(
                         primary: Theme.of(context).primaryColor)),
@@ -830,7 +898,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                                 Theme.of(context).scaffoldBackgroundColor),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                              borderRadius: BorderRadius.circular(10.0),
                             ))),
                         onPressed: () async {
                           await registerMember(context);

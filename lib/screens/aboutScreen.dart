@@ -3,6 +3,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+
+import '../widgets/dialogs/policyDialog.dart';
 
 class AboutScreen extends StatefulWidget {
   static const String routeName = "AboutScreen";
@@ -20,8 +23,7 @@ class _MyAboutScreenState extends State<AboutScreen> {
           backgroundColor: Theme.of(context).primaryColor,
           leading: IconButton(
             onPressed: () {
-              // ZoomDrawer.of(context).toggle();
-              Navigator.of(context).pop();
+              ZoomDrawer.of(context).toggle();
             },
             icon: Icon(
               Icons.menu,
@@ -68,12 +70,104 @@ class _MyAboutScreenState extends State<AboutScreen> {
                   ),
                 ),
               ),
+
+              Divider(
+                thickness: 1,
+                endIndent: 10,
+                indent: 10,
+                color: Colors.grey[300],
+              ),
+              //Terms and Conditions
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: InkWell(
+                    splashColor: Colors.blue,
+                    hoverColor: Colors.blue,
+                    highlightColor: Colors.blue,
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext context) => PolicyDialog(
+                              mdFileName: 'terms_and_conditions.md'));
+                    },
+                    child: ListTile(
+                      leading: Text(
+                        AppLocalizations.of(context).termsAndConditionsTitle,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      trailing: Icon(Icons.navigate_next,
+                          size: 30, color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ),
+              ),
+
+              Divider(
+                thickness: 1,
+                endIndent: 10,
+                indent: 10,
+                color: Colors.grey[300],
+              ),
+
+              //Privacy Policy
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: InkWell(
+                    splashColor: Colors.blue,
+                    hoverColor: Colors.blue,
+                    highlightColor: Colors.blue,
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (BuildContext context) =>
+                              PolicyDialog(mdFileName: 'privacy_policy.md'));
+                    },
+                    child: ListTile(
+                      leading: Text(
+                        AppLocalizations.of(context).privacyPolicy,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      trailing: Icon(Icons.navigate_next,
+                          size: 30, color: Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ),
+              ),
+
+              Divider(
+                thickness: 1,
+                endIndent: 10,
+                indent: 10,
+                color: Colors.grey[300],
+              ),
               Padding(
-                padding: const EdgeInsets.only(top: 200),
+                padding: const EdgeInsets.only(top: 50),
                 child: Container(
+                  padding: const EdgeInsets.only(top: 50, bottom: 50),
                   color: Theme.of(context).primaryColor,
                   width: MediaQuery.of(context).size.width,
-                  height: 200,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -123,7 +217,7 @@ class _MyAboutScreenState extends State<AboutScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -142,7 +236,17 @@ class _MyAboutScreenState extends State<AboutScreen> {
                             style: TextStyle(color: Colors.blue, fontSize: 12),
                           ),
                         ],
-                      )
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      const Text(
+                        'version: 1.0.0+1',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -8,7 +8,7 @@ import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/memberRegistrationsResponseData.dart';
 import 'package:gym_staff_app/screens/memberPackageDetailsScreen.dart';
 import '../../Exceptions/getRequest_exception.dart';
-import '../feedBackDialog.dart';
+import '../dialogs/feedBackDialog.dart';
 
 class MemberPackageDataTile extends StatelessWidget {
   MemberRegistrationsResponseData memberRegistrationsResponseData;

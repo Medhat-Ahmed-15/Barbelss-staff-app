@@ -3,18 +3,17 @@ import 'dart:io';
 import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
-import 'package:gym_staff_app/widgets/EmptyAnimationWidget.dart';
-import 'package:gym_staff_app/widgets/InternetConnectionError.dart';
-import 'package:gym_staff_app/widgets/ListCountSubTitle.dart';
-import 'package:gym_staff_app/widgets/feedBackDialog.dart';
-import 'package:gym_staff_app/widgets/fourDotsLoading.dart';
+import 'package:gym_staff_app/widgets/dialogs/feedBackDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/widgets/memberDetailsScreenWidgets/memberPackageDataTile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
+import 'package:gym_staff_app/widgets/other/InternetConnectionError.dart';
 
-import '../widgets/memberDetailsScreenWidgets/MemberDetailsCentralCard.dart';
+import '../widgets/memberDetailsScreenWidgets/memberDetailsCentralCard.dart';
 
 class MemberDetailsScreen extends StatefulWidget {
   static const routeName = '/MemberDetailsScreen';
@@ -122,12 +121,12 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 270,
+                height: MediaQuery.of(context).size.height * 0.3,
                 color: Theme.of(context).primaryColor,
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 130),
+                  padding: const EdgeInsets.only(left: 15, top: 150),
                   child: connectionError == true
                       ? InternetConnectionError(refresh)
                       : loadingMemberRegistrationsData == true
@@ -188,37 +187,33 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                   onRefresh: () {
                                     return refresh();
                                   },
-                                  child: Scrollbar(
-                                    thumbVisibility: true,
-                                    interactive: true,
-                                    child: ListView.separated(
-                                      padding: const EdgeInsets.all(0),
-                                      itemBuilder: (context, index) {
-                                        return MemberPackageDataTile(
-                                            allMemberRegistrationsList[index],
-                                            refresh,
-                                            setBackgroundLoading,
-                                            stopBackgroundLoading);
-                                      },
-                                      itemCount:
-                                          allMemberRegistrationsList.length,
-                                      separatorBuilder:
-                                          (BuildContext context, int index) {
-                                        return Divider(
-                                          thickness: 1,
-                                          endIndent: 10,
-                                          indent: 10,
-                                          color: Colors.grey[300],
-                                        );
-                                      },
-                                    ),
+                                  child: ListView.separated(
+                                    padding: const EdgeInsets.all(0),
+                                    itemBuilder: (context, index) {
+                                      return MemberPackageDataTile(
+                                          allMemberRegistrationsList[index],
+                                          refresh,
+                                          setBackgroundLoading,
+                                          stopBackgroundLoading);
+                                    },
+                                    itemCount:
+                                        allMemberRegistrationsList.length,
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return Divider(
+                                        thickness: 1,
+                                        endIndent: 10,
+                                        indent: 10,
+                                        color: Colors.grey[300],
+                                      );
+                                    },
                                   ),
                                 ),
                 ),
               ),
             ],
           ),
-          //central card
+          //central card and list count
           MemberDetailsCentralCard(empty),
           //back arrow
           Positioned(

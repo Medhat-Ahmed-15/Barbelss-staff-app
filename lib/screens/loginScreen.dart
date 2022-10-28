@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:country_picker/country_picker.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,11 +12,12 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/providers/localLanguageProvider.dart';
 import 'package:gym_staff_app/screens/forgotPassword_screen.dart';
-import 'package:gym_staff_app/widgets/feedBackDialog.dart';
+import 'package:gym_staff_app/widgets/dialogs/feedBackDialog.dart';
+import 'package:gym_staff_app/widgets/dialogs/policyDialog.dart';
+import 'package:gym_staff_app/widgets/dialogs/qrCodeDialog.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:provider/provider.dart';
-
 import '../globalVariables.dart';
-import '../widgets/FourDotsLoading.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/LoginScreen';
@@ -53,6 +55,12 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       return;
     }
+    if (phoneController.text.trim().isEmpty) {
+      setState(() {
+        phoneErrorMessage = AppLocalizations.of(context).phoneNumberIsRequired;
+        passwordErrorMessage = null;
+      });
+    }
     if (passwordController.text.trim().isEmpty) {
       setState(() {
         passwordErrorMessage = AppLocalizations.of(context).passwordIsRequired;
@@ -66,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
         loading = true;
       });
       await Provider.of<AuthProvider>(context, listen: false).userLogin(
-          phoneController.text.trim(),
+          phoneController.text.substring(1).trim(),
           phoneCode,
           passwordController.text.trim(),
           context);
@@ -165,7 +173,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     if (isInit == true) {
       containerheight = MediaQuery.of(context).size.height * 0.6;
@@ -281,10 +288,14 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         body: Stack(
           children: [
-            Positioned(
-              top: titleHeight,
-              left: localeLanguage == const Locale('en') ? 15 : 0,
-              right: localeLanguage != const Locale('en') ? 15 : 0,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              padding: EdgeInsets.only(
+                top: titleHeight,
+                left: localeLanguage == const Locale('en') ? 15 : 0,
+                right: localeLanguage != const Locale('en') ? 15 : 0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -326,7 +337,9 @@ class _LoginScreenState extends State<LoginScreen> {
               bottom: 0,
               left: 0,
               right: 0,
-              child: Container(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
                 height: containerheight,
                 padding: const EdgeInsets.only(top: 10, left: 8, right: 8),
                 decoration: const BoxDecoration(
@@ -343,7 +356,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     //Phone TextField
                     Row(
@@ -357,7 +370,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   controller: phoneController,
                                   errorText: phoneErrorMessage,
                                   focusNode: phoneFocusNode,
-                                  hintText: '$phonehHintText ex: 1282923670',
+                                  hintText: '$phonehHintText ex: 01 282923670',
                                   keyboardType: TextInputType.phone,
                                   labelText:
                                       AppLocalizations.of(context).phoneTitle,
@@ -530,6 +543,72 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
+
+                    Expanded(child: Container()),
+                    Padding(
+                        padding: const EdgeInsets.only(bottom: 22),
+                        child: InkWell(
+                          onTap: () {},
+                          child: RichText(
+                            textAlign: TextAlign.center,
+
+                            // Whether the text should break at soft line breaks
+                            softWrap: true,
+
+                            // Maximum number of lines for the text to span
+                            maxLines: 4,
+
+                            text: TextSpan(
+                              text:
+                                  'By logging into the application, you are agreeing to our\n',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                              children: [
+                                TextSpan(
+                                    text: 'Terms and Conditions ',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 14,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: true,
+                                            builder: (BuildContext context) =>
+                                                PolicyDialog(
+                                                    mdFileName:
+                                                        'terms_and_conditions.md'));
+                                      }),
+                                const TextSpan(
+                                  text: 'and ',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                TextSpan(
+                                    text: 'Privacy Policy!',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 14,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: true,
+                                            builder: (BuildContext context) =>
+                                                PolicyDialog(
+                                                    mdFileName:
+                                                        'privacy_policy.md'));
+                                      }),
+                              ],
+                            ),
+                          ),
+                        ))
                   ],
                 ),
               ),

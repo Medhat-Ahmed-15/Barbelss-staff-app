@@ -52,8 +52,6 @@ Future<void> setLocalLanguageInSorage(String language) async {
     'localLanguage': language,
   });
 
-  prefs.setString('localLanguage', localLanguage).then((value) => print(value));
-
   localeLanguage = Locale(language);
 }
 
@@ -98,9 +96,6 @@ Future<void> getAllMembers() async {
   String jSonData = res.body;
   var decodeData = jsonDecode(jSonData);
 
-  print(
-      'All Members Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
-
   if (decodeData['accepted'] == false) {
     throw GetRequestException(decodeData['message'] ?? 'error');
   }
@@ -114,9 +109,6 @@ Future<void> getAllMembers() async {
 //Get All Member Registartions/////////////////////////////////////////////////////////////////////////////
 
 Future<void> getAllMemberRegistartions() async {
-  print('Staff Id:: ${currentStaffData.staffClubId}');
-  print('Member Id:: ${pickedMember.memberId}');
-
   String url =
       'http://159.223.172.150/api/v1/registrations/clubs/${currentStaffData.staffClubId}/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -131,9 +123,6 @@ Future<void> getAllMemberRegistartions() async {
   String jSonData = res.body;
   var decodeData = jsonDecode(jSonData);
 
-  print(
-      'All Member Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $decodeData');
-
   if (decodeData['accepted'] == false) {
     throw GetRequestException('Error');
   }
@@ -143,9 +132,6 @@ Future<void> getAllMemberRegistartions() async {
   allMemberRegistrationsList = (allMemberRegistrations as List)
       .map((index) => MemberRegistrationsResponseData.fromjson(index))
       .toList();
-
-  print(
-      'All member registartions legnth:: ${allMemberRegistrationsList.length}');
 }
 
 // Convert date to day in numbers month in text//////////////////////////////////////////////////////////////////////
@@ -219,12 +205,10 @@ Future<void> addNewMember(
     int age,
     bool isAuthenticate,
     int membership,
+    String whatsAppMessageLang,
     BuildContext context}) async {
   String url =
       'http://159.223.172.150/api/v1/members?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
-
-  print('CURRENT STAFF ID:: ${currentStaffData.staffId}');
-  print('CURRENT URL:: $qrCodeURL');
 
   final response = await http.post(Uri.parse(url),
       headers: <String, String>{
@@ -242,11 +226,9 @@ Future<void> addNewMember(
         "countryCode": phoneCode,
         "staffId": currentStaffData.staffId,
         "canAuthenticate": isAuthenticate,
-        "languageCode": localeLanguage == const Locale('en') ? "en" : "ar",
+        "languageCode": whatsAppMessageLang,
       }));
   final responseData = json.decode(response.body);
-  print(
-      'Add New Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   if (responseData['accepted'] == false) {
     addNewMemberFieldKey = responseData['field'];
@@ -268,8 +250,6 @@ Future<void> addNewMember(
   memberData.isBlocked = responseData['newMember']['isBlocked'];
 
   pickedMember = memberData;
-
-  print('Current member id:: ${pickedMember.memberId}');
 }
 
 //Get All Plans/////////////////////////////////////////////////////////////////
@@ -288,8 +268,6 @@ Future<void> getAllPlans() async {
 
   String jSonData = res.body;
   var decodeData = jsonDecode(jSonData);
-
-  //print(decodeData);
 
   if (decodeData['accepted'] == false) {
     throw GetRequestException('Error');
@@ -321,7 +299,6 @@ Future<void> registerPlan(
         "paid": planPrice
       }));
   final responseData = json.decode(response.body);
-  print(responseData);
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
@@ -332,7 +309,6 @@ Future<void> registerPlan(
 
 Future<void> confirmArrival(
     {String registrationId, BuildContext context}) async {
-  print('Registration Id:: $registrationId');
   String url =
       'http://159.223.172.150/api/v1/attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -346,8 +322,6 @@ Future<void> confirmArrival(
         "staffId": currentStaffData.staffId
       }));
   final responseData = json.decode(response.body);
-  print(
-      'Confirm Arrival Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
@@ -371,7 +345,6 @@ Future<void> cancelAttendence(
         "staffId": currentStaffData.staffId
       }));
   final responseData = json.decode(response.body);
-  print(responseData);
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
@@ -396,8 +369,6 @@ Future<void> deleteRegistration(
         "staffId": currentStaffData.staffId
       }));
   final responseData = json.decode(response.body);
-  print(
-      'Delete Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
@@ -423,12 +394,12 @@ Future<void> extractImageAndPutInFirebase(
 
   qrCodeURL = await sref.getDownloadURL();
   log('CURRENT URL2:: $qrCodeURL');
-  print('CURRENT URL2:: $qrCodeURL');
 }
 
 //Delete Registration//////////////////////////////////////////////////////////////////////////
 
-Future<void> updateMemberQrCode({BuildContext context}) async {
+Future<void> updateMemberQrCode(
+    {BuildContext context, String whatsAppMessageLang}) async {
   String url =
       'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code?lang=lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -442,39 +413,32 @@ Future<void> updateMemberQrCode({BuildContext context}) async {
         "QRCodeUUID": qrCodeUUID,
       }));
   final responseData = jsonDecode(response.body);
-  print(
-      'Update Member Qr Code:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
   }
 
-  sendVerificationCodeToWhatsApp(context);
+  await sendVerificationCodeToWhatsApp(context, whatsAppMessageLang);
 }
 
 //Send Verification Code To Whatsapp Registration//////////////////////////////////////////////////////////////////////////
 
-Future<void> sendVerificationCodeToWhatsApp(BuildContext context) async {
+Future<void> sendVerificationCodeToWhatsApp(
+    BuildContext context, String whatsAppMessageLang) async {
   String url =
-      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/language/${localeLanguage == const Locale('en') ? 'en' : 'ar'}/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/language/$whatsAppMessageLang/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-access-token': token
-      },
-    );
-    final responseData = json.decode(response.body);
-    print(
-        'Send QrCode Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
+  final response = await http.post(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+  );
+  final responseData = json.decode(response.body);
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
-    }
-  } on SocketException {
-    throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 
@@ -496,8 +460,6 @@ Future<void> freezeRegistration(
         "freezeDuration": duration
       }));
   final responseData = json.decode(response.body);
-  print(
-      'Freeze Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
@@ -520,8 +482,6 @@ Future<void> reactivateRegestration(
         "staffId": currentStaffData.staffId,
       }));
   final responseData = json.decode(response.body);
-  print(
-      'Reactivate Registration Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
@@ -543,25 +503,20 @@ Future<void> getAllMemberAttendences(String registrationId) async {
   );
 
   final responseData = json.decode(res.body);
-  print(
-      'All Member Attendences Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   var allMemberAttendences = responseData['attendances'];
 
   allMemberAttendencesList = (allMemberAttendences as List)
       .map((index) => MemberAttendencesData.fromjson(index))
       .toList();
-
-  print('All member attendences legnth:: ${allMemberAttendencesList.length}');
 }
 
 //Update Verify Member Registration//////////////////////////////////////////////////////////////////////////
 
 Future<void> updateMemberVerification(
-    {BuildContext context, bool verificationStatus}) async {
-  print(pickedMember.memberId);
-  print(pickedMember.memberId);
-
+    {BuildContext context,
+    bool verificationStatus,
+    String whatsAppMessageLang}) async {
   String url =
       'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/authentication?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
@@ -575,18 +530,13 @@ Future<void> updateMemberVerification(
           "QRCodeURL": qrCodeURL,
           "QRCodeUUID": qrCodeUUID,
           "canAuthenticate": verificationStatus,
-          "languageCode": localeLanguage == const Locale('en') ? "en" : "ar"
+          "languageCode": whatsAppMessageLang
         }));
     final responseData = jsonDecode(response.body.toString());
-    print(
-        'Update Member Verification Status :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
     if (responseData['whatsappMessage']['message'] ==
             'could not send member QR code message' &&
         responseData['whatsappMessage']['isSent'] == false) {
-      print(
-          'Response::::::::::: ${responseData['whatsappMessage']['message']}');
-
       throw GetRequestException(
           responseData['whatsappMessage']['message'] ?? 'error');
     }
@@ -610,8 +560,6 @@ Future<void> updateMemberVerification(
 
     pickedMember = memberData;
   } on SocketException {
-    print(
-        'update Member Verification Status socket exception (assistantFunction.dart)');
     throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
   }
 }
@@ -631,8 +579,6 @@ Future<void> addAttendanceBymember(
     },
   );
   final responseData = json.decode(response.body);
-  print(
-      'Add Attendance By Member Response:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: $responseData');
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(
@@ -653,7 +599,6 @@ Future<void> memberForgetPassword(String email, BuildContext context) async {
       body: json.encode({"email": email}));
 
   final responseData = json.decode(response.body);
-  print(responseData);
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
@@ -682,7 +627,6 @@ Future<void> blockMember(
   );
 
   final responseData = json.decode(response.body);
-  print(responseData);
 
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');

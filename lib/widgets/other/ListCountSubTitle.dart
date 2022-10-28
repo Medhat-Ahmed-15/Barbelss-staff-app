@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../globalVariables.dart';
+import 'package:gym_staff_app/globalVariables.dart';
+import 'package:numeral/fun.dart';
 
 class ListCountSubTitle extends StatelessWidget {
   bool empty;
@@ -16,6 +17,7 @@ class ListCountSubTitle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Expanded(child: Container()),
         Text(
           AppLocalizations.of(context).searchResultsContains,
           style: const TextStyle(
@@ -27,15 +29,15 @@ class ListCountSubTitle extends StatelessWidget {
         ),
         Text(
           listName == 'members'
-              ? '${empty == true || allMembersList == null ? 0 : allMembersList.length}'
+              ? '${empty == true || allMembersList == null ? 0 : numeral(allMembersList.length)}'
               : listName == 'registrations'
-                  ? '${empty == true || allMemberRegistrationsList == null ? 0 : allMemberRegistrationsList.length}'
-                  : '${empty == true || allMemberAttendencesList == null ? 0 : allMemberAttendencesList.length}',
+                  ? '${empty == true || allMemberRegistrationsList == null ? 0 : numeral(allMemberRegistrationsList.length)}'
+                  : '${empty == true || allMemberAttendencesList == null ? 0 : numeral(allMemberAttendencesList.length)}',
           style: TextStyle(
-            color: Theme.of(context).primaryColor,
-            fontSize: 19,
-            fontWeight: FontWeight.bold,
-          ),
+              color: Theme.of(context).primaryColor,
+              fontSize: 19,
+              fontWeight: FontWeight.bold,
+              overflow: TextOverflow.ellipsis),
         ),
         const SizedBox(
           width: 5,
@@ -50,6 +52,7 @@ class ListCountSubTitle extends StatelessWidget {
             color: Colors.grey,
           ),
         ),
+        Expanded(child: Container()),
       ],
     );
   }

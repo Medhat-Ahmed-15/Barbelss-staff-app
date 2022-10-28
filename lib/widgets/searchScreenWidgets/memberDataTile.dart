@@ -123,9 +123,6 @@ class _MemberDataTileState extends State<MemberDataTile> {
                 ),
                 onTap: () async {
                   pickedMember = widget.memberData;
-                  print('Current member id:: ${pickedMember.memberId}');
-                  print(
-                      'Current member validation:: ${pickedMember.canAuthenticate}');
 
                   await Navigator.pushNamed(
                       context, MemberDetailsScreen.routeName);
