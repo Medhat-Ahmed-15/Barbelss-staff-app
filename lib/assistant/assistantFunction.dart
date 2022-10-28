@@ -282,7 +282,7 @@ Future<void> getAllPlans() async {
 //Register Plan///////////////////////////////////////////////////////////////////////////
 
 Future<void> registerPlan(
-    {String planId, int planPrice, BuildContext context}) async {
+    {String planId, double planPrice, BuildContext context}) async {
   String url =
       'http://159.223.172.150/api/v1/registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
