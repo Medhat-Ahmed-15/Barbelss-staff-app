@@ -206,7 +206,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         return;
       }
 
-      if (phoneController.text.substring(1).trim().isEmpty) {
+      if (phoneController.text.trim().isEmpty) {
         setState(() {
           phoneErrorText = AppLocalizations.of(context).phoneNumberIsRequired;
           nameErrorText = '';
@@ -444,6 +444,9 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         });
       }
     } catch (error) {
+      setState(() {
+        loading = false;
+      });
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
     }
   }

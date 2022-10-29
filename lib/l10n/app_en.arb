@@ -541,6 +541,21 @@
     "privacyPolicy": "Privacy Policy",
     "@language": {
       "description": " "
+    },
+
+    "followUsOn": "FOLLOW US ON",
+    "@language": {
+      "description": " "
+    },
+
+    "poweredBy": "Powered by",
+    "@language": {
+      "description": " "
+    },
+
+    "agile": "Agile",
+    "@language": {
+      "description": " "
     }
 
 

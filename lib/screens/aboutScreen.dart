@@ -171,10 +171,10 @@ class _MyAboutScreenState extends State<AboutScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'FOLLOW US ON',
+                      Text(
+                        AppLocalizations.of(context).followUsOn,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.grey,
                         ),
                       ),
@@ -222,7 +222,7 @@ class _MyAboutScreenState extends State<AboutScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Powered by',
+                            AppLocalizations.of(context).poweredBy,
                             style: TextStyle(
                                 color:
                                     Theme.of(context).scaffoldBackgroundColor,
@@ -231,9 +231,10 @@ class _MyAboutScreenState extends State<AboutScreen> {
                           const SizedBox(
                             width: 5,
                           ),
-                          const Text(
-                            'Agile',
-                            style: TextStyle(color: Colors.blue, fontSize: 12),
+                          Text(
+                            AppLocalizations.of(context).agile,
+                            style: const TextStyle(
+                                color: Colors.blue, fontSize: 12),
                           ),
                         ],
                       ),

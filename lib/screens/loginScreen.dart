@@ -355,261 +355,271 @@ class _LoginScreenState extends State<LoginScreen> {
                     )
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //Phone TextField
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child:
-                              //phone textField
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //Phone TextField
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child:
+                                //phone textField
 
-                              textField(
-                                  controller: phoneController,
-                                  errorText: phoneErrorMessage,
-                                  focusNode: phoneFocusNode,
-                                  hintText: '$phonehHintText ex: 01 282923670',
-                                  keyboardType: TextInputType.phone,
-                                  labelText:
-                                      AppLocalizations.of(context).phoneTitle,
-                                  passwordText: false,
-                                  prefixIcon: Icons.phone,
-                                  sufixIcon: null,
-                                  textFieldName: 'phone'),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            showCountryPicker(
-                              context: context,
-                              //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                              exclude: <String>['IL'],
-                              favorite: <String>['EG'],
-                              //Optional. Shows phone code before the country name.
-                              showPhoneCode: true,
-                              onSelect: (Country country) {
-                                setState(() {
-                                  countryFlag = country.flagEmoji;
-                                  phonehHintText = '+${country.phoneCode}';
-                                  phoneCode = country.phoneCode;
-                                });
-                              },
-                              // Optional. Sets the theme for the country list picker.
-                              countryListTheme: CountryListThemeData(
-                                inputDecoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.search,
-                                      color: Theme.of(context).primaryColor),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(30.0),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor),
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(30.0),
-                                    ),
-                                  ),
-                                  errorBorder: const OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.redAccent),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(30.0),
-                                    ),
-                                  ),
-                                  labelText: AppLocalizations.of(context)
-                                      .searchBarHintTitle,
-                                  labelStyle: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                // Optional. Sets the border radius for the bottomsheet.
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(40.0),
-                                  topRight: Radius.circular(40.0),
-                                ),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            countryFlag,
-                            style: const TextStyle(fontSize: 22),
+                                textField(
+                                    controller: phoneController,
+                                    errorText: phoneErrorMessage,
+                                    focusNode: phoneFocusNode,
+                                    hintText:
+                                        '$phonehHintText ex: 01 282923670',
+                                    keyboardType: TextInputType.phone,
+                                    labelText:
+                                        AppLocalizations.of(context).phoneTitle,
+                                    passwordText: false,
+                                    prefixIcon: Icons.phone,
+                                    sufixIcon: null,
+                                    textFieldName: 'phone'),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    //Password TextField
-                    textField(
-                        controller: passwordController,
-                        errorText: passwordErrorMessage,
-                        focusNode: passwordFocusNode,
-                        hintText: '',
-                        keyboardType: TextInputType.text,
-                        labelText: AppLocalizations.of(context).passwordTitle,
-                        passwordText: obscureText,
-                        prefixIcon: Icons.lock,
-                        sufixIcon: IconButton(
-                          icon: const Icon(Icons.remove_red_eye),
-                          onPressed: () {
-                            setState(() {
-                              obscureText = !obscureText;
-                            });
-                          },
-                          color: passwordFocusNode.hasFocus
-                              ? Theme.of(context).primaryColor
-                              : Colors.black54,
-                        ),
-                        textFieldName: 'password'),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextButton(
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          AppLocalizations.of(context).forgetPasswordTitle,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(ForgotPasswordScreen.routeName);
-                      },
-                    ),
-
-                    const SizedBox(
-                      height: 80,
-                    ),
-                    loading == true
-                        ? FourDotsLoading()
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                              left: 8,
-                              right: 8,
-                            ),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: 56,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Theme.of(context).primaryColor),
-                                    overlayColor: MaterialStateProperty.all(
-                                        Theme.of(context)
-                                            .scaffoldBackgroundColor),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ))),
-                                onPressed: () async {
-                                  await login(context);
+                          InkWell(
+                            onTap: () {
+                              showCountryPicker(
+                                context: context,
+                                //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                                exclude: <String>['IL'],
+                                favorite: <String>['EG'],
+                                //Optional. Shows phone code before the country name.
+                                showPhoneCode: true,
+                                onSelect: (Country country) {
+                                  setState(() {
+                                    countryFlag = country.flagEmoji;
+                                    phonehHintText = '+${country.phoneCode}';
+                                    phoneCode = country.phoneCode;
+                                  });
                                 },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 10,
-                                    bottom: 10,
+                                // Optional. Sets the theme for the country list picker.
+                                countryListTheme: CountryListThemeData(
+                                  inputDecoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.search,
+                                        color: Theme.of(context).primaryColor),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(30.0),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(30.0),
+                                      ),
+                                    ),
+                                    errorBorder: const OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.redAccent),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(30.0),
+                                      ),
+                                    ),
+                                    labelText: AppLocalizations.of(context)
+                                        .searchBarHintTitle,
+                                    labelStyle: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  child: Text(
-                                    AppLocalizations.of(context).loginTitle,
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .headline1
-                                            .color,
-                                        fontSize: 18),
+                                  // Optional. Sets the border radius for the bottomsheet.
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(40.0),
+                                    topRight: Radius.circular(40.0),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              countryFlag,
+                              style: const TextStyle(fontSize: 22),
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_drop_down,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      //Password TextField
+                      textField(
+                          controller: passwordController,
+                          errorText: passwordErrorMessage,
+                          focusNode: passwordFocusNode,
+                          hintText: '',
+                          keyboardType: TextInputType.text,
+                          labelText: AppLocalizations.of(context).passwordTitle,
+                          passwordText: obscureText,
+                          prefixIcon: Icons.lock,
+                          sufixIcon: IconButton(
+                            icon: const Icon(Icons.remove_red_eye),
+                            onPressed: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            },
+                            color: passwordFocusNode.hasFocus
+                                ? Theme.of(context).primaryColor
+                                : Colors.black54,
+                          ),
+                          textFieldName: 'password'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextButton(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            AppLocalizations.of(context).forgetPasswordTitle,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(ForgotPasswordScreen.routeName);
+                        },
+                      ),
+
+                      SizedBox(
+                        height:
+                            MediaQuery.of(context).size.height < 700 ? 10 : 60,
+                      ),
+                      loading == true
+                          ? FourDotsLoading()
+                          : Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                height: 56,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Theme.of(context).primaryColor),
+                                      overlayColor: MaterialStateProperty.all(
+                                          Theme.of(context)
+                                              .scaffoldBackgroundColor),
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ))),
+                                  onPressed: () async {
+                                    await login(context);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 10,
+                                      bottom: 10,
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(context).loginTitle,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .headline1
+                                              .color,
+                                          fontSize: 18),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
 
-                    Expanded(child: Container()),
-                    Padding(
-                        padding: const EdgeInsets.only(bottom: 22),
-                        child: InkWell(
-                          onTap: () {},
-                          child: RichText(
-                            textAlign: TextAlign.center,
+                      const SizedBox(
+                        height: 80,
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(bottom: 22),
+                          child: InkWell(
+                            onTap: () {},
+                            child: RichText(
+                              textAlign: TextAlign.center,
 
-                            // Whether the text should break at soft line breaks
-                            softWrap: true,
+                              // Whether the text should break at soft line breaks
+                              softWrap: true,
 
-                            // Maximum number of lines for the text to span
-                            maxLines: 4,
+                              // Maximum number of lines for the text to span
+                              maxLines: 4,
 
-                            text: TextSpan(
-                              text:
-                                  'By logging into the application, you are agreeing to our\n',
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                              ),
-                              children: [
-                                TextSpan(
-                                    text: 'Terms and Conditions ',
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
-                                      fontSize: 14,
-                                    ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        showDialog(
-                                            context: context,
-                                            barrierDismissible: true,
-                                            builder: (BuildContext context) =>
-                                                PolicyDialog(
-                                                    mdFileName:
-                                                        'terms_and_conditions.md'));
-                                      }),
-                                const TextSpan(
-                                  text: 'and ',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  ),
+                              text: TextSpan(
+                                text:
+                                    'By logging into the application, you are agreeing to our\n',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
                                 ),
-                                TextSpan(
-                                    text: 'Privacy Policy!',
+                                children: [
+                                  TextSpan(
+                                      text: 'Terms and Conditions ',
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontSize: 14,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) =>
+                                                  PolicyDialog(
+                                                      mdFileName:
+                                                          'terms_and_conditions.md'));
+                                        }),
+                                  const TextSpan(
+                                    text: 'and ',
                                     style: TextStyle(
-                                      color: Theme.of(context).primaryColor,
+                                      color: Colors.grey,
                                       fontSize: 14,
                                     ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        showDialog(
-                                            context: context,
-                                            barrierDismissible: true,
-                                            builder: (BuildContext context) =>
-                                                PolicyDialog(
-                                                    mdFileName:
-                                                        'privacy_policy.md'));
-                                      }),
-                              ],
+                                  ),
+                                  TextSpan(
+                                      text: 'Privacy Policy!',
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                        fontSize: 14,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) =>
+                                                  PolicyDialog(
+                                                      mdFileName:
+                                                          'privacy_policy.md'));
+                                        }),
+                                ],
+                              ),
                             ),
-                          ),
-                        ))
-                  ],
+                          ))
+                    ],
+                  ),
                 ),
               ),
             ),
