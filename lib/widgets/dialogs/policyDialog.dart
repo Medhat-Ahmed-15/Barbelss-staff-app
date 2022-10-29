@@ -14,7 +14,8 @@ class PolicyDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: SizedBox(
-        height: 600,
+        height: MediaQuery.of(context).size.height * 0.6,
+        width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
             Expanded(
@@ -32,31 +33,40 @@ class PolicyDialog extends StatelessWidget {
                       }
                       return FourDotsLoading();
                     })),
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).primaryColor),
-                    overlayColor: MaterialStateProperty.all(
-                        Theme.of(context).scaffoldBackgroundColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ))),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context).doneTitle,
-                    style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1.color,
-                        fontSize: 18),
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.grey[300],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).primaryColor),
+                      overlayColor: MaterialStateProperty.all(
+                          Theme.of(context).scaffoldBackgroundColor),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ))),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context).doneTitle,
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1.color,
+                          fontSize: 18),
+                    ),
                   ),
                 ),
               ),

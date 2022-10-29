@@ -578,9 +578,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   TextSpan(
                                       text: 'Terms and Conditions ',
                                       style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontSize: 14,
-                                      ),
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           showDialog(
@@ -601,9 +601,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   TextSpan(
                                       text: 'Privacy Policy!',
                                       style: TextStyle(
-                                        color: Theme.of(context).primaryColor,
-                                        fontSize: 14,
-                                      ),
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           showDialog(
