@@ -120,9 +120,9 @@ class _MemberPackageDetailsScreenState
                             : empty == true
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      EmptyAnimationWidget(),
-                                      SizedBox(
+                                    children: [
+                                      EmptyAnimationWidget(refresh),
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                     ],

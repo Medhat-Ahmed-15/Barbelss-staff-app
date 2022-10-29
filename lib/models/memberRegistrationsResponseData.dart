@@ -6,7 +6,7 @@ class MemberRegistrationsResponseData {
   bool registrationIsActive;
   int registrationAttended;
   String registrationExpiresAt;
-  int registrationPaid;
+  num registrationPaid;
   bool isFreezed;
 
   String memberId;

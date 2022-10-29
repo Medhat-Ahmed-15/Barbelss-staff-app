@@ -132,55 +132,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                       : loadingMemberRegistrationsData == true
                           ? FourDotsLoading()
                           : empty == true
-                              ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const EmptyAnimationWidget(),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    SizedBox(
-                                      width: 150,
-                                      height: 56,
-                                      child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all(
-                                                    Theme.of(context)
-                                                        .scaffoldBackgroundColor),
-                                            overlayColor:
-                                                MaterialStateProperty.all(
-                                                    Colors.grey[300]),
-                                            shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(10.0),
-                                                    side: BorderSide(color: Theme.of(context).primaryColor)))),
-                                        onPressed: () async {
-                                          await Navigator.of(context).pushNamed(
-                                            PlansScreen.routeName,
-                                          );
-                                          await refresh();
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                            top: 10,
-                                            bottom: 10,
-                                          ),
-                                          child: Text(
-                                            AppLocalizations.of(context)
-                                                .enrollNowTitle,
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                fontSize: 14),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
+                              ? EmptyAnimationWidget(refresh)
                               : RefreshIndicator(
                                   color: Theme.of(context).primaryColor,
                                   strokeWidth: 5,

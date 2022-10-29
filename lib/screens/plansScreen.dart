@@ -151,7 +151,7 @@ class _PlansScreenState extends State<PlansScreen> {
                 : loadingPlans == true
                     ? FourDotsLoading()
                     : empty == true
-                        ? const EmptyAnimationWidget()
+                        ? EmptyAnimationWidget(refresh)
                         : Swiper(
                             outer: true,
                             pagination: const SwiperPagination(

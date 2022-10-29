@@ -231,7 +231,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 : loadingMembersData == true
                     ? FourDotsLoading()
                     : empty == true
-                        ? const EmptyAnimationWidget()
+                        ? EmptyAnimationWidget(refresh)
                         : RefreshIndicator(
                             color: Theme.of(context).primaryColor,
                             strokeWidth: 5,
