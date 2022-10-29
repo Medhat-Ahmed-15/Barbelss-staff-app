@@ -7,7 +7,7 @@ class PlanData {
   String planTitle;
   int planAttendance;
   String planExpiresIn;
-  int planPrice;
+  num planPrice;
   bool isOpen;
   String createdAt;
 

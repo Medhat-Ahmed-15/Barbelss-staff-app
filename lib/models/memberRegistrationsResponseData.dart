@@ -28,7 +28,7 @@ class MemberRegistrationsResponseData {
   String packageTitle;
   int packageAttendance;
   String packageExpiresIn;
-  int packagePrice;
+  num packagePrice;
 
   MemberRegistrationsResponseData.fromjson(Map<String, dynamic> json) {
     registrationId = json['_id'];
