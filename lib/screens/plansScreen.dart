@@ -162,8 +162,9 @@ class _PlansScreenState extends State<PlansScreen> {
                                   allPlansList[index], screenComingFrom);
                             },
                             itemCount: allPlansList.length,
-                            itemWidth: 300.0,
-                            itemHeight: 550.0,
+                            itemWidth: MediaQuery.of(context).size.width * 0.75,
+                            itemHeight:
+                                MediaQuery.of(context).size.height * 0.7,
                             loop: true,
                             layout: SwiperLayout.STACK,
                           ),
