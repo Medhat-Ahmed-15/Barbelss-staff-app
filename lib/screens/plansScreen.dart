@@ -25,7 +25,7 @@ class _PlansScreenState extends State<PlansScreen> {
   bool loadingPlans = true;
   bool connectionError = false;
   bool empty = false;
-  bool isInit = false;
+  bool isInit = true;
 
   String screenComingFrom;
 
@@ -33,30 +33,35 @@ class _PlansScreenState extends State<PlansScreen> {
   void didChangeDependencies() async {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    try {
-      await getAllPlans();
 
-      if (allPlansList.isEmpty) {
+    if (isInit == true) {
+      try {
+        await getAllPlans();
+
+        if (allPlansList.isEmpty) {
+          setState(() {
+            loadingPlans = false;
+            connectionError = false;
+            empty = true;
+          });
+        } else {
+          setState(() {
+            loadingPlans = false;
+            connectionError = false;
+            empty = false;
+          });
+        }
+      } on SocketException {
         setState(() {
+          connectionError = true;
           loadingPlans = false;
-          connectionError = false;
-          empty = true;
-        });
-      } else {
-        setState(() {
-          loadingPlans = false;
-          connectionError = false;
           empty = false;
         });
+      } catch (error) {
+        showToast(AppLocalizations.of(context).somethingWentWrong, context);
       }
-    } on SocketException {
-      setState(() {
-        connectionError = true;
-        loadingPlans = false;
-        empty = false;
-      });
-    } catch (error) {
-      showToast(AppLocalizations.of(context).somethingWentWrong, context);
+
+      isInit = false;
     }
   }
 

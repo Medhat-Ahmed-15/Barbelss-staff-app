@@ -567,9 +567,10 @@ Future<void> updateMemberVerification(
 //Add Attendance By Member//////////////////////////////////////////////////////////////////////////
 
 Future<void> addAttendanceBymember(
-    {String memberId, BuildContext context}) async {
+    {String memberId, String qrCodeUUID, BuildContext context}) async {
+  //159.223.172.150/api/v1/attendances/members/63137d0bc4cae825d788889b/QRCodes-uuids/39f3368e-8c38-4a48-beeb-138918da9970?lang=ar
   String url =
-      'http://159.223.172.150/api/v1/attendances/members/$memberId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'http://159.223.172.150/api/v1/attendances/members/$memberId/QRCodes-uuids/$qrCodeUUID?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   final response = await http.post(
     Uri.parse(url),

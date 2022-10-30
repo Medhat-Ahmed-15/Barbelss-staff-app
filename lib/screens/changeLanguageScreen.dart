@@ -77,16 +77,7 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: switchLanguage == true
-                      ? Theme.of(context).primaryColor
-                      : Theme.of(context).scaffoldBackgroundColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(206, 206, 206, 1),
-                      offset: Offset(1, 3),
-                      blurRadius: 1.0,
-                    )
-                  ],
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 width: MediaQuery.of(context).size.width,
@@ -118,27 +109,31 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                       }
                     },
                     child: ListTile(
-                      leading: const Text(
+                      leading: Text(
                         'English',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                            color: Colors.grey),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       trailing: switchLanguage == false
                           ? null
                           : Icon(Icons.check_circle_outline,
                               size: 30,
                               color: switchLanguage == true
-                                  ? Colors.white
-                                  : Colors.grey[600]),
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).scaffoldBackgroundColor),
                     ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(
-              height: 50,
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.grey[300],
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -147,16 +142,7 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: switchLanguage == false
-                      ? Theme.of(context).primaryColor
-                      : Theme.of(context).scaffoldBackgroundColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromRGBO(206, 206, 206, 1),
-                      offset: Offset(1, 3),
-                      blurRadius: 1.0,
-                    )
-                  ],
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(15.0),
                 ),
                 width: MediaQuery.of(context).size.width,
@@ -190,24 +176,31 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
                       }
                     },
                     child: ListTile(
-                      leading: const Text(
+                      leading: Text(
                         'العربية',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                            color: Colors.grey),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       trailing: switchLanguage == true
                           ? null
                           : Icon(Icons.check_circle_outline,
                               size: 30,
                               color: switchLanguage == false
-                                  ? Colors.white
-                                  : Colors.grey[600]),
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).scaffoldBackgroundColor),
                     ),
                   ),
                 ),
               ),
+            ),
+            Divider(
+              thickness: 1,
+              endIndent: 10,
+              indent: 10,
+              color: Colors.grey[300],
             ),
             switchLanguageLoading == true
                 ? Container(

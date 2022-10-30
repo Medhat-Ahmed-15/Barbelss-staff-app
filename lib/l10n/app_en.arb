@@ -281,6 +281,16 @@
       "description": " "
     },
 
+    "disAllowVerification": "Disallow Verification",
+    "@language": {
+      "description": " "
+    },
+
+    "memberVerification": "Member Verification",
+    "@language": {
+      "description": " "
+    },
+
     "next": "Next",
     "@language": {
       "description": " "
@@ -554,6 +564,11 @@
     },
 
     "agile": "Agile",
+    "@language": {
+      "description": " "
+    },
+
+    "close": "Close",
     "@language": {
       "description": " "
     }

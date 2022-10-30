@@ -54,7 +54,6 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 30.0),
             RepaintBoundary(
 // Assigning the global key to the repaint boundary widget.
               key: globalKey,
@@ -76,60 +75,101 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
               ),
             ),
             const SizedBox(height: 18.0),
-            loading == true
-                ? Center(
-                    child: LoadingAnimationWidget.fourRotatingDots(
-                      color: Theme.of(context).primaryColor,
-                      size: 50,
-                    ),
-                  )
-                : Container(
-                    width: 150,
+            Column(
+              children: [
+                loading == true
+                    ? Center(
+                        child: LoadingAnimationWidget.fourRotatingDots(
+                          color: Theme.of(context).primaryColor,
+                          size: 50,
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 56,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                  color: Theme.of(context).primaryColor)),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Theme.of(context).scaffoldBackgroundColor),
+                                overlayColor: MaterialStateProperty.all(
+                                    Theme.of(context).primaryColor)),
+                            onPressed: () async {
+                              //export image
+
+                              try {
+                                setState(() {
+                                  loading = true;
+                                });
+
+                                await extractImageAndPutInFirebase(
+                                    globalKey, widget.phone);
+                                Navigator.of(context).pop(true);
+                              } catch (error) {
+                                Navigator.of(context).pop(false);
+                                rethrow;
+                              }
+
+                              setState(() {
+                                loading = false;
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 5,
+                                bottom: 5,
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context).sendQrCode,
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontSize: 14),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
                     height: 56,
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(5),
-                        border:
-                            Border.all(color: Theme.of(context).primaryColor)),
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).scaffoldBackgroundColor),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.redAccent),
                           overlayColor: MaterialStateProperty.all(
                               Theme.of(context).primaryColor)),
                       onPressed: () async {
-                        //export image
-
-                        try {
-                          setState(() {
-                            loading = true;
-                          });
-
-                          await extractImageAndPutInFirebase(
-                              globalKey, widget.phone);
-                          Navigator.of(context).pop(true);
-                        } catch (error) {
-                          rethrow;
-                        }
-
-                        setState(() {
-                          loading = false;
-                        });
+                        Navigator.of(context).pop(false);
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(
-                          top: 10,
-                          bottom: 10,
+                          top: 5,
+                          bottom: 5,
                         ),
                         child: Text(
-                          AppLocalizations.of(context).sendQrCode,
+                          AppLocalizations.of(context).close,
                           style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).scaffoldBackgroundColor,
                               fontSize: 14),
                         ),
                       ),
                     ),
                   ),
+                ),
+              ],
+            ),
             const SizedBox(
               height: 10.0,
             )

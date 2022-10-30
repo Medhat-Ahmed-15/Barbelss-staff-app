@@ -19,7 +19,7 @@ class MemberPersonalDataScreen extends StatefulWidget {
 }
 
 class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
-  bool allowVerification = pickedMember.canAuthenticate;
+  bool allowVerification = false;
   bool resendQrCodeLoading = false;
   bool blockOrUnBlockLoading = false;
   bool arabicChosen = false;
@@ -27,12 +27,16 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
 
   String whatsAppMessageLang = 'en';
 
-  void toggleSwitch(bool value) async {
+  void setMemberVerification() async {
     try {
-      if (value == true) {
+      setState(() {
+        allowVerification = true;
+      });
+
+      if (pickedMember.canAuthenticate == false) {
         var response = await showDialog(
           context: context,
-          barrierDismissible: true,
+          barrierDismissible: false,
           builder: (BuildContext context) => QrCodeDialog(
             pickedMember.memberName,
             pickedMember.memberEmail,
@@ -43,17 +47,22 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
         if (response == true) {
           await updateMemberVerification(
               context: context,
-              verificationStatus: value,
+              verificationStatus: true,
               whatsAppMessageLang: whatsAppMessageLang);
           setState(() {
-            allowVerification = value;
+            allowVerification = false;
           });
+        } else {
+          setState(() {
+            allowVerification = false;
+          });
+          return;
         }
       } else {
         await updateMemberVerification(
-            context: context, verificationStatus: value);
+            context: context, verificationStatus: false);
         setState(() {
-          allowVerification = value;
+          allowVerification = false;
         });
       }
     } on GetRequestException catch (error) {
@@ -244,43 +253,46 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                           color: Theme.of(context).scaffoldBackgroundColor),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context).allowVerification,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                    color: Colors.grey),
-                              ),
-                              Switch(
-                                onChanged: toggleSwitch,
-                                value: allowVerification,
-                                activeColor:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                activeTrackColor: Colors.green,
-                                inactiveThumbColor:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                inactiveTrackColor: Colors.grey[300],
-                              )
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              children: [
+                                Text(
+                                  '${AppLocalizations.of(context).memberVerification}:  ',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                      color: Colors.grey),
+                                ),
+                                Icon(
+                                  pickedMember.canAuthenticate == false
+                                      ? Icons.cancel_outlined
+                                      : Icons.check,
+                                  color: pickedMember.canAuthenticate == false
+                                      ? Colors.redAccent
+                                      : Colors.green,
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                AppLocalizations.of(context).languageTitle,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                    color: Colors.grey),
-                              ),
-                              Expanded(child: Container()),
-                              languageButton('English'),
-                              Expanded(child: Container()),
-                              languageButton('العربية'),
-                              Expanded(child: Container()),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Row(
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context).languageTitle,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                      color: Colors.grey),
+                                ),
+                                Expanded(child: Container()),
+                                languageButton('English'),
+                                Expanded(child: Container()),
+                                languageButton('العربية'),
+                                Expanded(child: Container()),
+                              ],
+                            ),
                           )
                         ],
                       ),
@@ -288,6 +300,20 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                   ),
                   const SizedBox(
                     height: 50,
+                  ),
+
+                  //Allow verification
+                  allowVerification == true
+                      ? FourDotsLoading()
+                      : button(
+                          setMemberVerification,
+                          Colors.blue,
+                          pickedMember.canAuthenticate == true
+                              ? AppLocalizations.of(context)
+                                  .disAllowVerification
+                              : AppLocalizations.of(context).allowVerification),
+                  const SizedBox(
+                    height: 20,
                   ),
 
                   //Resend Qr Code

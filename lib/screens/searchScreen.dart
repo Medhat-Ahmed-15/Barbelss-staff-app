@@ -302,7 +302,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 Map decodedBarcodeData = json.decode(barcodeData);
 
                 await addAttendanceBymember(
-                    context: context, memberId: decodedBarcodeData['memberId']);
+                    context: context,
+                    memberId: decodedBarcodeData['memberId'],
+                    qrCodeUUID: decodedBarcodeData['uuid']);
 
                 setState(() {
                   confirmationLoading = false;

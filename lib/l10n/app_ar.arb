@@ -113,6 +113,10 @@
 
      "allowVerification": "السماح بالتحقق",
 
+     "disAllowVerification": "عدم السماح بالتحقق",
+
+     "memberVerification": "التحقق من العضو",
+
      "next": "التالي",
 
      "moreMemberDetails": "المزيد من تفاصيل الأعضاء",
@@ -221,7 +225,9 @@
 
      "poweredBy": "مشغل بواسطة",
 
-     "agile": "اجيل"
+     "agile": "اجيل",
+
+    "close": "أغلق"
 
 
 

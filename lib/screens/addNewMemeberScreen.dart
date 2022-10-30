@@ -264,9 +264,9 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
             phoneCode: phoneCode,
             whatsAppMessageLang: whatsAppMessageLang);
 
-        await showDialog(
+        var response = await showDialog(
           context: context,
-          barrierDismissible: true,
+          barrierDismissible: false,
           builder: (BuildContext context) => QrCodeDialog(
             nameController.text.trim(),
             emailController.text.trim(),
@@ -274,10 +274,18 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
             context,
           ),
         );
-        await updateMemberVerification(
-            context: context,
-            verificationStatus: isAuthenticate,
-            whatsAppMessageLang: whatsAppMessageLang);
+
+        if (response == true) {
+          await updateMemberVerification(
+              context: context,
+              verificationStatus: isAuthenticate,
+              whatsAppMessageLang: whatsAppMessageLang);
+        } else {
+          setState(() {
+            isAuthenticate = false;
+          });
+        }
+
         showDialog(
           context: context,
           barrierDismissible: true,
