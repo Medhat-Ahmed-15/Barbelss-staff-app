@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:country_picker/country_picker.dart';
@@ -282,6 +283,10 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
               whatsAppMessageLang: whatsAppMessageLang);
         } else {
           setState(() {
+            showToast(
+                'Qr Code is not sent\nsorry something went wrong,\nPlease try again later',
+                context);
+
             isAuthenticate = false;
           });
         }
@@ -456,6 +461,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         loading = false;
       });
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
+      log('ERROR::: ${error.toString()}');
     }
   }
 

@@ -49,10 +49,16 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
               context: context,
               verificationStatus: true,
               whatsAppMessageLang: whatsAppMessageLang);
+          showToast(
+            '✔',
+            context,
+          );
           setState(() {
             allowVerification = false;
           });
         } else {
+          showToast(AppLocalizations.of(context).somethingWentWrong, context);
+
           setState(() {
             allowVerification = false;
           });
@@ -61,6 +67,10 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
       } else {
         await updateMemberVerification(
             context: context, verificationStatus: false);
+        showToast(
+          '❌',
+          context,
+        );
         setState(() {
           allowVerification = false;
         });

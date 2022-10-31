@@ -52,7 +52,7 @@ class _MenuScreenState extends State<MenuScreen> {
               flex: 3,
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 15),
+              padding: EdgeInsets.only(left: 15, right: 15),
               child: Text(
                 'Barbells',
                 style: TextStyle(
@@ -62,7 +62,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 15, bottom: 15),
+              padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
               child: Text(
                 'version: 1.0.0+1',
                 style: TextStyle(

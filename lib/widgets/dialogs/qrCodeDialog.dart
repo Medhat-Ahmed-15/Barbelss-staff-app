@@ -113,7 +113,6 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                                 Navigator.of(context).pop(true);
                               } catch (error) {
                                 Navigator.of(context).pop(false);
-                                rethrow;
                               }
 
                               setState(() {

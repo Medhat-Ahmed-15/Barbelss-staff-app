@@ -361,6 +361,10 @@ class _SearchScreenState extends State<SearchScreen> {
               } catch (error) {
                 showToast(
                     AppLocalizations.of(context).somethingWentWrong, context);
+
+                setState(() {
+                  confirmationLoading = false;
+                });
               }
             }
           }

@@ -19,13 +19,16 @@ import 'package:gym_staff_app/globalVariables.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void showToast(String message, BuildContext context) {
+void showToast(
+  String message,
+  BuildContext context,
+) {
   Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 5,
-      backgroundColor: Colors.grey,
+      backgroundColor: Theme.of(context).primaryColor,
       textColor: Colors.white,
       fontSize: 16.0);
 }
@@ -51,6 +54,8 @@ Future<void> setLocalLanguageInSorage(String language) async {
   final localLanguage = json.encode({
     'localLanguage': language,
   });
+
+  prefs.setString('localLanguage', localLanguage);
 
   localeLanguage = Locale(language);
 }

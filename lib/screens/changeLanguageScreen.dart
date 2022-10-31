@@ -57,7 +57,7 @@ class _ChangeLanguageScreenState extends State<ChangeLanguageScreen> {
             ),
           ),
           title: Text(
-            AppLocalizations.of(context).settingsIconTitle,
+            AppLocalizations.of(context).languageTitle,
             style: TextStyle(
                 color: Theme.of(context).textTheme.headline1.color,
                 fontSize: 30,
