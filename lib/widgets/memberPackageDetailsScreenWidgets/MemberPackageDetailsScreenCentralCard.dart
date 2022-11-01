@@ -82,7 +82,10 @@ class MemberPackageDetailsScreenCentralCard extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          ListCountSubTitle(empty, 'attendences'),
+          ListCountSubTitle(
+            empty: empty,
+            listName: 'attendences',
+          ),
         ],
       ),
     );

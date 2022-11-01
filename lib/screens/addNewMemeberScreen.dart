@@ -805,12 +805,10 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                   style: const TextStyle(fontSize: 17.0),
                 ),
                 title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Container()),
                     languageButton('English'),
-                    Expanded(child: Container()),
                     languageButton('العربية'),
-                    Expanded(child: Container()),
                   ],
                 ),
               ),

@@ -33,6 +33,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool confirmationLoading = false;
   String barcodeData;
   final searchController = TextEditingController();
+  List<MemberData> sortedMemberData;
 
   @override
   void didChangeDependencies() async {
@@ -51,6 +52,7 @@ class _SearchScreenState extends State<SearchScreen> {
             loadingMembersData = false;
             connectionError = false;
             empty = false;
+            sortedMemberData = allMembersList;
           });
         }
       } on SocketException {
@@ -92,6 +94,7 @@ class _SearchScreenState extends State<SearchScreen> {
           loadingMembersData = false;
           connectionError = false;
           empty = false;
+          sortedMemberData = allMembersList;
         });
       }
     } on SocketException {
@@ -124,7 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Stack(
         children: [
           //upper container containing burger button and title
-          const upperContainer(),
+          const UpperContainer(),
           //search textfield and list count
           Positioned(
             child: Padding(
@@ -147,6 +150,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       child: TextField(
                         controller: searchController,
+                        keyboardType: TextInputType.phone,
                         cursorColor: Theme.of(context).primaryColor,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.search,
@@ -157,63 +161,41 @@ class _SearchScreenState extends State<SearchScreen> {
                           border: InputBorder.none,
                         ),
                         onChanged: (value) async {
-                          List<MemberData> sortedMemberData = [];
-
-                          try {
-                            setState(() {
-                              connectionError = false;
-                              empty = false;
-                              loadingMembersData = true;
-                            });
-                            await getAllMembers();
-
-                            for (var memberData in allMembersList) {
-                              if (memberData.memberPhone.startsWith(value)) {
-                                sortedMemberData.add(memberData);
-                              }
+                          sortedMemberData = [];
+                          for (var memberData in allMembersList) {
+                            if (memberData.memberPhone
+                                .startsWith(value.substring(1))) {
+                              sortedMemberData.add(memberData);
                             }
-                            if (sortedMemberData.isEmpty && value != '') {
-                              setState(() {
-                                empty = true;
-                                loadingMembersData = false;
-                                connectionError = false;
-                              });
-                            } else {
-                              setState(() {
-                                allMembersList = sortedMemberData;
-                                loadingMembersData = false;
-                                connectionError = false;
-                              });
-                            }
-                          } on SocketException {
+                          }
+                          if (sortedMemberData.isEmpty && value != '') {
                             setState(() {
-                              connectionError = true;
-                              loadingMembersData = false;
-                              empty = false;
-                            });
-                          } on GetRequestException {
-                            setState(() {
-                              connectionError = false;
-                              loadingMembersData = false;
                               empty = true;
+                              loadingMembersData = false;
+                              connectionError = false;
                             });
-                          } catch (error) {
-                            showToast(
-                                AppLocalizations.of(context).somethingWentWrong,
-                                context);
-
+                          } else {
                             setState(() {
                               loadingMembersData = false;
+                              connectionError = false;
+                              empty = false;
                             });
                           }
                         },
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: ListCountSubTitle(empty, 'members'),
-                  ),
+                  loadingMembersData == true
+                      ? const SizedBox(
+                          height: 0,
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: ListCountSubTitle(
+                              empty: empty,
+                              listName: 'members',
+                              membersListCount: sortedMemberData.length),
+                        ),
                 ],
               ),
             ),
@@ -242,9 +224,9 @@ class _SearchScreenState extends State<SearchScreen> {
                               padding: const EdgeInsets.all(0),
                               itemBuilder: (context, index) {
                                 return MemberDataTile(
-                                    allMembersList[index], refresh);
+                                    sortedMemberData[index], refresh);
                               },
-                              itemCount: allMembersList.length,
+                              itemCount: sortedMemberData.length,
                             ),
                           ),
           ),
@@ -262,7 +244,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: 'btn1',
+        heroTag: 'qrCodeButton',
         child: Icon(
           Icons.qr_code,
           size: 30,

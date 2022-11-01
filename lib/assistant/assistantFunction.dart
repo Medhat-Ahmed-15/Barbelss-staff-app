@@ -401,52 +401,6 @@ Future<void> extractImageAndPutInFirebase(
   log('CURRENT URL2:: $qrCodeURL');
 }
 
-//Delete Registration//////////////////////////////////////////////////////////////////////////
-
-Future<void> updateMemberQrCode(
-    {BuildContext context, String whatsAppMessageLang}) async {
-  String url =
-      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code?lang=lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
-
-  final response = await http.patch(Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-access-token': token
-      },
-      body: json.encode({
-        "QRCodeURL": qrCodeURL,
-        "QRCodeUUID": qrCodeUUID,
-      }));
-  final responseData = jsonDecode(response.body);
-
-  if (responseData['accepted'] == false) {
-    throw GetRequestException(responseData['message'] ?? 'error');
-  }
-
-  await sendVerificationCodeToWhatsApp(context, whatsAppMessageLang);
-}
-
-//Send Verification Code To Whatsapp Registration//////////////////////////////////////////////////////////////////////////
-
-Future<void> sendVerificationCodeToWhatsApp(
-    BuildContext context, String whatsAppMessageLang) async {
-  String url =
-      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/language/$whatsAppMessageLang/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
-
-  final response = await http.post(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-access-token': token
-    },
-  );
-  final responseData = json.decode(response.body);
-
-  if (responseData['accepted'] == false) {
-    throw GetRequestException(responseData['message'] ?? 'error');
-  }
-}
-
 //Freeze Registration//////////////////////////////////////////////////////////////////////////
 
 Future<void> freezeRegistration(
@@ -566,6 +520,52 @@ Future<void> updateMemberVerification(
     pickedMember = memberData;
   } on SocketException {
     throw SocketException(AppLocalizations.of(context).connectionStatusMessage);
+  }
+}
+
+//Update Member Qr Code//////////////////////////////////////////////////////////////////////////
+
+Future<void> updateMemberQrCode(
+    {BuildContext context, String whatsAppMessageLang}) async {
+  String url =
+      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code?lang=lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+  final response = await http.patch(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode({
+        "QRCodeURL": qrCodeURL,
+        "QRCodeUUID": qrCodeUUID,
+      }));
+  final responseData = jsonDecode(response.body);
+
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
+  }
+
+  await sendVerificationCodeToWhatsApp(context, whatsAppMessageLang);
+}
+
+//Send Verification Code To Whatsapp Registration//////////////////////////////////////////////////////////////////////////
+
+Future<void> sendVerificationCodeToWhatsApp(
+    BuildContext context, String whatsAppMessageLang) async {
+  String url =
+      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/language/$whatsAppMessageLang/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+  final response = await http.post(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+  );
+  final responseData = json.decode(response.body);
+
+  if (responseData['accepted'] == false) {
+    throw GetRequestException(responseData['message'] ?? 'error');
   }
 }
 

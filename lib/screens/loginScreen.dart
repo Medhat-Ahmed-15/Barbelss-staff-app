@@ -171,24 +171,24 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (isInit == true) {
-      containerheight = MediaQuery.of(context).size.height * 0.6;
-      titleHeight = MediaQuery.of(context).size.height * 0.1;
-      Fluttertoast.showToast(
-          msg:
-              ' \n \n Screen Width:  ${MediaQuery.of(context).size.width} \n \n Screen Height:  ${MediaQuery.of(context).size.height}  \n \n',
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 20.0);
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (isInit == true) {
+  //     containerheight = MediaQuery.of(context).size.height * 0.6;
+  //     titleHeight = MediaQuery.of(context).size.height * 0.1;
+  //     Fluttertoast.showToast(
+  //         msg:
+  //             ' \n \n Screen Width:  ${MediaQuery.of(context).size.width} \n \n Screen Height:  ${MediaQuery.of(context).size.height}  \n \n',
+  //         toastLength: Toast.LENGTH_LONG,
+  //         gravity: ToastGravity.CENTER,
+  //         backgroundColor: Colors.grey,
+  //         textColor: Colors.white,
+  //         fontSize: 20.0);
 
-      isInit = false;
-    }
-  }
+  //     isInit = false;
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -270,6 +270,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Widget rowWidget(Widget widget1, Widget widget2) {
+    return Row(
+      mainAxisAlignment: localeLanguage == const Locale('en')
+          ? MainAxisAlignment.start
+          : MainAxisAlignment.end,
+      children: [
+        widget1,
+        widget2,
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).viewInsets.bottom != 0) {
@@ -291,43 +303,49 @@ class _LoginScreenState extends State<LoginScreen> {
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              padding: EdgeInsets.only(
-                top: titleHeight,
-                left: localeLanguage == const Locale('en') ? 15 : 0,
-                right: localeLanguage != const Locale('en') ? 15 : 0,
-              ),
+              padding: EdgeInsets.only(top: titleHeight, left: 15),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: localeLanguage == const Locale('en')
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/b8.png',
-                        height: 50,
-                        width: 50,
-                      ),
-                      Text(
-                        AppLocalizations.of(context).appName,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
+                  localeLanguage == const Locale('en')
+                      ? rowWidget(
+                          Image.asset('assets/images/b8.png',
+                              height: 50, width: 50),
+                          const Text(
+                            'arbells',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      : rowWidget(
+                          const Text(
+                            'arbells',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Image.asset('assets/images/b8.png',
+                              height: 50, width: 50),
                         ),
-                      ),
-                    ],
-                  ),
                   Text(
-                    AppLocalizations.of(context).loginSubtitleOne,
+                    'Manage and track',
                     style: TextStyle(
                       color: Theme.of(context).scaffoldBackgroundColor,
-                      fontSize: localeLanguage == const Locale('en') ? 15 : 20,
+                      fontSize: 15,
                     ),
                   ),
                   Text(
-                    AppLocalizations.of(context).loginSubtitleTwo,
+                    'your member registartions with us',
                     style: TextStyle(
                       color: Theme.of(context).scaffoldBackgroundColor,
-                      fontSize: localeLanguage == const Locale('en') ? 15 : 20,
+                      fontSize: 15,
                     ),
                   ),
                 ],
@@ -486,7 +504,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       TextButton(
                         child: Align(
-                          alignment: Alignment.topRight,
+                          alignment: localeLanguage == const Locale('en')
+                              ? Alignment.topRight
+                              : Alignment.topLeft,
                           child: Text(
                             AppLocalizations.of(context).forgetPasswordTitle,
                             style: TextStyle(
@@ -509,9 +529,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? FourDotsLoading()
                           : Padding(
                               padding: const EdgeInsets.only(
-                                left: 8,
-                                right: 8,
-                              ),
+                                  left: 8, right: 8, bottom: 20),
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 height: 56,
@@ -551,9 +569,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
 
-                      const SizedBox(
-                        height: 80,
-                      ),
                       Padding(
                           padding: const EdgeInsets.only(bottom: 22),
                           child: InkWell(
@@ -599,7 +614,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   TextSpan(
-                                      text: 'Privacy Policy!',
+                                      text: 'Privacy Policy',
                                       style: TextStyle(
                                           color: Theme.of(context).primaryColor,
                                           fontSize: 14,

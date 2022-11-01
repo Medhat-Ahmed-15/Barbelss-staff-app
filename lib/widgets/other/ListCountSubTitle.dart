@@ -6,11 +6,9 @@ import 'package:numeral/fun.dart';
 class ListCountSubTitle extends StatelessWidget {
   bool empty;
   String listName;
+  int membersListCount;
 
-  ListCountSubTitle(
-    this.empty,
-    this.listName,
-  );
+  ListCountSubTitle({this.empty, this.listName, this.membersListCount});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +27,7 @@ class ListCountSubTitle extends StatelessWidget {
         ),
         Text(
           listName == 'members'
-              ? '${empty == true || allMembersList == null ? 0 : numeral(allMembersList.length)}'
+              ? '${empty == true || membersListCount == null ? 0 : numeral(membersListCount)}'
               : listName == 'registrations'
                   ? '${empty == true || allMemberRegistrationsList == null ? 0 : numeral(allMemberRegistrationsList.length)}'
                   : '${empty == true || allMemberAttendencesList == null ? 0 : numeral(allMemberAttendencesList.length)}',

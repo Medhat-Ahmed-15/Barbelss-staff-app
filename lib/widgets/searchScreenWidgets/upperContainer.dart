@@ -3,8 +3,8 @@ import 'package:gym_staff_app/screens/addNewMemeberScreen.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:flutter/material.dart';
 
-class upperContainer extends StatelessWidget {
-  const upperContainer({
+class UpperContainer extends StatelessWidget {
+  const UpperContainer({
     Key key,
   }) : super(key: key);
 

@@ -78,7 +78,10 @@ class MemberDetailsCentralCard extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          ListCountSubTitle(empty, 'registrations')
+          ListCountSubTitle(
+            empty: empty,
+            listName: 'registrations',
+          )
         ],
       ),
     );
