@@ -88,7 +88,7 @@ class MemberAttendencesDataTile extends StatelessWidget {
               ),
               trailing: Text(
                 convertDateToDayInNumberMonthInText(
-                    memberAttendencesData.createdAt),
+                    memberAttendencesData.createdAt, context),
                 style: const TextStyle(
                   color: Colors.grey,
                 ),

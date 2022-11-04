@@ -116,7 +116,7 @@ class _MemberDataTileState extends State<MemberDataTile> {
                 ),
                 trailing: Text(
                   convertDateToDayInNumberMonthInText(
-                      widget.memberData.createdAt),
+                      widget.memberData.createdAt, context),
                   style: const TextStyle(
                     color: Colors.grey,
                   ),

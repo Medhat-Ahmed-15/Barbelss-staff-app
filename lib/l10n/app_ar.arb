@@ -93,7 +93,7 @@
 
      "showMore":  "أظهر المزيد",
 
-     "packageDetails": "تفاصيل الحزمة",
+     "packageDetails": "تفاصيل الالاشتراك",
 
      "freeze": "تجميد",
 
@@ -103,13 +103,13 @@
 
      "attendenceTme": "وقت الحضور",
 
-     "packageHasBeenFreezedSuccessfully": "تم تجميد الحزمة بنجاح",
+     "packageHasBeenFreezedSuccessfully": "تم تجميد الالاشتراك بنجاح",
 
-     "packageHasBeenReactivatedSuccessfully": "تمت إعادة تنشيط الحزمة بنجاح",
+     "packageHasBeenReactivatedSuccessfully": "تمت إعادة تنشيط الالاشتراك بنجاح",
 
      "personalInformation": "معلومات شخصية",
 
-     "blockMember": "منع العضو",
+     "blockMember": "منع دخول العضو",
 
      "allowVerification": "السماح بالتحقق",
 
@@ -183,11 +183,11 @@
 
      "sorryMemberIsBlocked": "آسف عضو محظور",
 
-     "packageIsfreezed": "عذرا ، الحزمة مجمدة",
+     "packageIsfreezed": "عذرا ، الاشتراك مجمد",
 
      "blocked": "محظور",
 
-     "tryAgain": "حاول ثانية",
+     "tryAgain": "تحديث",
 
      "passwordIsRequired": "كلمة المرور مطلوبة",
 
@@ -227,7 +227,33 @@
 
      "agile": "اجيل",
 
-    "close": "أغلق"
+    "close": "أغلق",
+
+    "numberOfAttendancesLeft": "عدد الحضور المتبقي",
+
+    "jan": "يناير",
+
+    "feb": "فبراير",
+
+    "mar": "مارس",
+
+    "apr": "أبريل",
+
+    "may": "مايو",
+
+    "jun": "يونيو",
+
+    "jul": "يوليو",
+
+    "aug": "أغسطس",
+
+    "sep": "سبتمبر",
+
+    "oct": "أكتوبر",
+
+    "nov": "نوفمبر",
+
+    "dec": "ديسمبر"
 
 
 

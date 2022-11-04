@@ -63,6 +63,11 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
+      setState(() {
+        connectionError = false;
+        loadingMemberRegistrationsData = false;
+        empty = false;
+      });
     }
   }
 
@@ -107,6 +112,11 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
+      setState(() {
+        connectionError = false;
+        loadingMemberRegistrationsData = false;
+        empty = false;
+      });
     }
   }
 
@@ -358,6 +368,9 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             });
           } catch (error) {
             showToast(AppLocalizations.of(context).somethingWentWrong, context);
+            setState(() {
+              confirmationLoading = false;
+            });
           }
         },
         label: Text(
@@ -482,6 +495,9 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             } catch (error) {
               showToast(
                   AppLocalizations.of(context).somethingWentWrong, context);
+              setState(() {
+                confirmationLoading = false;
+              });
             }
           },
           label: Text(

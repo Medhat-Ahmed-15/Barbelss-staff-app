@@ -10,12 +10,14 @@ class FeedBackDialog extends StatefulWidget {
   Function callBackFunction;
   bool enableButton;
   Color buttonColor;
+  String numberOfAttendences;
 
   FeedBackDialog(
       {this.titleText,
       this.gif,
       this.enableButton,
       this.buttonText,
+      this.numberOfAttendences = '',
       this.callBackFunction,
       this.buttonColor});
 
@@ -59,8 +61,16 @@ class _FeedBackDialogState extends State<FeedBackDialog> {
             const SizedBox(
               height: 10.0,
             ),
+            Text(
+              widget.numberOfAttendences ?? ' ',
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16.0, color: Colors.grey),
+            ),
+            SizedBox(
+              height: widget.numberOfAttendences == '' ? 0 : 10.0,
+            ),
             widget.enableButton == true
-                ? Container(
+                ? SizedBox(
                     width: 150,
                     height: 56,
                     child: ElevatedButton(

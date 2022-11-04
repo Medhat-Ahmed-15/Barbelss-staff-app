@@ -300,6 +300,10 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                     AppLocalizations.of(context)
                                         .somethingWentWrong,
                                     context);
+
+                                setState(() {
+                                  loading = false;
+                                });
                               }
                             },
                             child: Padding(

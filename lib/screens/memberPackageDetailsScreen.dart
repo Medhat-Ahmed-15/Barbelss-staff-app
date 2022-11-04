@@ -58,6 +58,11 @@ class _MemberPackageDetailsScreenState
         });
       } catch (error) {
         showToast(AppLocalizations.of(context).somethingWentWrong, context);
+        setState(() {
+          connectionError = false;
+          loadingMemberAttendencesData = false;
+          empty = false;
+        });
       }
       isInit = false;
     }
@@ -92,6 +97,11 @@ class _MemberPackageDetailsScreenState
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
+      setState(() {
+        connectionError = false;
+        loadingMemberAttendencesData = false;
+        empty = false;
+      });
     }
   }
 
@@ -240,9 +250,15 @@ class _MemberPackageDetailsScreenState
                       },
                       buttonColor: Colors.redAccent),
                 );
+                setState(() {
+                  confirmationLoading = false;
+                });
               } catch (error) {
                 showToast(
                     AppLocalizations.of(context).somethingWentWrong, context);
+                setState(() {
+                  confirmationLoading = false;
+                });
               }
             } else {
               showDialog(

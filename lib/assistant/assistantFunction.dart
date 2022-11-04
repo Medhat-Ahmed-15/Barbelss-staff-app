@@ -27,7 +27,6 @@ void showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 5,
       backgroundColor: Theme.of(context).primaryColor,
       textColor: Colors.white,
       fontSize: 16.0);
@@ -141,7 +140,7 @@ Future<void> getAllMemberRegistartions() async {
 
 // Convert date to day in numbers month in text//////////////////////////////////////////////////////////////////////
 
-String convertDateToDayInNumberMonthInText(String date) {
+String convertDateToDayInNumberMonthInText(String date, BuildContext context) {
   String monthInText;
   String dayInNumber;
 
@@ -154,29 +153,29 @@ String convertDateToDayInNumberMonthInText(String date) {
   int month = int.parse(date.split('T')[0].split('-')[1]);
 
   if (month == 1) {
-    monthInText = 'Jan';
+    monthInText = AppLocalizations.of(context).jan;
   } else if (month == 2) {
-    monthInText = 'Feb';
+    monthInText = AppLocalizations.of(context).feb;
   } else if (month == 3) {
-    monthInText = 'Mar';
+    monthInText = AppLocalizations.of(context).mar;
   } else if (month == 4) {
-    monthInText = 'Apr';
+    monthInText = AppLocalizations.of(context).apr;
   } else if (month == 5) {
-    monthInText = 'May ';
+    monthInText = AppLocalizations.of(context).may;
   } else if (month == 6) {
-    monthInText = 'Jun';
+    monthInText = AppLocalizations.of(context).jun;
   } else if (month == 7) {
-    monthInText = 'Jul';
+    monthInText = AppLocalizations.of(context).jul;
   } else if (month == 8) {
-    monthInText = 'Aug';
+    monthInText = AppLocalizations.of(context).aug;
   } else if (month == 9) {
-    monthInText = 'Sep';
+    monthInText = AppLocalizations.of(context).sep;
   } else if (month == 10) {
-    monthInText = 'Oct';
+    monthInText = AppLocalizations.of(context).oct;
   } else if (month == 11) {
-    monthInText = 'Nov';
+    monthInText = AppLocalizations.of(context).nov;
   } else if (month == 12) {
-    monthInText = 'Dec';
+    monthInText = AppLocalizations.of(context).dec;
   }
 
   String ordderDate = dayInNumber + " " + monthInText;
@@ -571,7 +570,7 @@ Future<void> sendVerificationCodeToWhatsApp(
 
 //Add Attendance By Member//////////////////////////////////////////////////////////////////////////
 
-Future<void> addAttendanceBymember(
+Future<String> addAttendanceBymember(
     {String memberId, String qrCodeUUID, BuildContext context}) async {
   //159.223.172.150/api/v1/attendances/members/63137d0bc4cae825d788889b/QRCodes-uuids/39f3368e-8c38-4a48-beeb-138918da9970?lang=ar
   String url =
@@ -590,6 +589,8 @@ Future<void> addAttendanceBymember(
     throw GetRequestException(
         '${responseData['message'] ?? 'error'}\n${responseData['note'] ?? 'error'}');
   }
+
+  return '${AppLocalizations.of(context).numberOfAttendancesLeft}: ${responseData['remainingAttendance']}';
 }
 //Forget Password Package///////////////////////////////////////////////
 

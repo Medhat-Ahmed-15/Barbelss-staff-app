@@ -10,9 +10,8 @@ class UpperContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Expanded(child: Container()),
         CircleAvatar(
           radius: 36.0,
           backgroundColor: Theme.of(context).primaryColor,
@@ -26,7 +25,6 @@ class UpperContent extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(child: Container()),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -49,7 +47,6 @@ class UpperContent extends StatelessWidget {
             ),
           ],
         ),
-        Expanded(child: Container()),
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -86,7 +83,6 @@ class UpperContent extends StatelessWidget {
             ],
           ),
         ),
-        Expanded(child: Container()),
       ],
     );
   }

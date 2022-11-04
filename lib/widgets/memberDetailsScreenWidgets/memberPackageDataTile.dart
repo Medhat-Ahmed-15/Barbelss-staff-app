@@ -99,6 +99,7 @@ class MemberPackageDataTile extends StatelessWidget {
                   } catch (error) {
                     showToast(AppLocalizations.of(context).somethingWentWrong,
                         context);
+                    stopBackgroundLoading();
                   }
 
                   await refresh();
@@ -194,7 +195,8 @@ class MemberPackageDataTile extends StatelessWidget {
                         Text(
                           convertDateToDayInNumberMonthInText(
                                   memberRegistrationsResponseData
-                                      .registrationExpiresAt) +
+                                      .registrationExpiresAt,
+                                  context) +
                               " " +
                               convertTimeTo12HFormat(
                                   memberRegistrationsResponseData

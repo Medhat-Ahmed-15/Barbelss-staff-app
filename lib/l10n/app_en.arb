@@ -266,7 +266,7 @@
       "description": " "
     },
 
-    "personalInformation": "Personal Information",
+    "personalInformation": "Personal Info",
     "@language": {
       "description": " "
     },
@@ -467,7 +467,7 @@
       "description": " "
     },
 
-    "tryAgain": "Try Again",
+    "tryAgain": "Refresh",
     "@language": {
       "description": " "
     },
@@ -571,7 +571,74 @@
     "close": "Close",
     "@language": {
       "description": " "
+    },
+
+    "numberOfAttendancesLeft": "Number of attendances left",
+    "@language": {
+      "description": " "
+    },
+
+    "jan": "Jan",
+    "@language": {
+      "description": " "
+    },
+
+    "feb": "Feb",
+    "@language": {
+      "description": " "
+    },
+
+    "mar": "Mar",
+    "@language": {
+      "description": " "
+    },
+
+    "apr": "Apr",
+    "@language": {
+      "description": " "
+    },
+
+    "may": "May",
+    "@language": {
+      "description": " "
+    },
+
+    "jun": "Jun",
+    "@language": {
+      "description": " "
+    },
+
+    "jul": "Jul",
+    "@language": {
+      "description": " "
+    },
+
+    "aug": "Aug",
+    "@language": {
+      "description": " "
+    },
+
+    "sep": "Sep",
+    "@language": {
+      "description": " "
+    },
+
+    "oct": "Oct",
+    "@language": {
+      "description": " "
+    },
+
+    "nov": "Nov",
+    "@language": {
+      "description": " "
+    },
+
+    "dec": "Dec",
+    "@language": {
+      "description": " "
     }
+
+    
 
 
   

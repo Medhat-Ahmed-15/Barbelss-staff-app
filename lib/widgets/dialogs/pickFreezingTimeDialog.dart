@@ -228,6 +228,9 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                                   AppLocalizations.of(context)
                                       .somethingWentWrong,
                                   context);
+                              setState(() {
+                                loading = false;
+                              });
                             }
                           },
                           child: Padding(

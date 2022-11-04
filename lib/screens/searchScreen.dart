@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -69,6 +70,11 @@ class _SearchScreenState extends State<SearchScreen> {
         });
       } catch (error) {
         showToast(AppLocalizations.of(context).somethingWentWrong, context);
+        setState(() {
+          connectionError = false;
+          loadingMembersData = false;
+          empty = false;
+        });
       }
     }
     isInit = false;
@@ -111,6 +117,11 @@ class _SearchScreenState extends State<SearchScreen> {
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
+      setState(() {
+        connectionError = false;
+        loadingMembersData = false;
+        empty = false;
+      });
     }
   }
 
@@ -161,11 +172,16 @@ class _SearchScreenState extends State<SearchScreen> {
                           border: InputBorder.none,
                         ),
                         onChanged: (value) async {
+                          print('VALUE:: ${value}');
                           sortedMemberData = [];
                           for (var memberData in allMembersList) {
-                            if (memberData.memberPhone
-                                .startsWith(value.substring(1))) {
-                              sortedMemberData.add(memberData);
+                            if (value != '') {
+                              if (memberData.memberPhone
+                                  .startsWith(value.substring(1))) {
+                                sortedMemberData.add(memberData);
+                              }
+                            } else {
+                              sortedMemberData = allMembersList;
                             }
                           }
                           if (sortedMemberData.isEmpty && value != '') {
@@ -283,7 +299,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 });
                 Map decodedBarcodeData = json.decode(barcodeData);
 
-                await addAttendanceBymember(
+                var numberOfAttendences = await addAttendanceBymember(
                     context: context,
                     memberId: decodedBarcodeData['memberId'],
                     qrCodeUUID: decodedBarcodeData['uuid']);
@@ -299,6 +315,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           .updatedAttendenceSuccessfully,
                       gif: 'assets/gifs/success.json',
                       enableButton: true,
+                      numberOfAttendences: numberOfAttendences,
                       buttonText: AppLocalizations.of(context).doneTitle,
                       callBackFunction: () {
                         Navigator.of(context).pop();
@@ -341,6 +358,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       buttonColor: Colors.redAccent),
                 );
               } catch (error) {
+                print('ERROR::: ${error.toString()}');
                 showToast(
                     AppLocalizations.of(context).somethingWentWrong, context);
 

@@ -59,6 +59,11 @@ class _PlansScreenState extends State<PlansScreen> {
         });
       } catch (error) {
         showToast(AppLocalizations.of(context).somethingWentWrong, context);
+        setState(() {
+          connectionError = false;
+          loadingPlans = false;
+          empty = false;
+        });
       }
 
       isInit = false;
@@ -94,6 +99,11 @@ class _PlansScreenState extends State<PlansScreen> {
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
+      setState(() {
+        connectionError = false;
+        loadingPlans = false;
+        empty = false;
+      });
     }
   }
 
