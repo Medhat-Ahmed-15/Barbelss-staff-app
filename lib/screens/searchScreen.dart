@@ -135,137 +135,131 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: sortedMemberData == null
-          ? const Center(
-              child: Text(
-                'Error ocurred\nPlease contact the technical support',
-                style: TextStyle(color: Colors.grey),
+      body: Stack(
+        children: [
+          //upper container containing burger button and title
+          const UpperContainer(),
+          //search textfield and list count
+          Positioned(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 120,
               ),
-            )
-          : Stack(
-              children: [
-                //upper container containing burger button and title
-                const UpperContainer(),
-                //search textfield and list count
-                Positioned(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 120,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 8, bottom: 8),
+                      width: MediaQuery.of(context).size.width,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        boxShadow: kElevationToShadow[1],
+                      ),
+                      child: TextField(
+                        controller: searchController,
+                        keyboardType: TextInputType.phone,
+                        cursorColor: Theme.of(context).primaryColor,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search,
+                              color: Theme.of(context).primaryColor),
+                          hintText:
+                              AppLocalizations.of(context).searchBarHintTitle,
+                          hintStyle: TextStyle(color: Colors.grey[600]),
+                          border: InputBorder.none,
+                        ),
+                        onChanged: (value) async {
+                          sortedMemberData = [];
+                          for (var memberData in allMembersList) {
+                            if (value != '') {
+                              if (memberData.memberPhone
+                                  .startsWith(value.substring(1))) {
+                                sortedMemberData.add(memberData);
+                              }
+                            } else {
+                              sortedMemberData = allMembersList;
+                            }
+                          }
+                          if (sortedMemberData.isEmpty && value != '') {
+                            setState(() {
+                              empty = true;
+                              loadingMembersData = false;
+                              connectionError = false;
+                            });
+                          } else {
+                            setState(() {
+                              loadingMembersData = false;
+                              connectionError = false;
+                              empty = false;
+                            });
+                          }
+                        },
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 15),
-                          child: Container(
-                            padding: const EdgeInsets.only(top: 8, bottom: 8),
-                            width: MediaQuery.of(context).size.width,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                              boxShadow: kElevationToShadow[1],
-                            ),
-                            child: TextField(
-                              controller: searchController,
-                              keyboardType: TextInputType.phone,
-                              cursorColor: Theme.of(context).primaryColor,
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.search,
-                                    color: Theme.of(context).primaryColor),
-                                hintText: AppLocalizations.of(context)
-                                    .searchBarHintTitle,
-                                hintStyle: TextStyle(color: Colors.grey[600]),
-                                border: InputBorder.none,
-                              ),
-                              onChanged: (value) async {
-                                print('VALUE:: ${value}');
-                                sortedMemberData = [];
-                                for (var memberData in allMembersList) {
-                                  if (value != '') {
-                                    if (memberData.memberPhone
-                                        .startsWith(value.substring(1))) {
-                                      sortedMemberData.add(memberData);
-                                    }
-                                  } else {
-                                    sortedMemberData = allMembersList;
-                                  }
-                                }
-                                if (sortedMemberData.isEmpty && value != '') {
-                                  setState(() {
-                                    empty = true;
-                                    loadingMembersData = false;
-                                    connectionError = false;
-                                  });
-                                } else {
-                                  setState(() {
-                                    loadingMembersData = false;
-                                    connectionError = false;
-                                    empty = false;
-                                  });
-                                }
+                  ),
+                  loadingMembersData == true
+                      ? const SizedBox(
+                          height: 0,
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: ListCountSubTitle(
+                              empty: empty,
+                              listName: 'members',
+                              membersListCount: sortedMemberData == null
+                                  ? 0
+                                  : sortedMemberData.length),
+                        ),
+                ],
+              ),
+            ),
+          ),
+
+          //Members List
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 230,
+              left: 15,
+              right: 15,
+            ),
+            child: connectionError == true
+                ? InternetConnectionError(refresh)
+                : loadingMembersData == true
+                    ? FourDotsLoading()
+                    : empty == true
+                        ? EmptyAnimationWidget(refresh)
+                        : RefreshIndicator(
+                            color: Theme.of(context).primaryColor,
+                            strokeWidth: 5,
+                            onRefresh: () {
+                              return refresh();
+                            },
+                            child: ListView.builder(
+                              padding: const EdgeInsets.all(0),
+                              itemBuilder: (context, index) {
+                                return MemberDataTile(
+                                    sortedMemberData[index], refresh);
                               },
+                              itemCount: sortedMemberData.length,
                             ),
                           ),
-                        ),
-                        loadingMembersData == true
-                            ? const SizedBox(
-                                height: 0,
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: ListCountSubTitle(
-                                    empty: empty,
-                                    listName: 'members',
-                                    membersListCount: sortedMemberData.length),
-                              ),
-                      ],
-                    ),
-                  ),
-                ),
+          ),
 
-                //Members List
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 230,
-                    left: 15,
-                    right: 15,
-                  ),
-                  child: connectionError == true
-                      ? InternetConnectionError(refresh)
-                      : loadingMembersData == true
-                          ? FourDotsLoading()
-                          : empty == true
-                              ? EmptyAnimationWidget(refresh)
-                              : RefreshIndicator(
-                                  color: Theme.of(context).primaryColor,
-                                  strokeWidth: 5,
-                                  onRefresh: () {
-                                    return refresh();
-                                  },
-                                  child: ListView.builder(
-                                    padding: const EdgeInsets.all(0),
-                                    itemBuilder: (context, index) {
-                                      return MemberDataTile(
-                                          sortedMemberData[index], refresh);
-                                    },
-                                    itemCount: sortedMemberData.length,
-                                  ),
-                                ),
+          confirmationLoading == true
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: FourDotsLoading(),
+                  color: Colors.black38,
+                )
+              : const SizedBox(
+                  height: 0,
                 ),
-
-                confirmationLoading == true
-                    ? Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: FourDotsLoading(),
-                        color: Colors.black38,
-                      )
-                    : const SizedBox(
-                        height: 0,
-                      ),
-              ],
-            ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'qrCodeButton',
         child: Icon(
