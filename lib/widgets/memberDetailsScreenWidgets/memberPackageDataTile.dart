@@ -1,31 +1,30 @@
 // ignore_for_file: file_names
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/memberRegistrationsResponseData.dart';
-import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/screens/memberPackageDetailsScreen.dart';
-import 'package:provider/provider.dart';
-import '../../Exceptions/getRequest_exception.dart';
-import '../dialogs/feedBackDialog.dart';
+import 'package:gym_staff_app/widgets/dialogs/confirmDeleteRegistrationDialog.dart';
 
-class MemberPackageDataTile extends StatelessWidget {
+class MemberPackageDataTile extends StatefulWidget {
   MemberRegistrationsResponseData memberRegistrationsResponseData;
-  Function setBackgroundLoading;
-  Function stopBackgroundLoading;
+
   MemberPackageDataTile(
     this.memberRegistrationsResponseData,
-    this.setBackgroundLoading,
-    this.stopBackgroundLoading,
   );
+
+  @override
+  State<MemberPackageDataTile> createState() => _MemberPackageDataTileState();
+}
+
+class _MemberPackageDataTileState extends State<MemberPackageDataTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        pickedMemberPackage = memberRegistrationsResponseData;
+        pickedMemberPackage = widget.memberRegistrationsResponseData;
         await Navigator.pushNamed(
             context, MemberPackageDetailsScreen.routeName);
       },
@@ -53,53 +52,14 @@ class MemberPackageDataTile extends StatelessWidget {
                 ),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) async {
-                  try {
-                    setBackgroundLoading();
-                    await Provider.of<AllMemberRegistartionsProvider>(context,
-                            listen: false)
-                        .deleteRegistration(
-                            context: context,
-                            registrationId:
-                                memberRegistrationsResponseData.registrationId);
-
-                    stopBackgroundLoading();
-                  } on SocketException {
-                    stopBackgroundLoading();
-
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) => FeedBackDialog(
-                          titleText: AppLocalizations.of(context)
-                              .connectionStatusMessage,
-                          gif: 'assets/gifs/fail.json',
-                          enableButton: true,
-                          buttonText: AppLocalizations.of(context).doneTitle,
-                          callBackFunction: () {
-                            Navigator.of(context).pop();
-                          },
-                          buttonColor: Colors.redAccent),
-                    );
-                  } on GetRequestException catch (error) {
-                    stopBackgroundLoading();
-                    showDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      builder: (BuildContext context) => FeedBackDialog(
-                          titleText: error.toStringMessage(),
-                          gif: 'assets/gifs/fail.json',
-                          enableButton: true,
-                          buttonText: AppLocalizations.of(context).doneTitle,
-                          callBackFunction: () {
-                            Navigator.of(context).pop();
-                          },
-                          buttonColor: Colors.redAccent),
-                    );
-                  } catch (error) {
-                    showToast(AppLocalizations.of(context).somethingWentWrong,
-                        context);
-                    stopBackgroundLoading();
-                  }
+                  await showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) =>
+                        ConfirmDeleteRegistrationDialog(widget
+                            .memberRegistrationsResponseData.registrationId),
+                  );
+                  setState(() {});
                 },
                 confirmDismiss: (direction) async {
                   return true;
@@ -118,7 +78,7 @@ class MemberPackageDataTile extends StatelessWidget {
                                 color: Theme.of(context).primaryColor,
                               )),
                           child: Text(
-                            memberRegistrationsResponseData.packageTitle,
+                            widget.memberRegistrationsResponseData.packageTitle,
                             style: TextStyle(
                               color:
                                   Theme.of(context).textTheme.headline2.color,
@@ -160,7 +120,7 @@ class MemberPackageDataTile extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          '${memberRegistrationsResponseData.registrationAttended}/${memberRegistrationsResponseData.packageAttendance}',
+                          '${widget.memberRegistrationsResponseData.registrationAttended}/${widget.memberRegistrationsResponseData.packageAttendance}',
                           style: const TextStyle(
                             color: Colors.grey,
                           ),
@@ -191,13 +151,13 @@ class MemberPackageDataTile extends StatelessWidget {
                         ),
                         Text(
                           convertDateToDayInNumberMonthInText(
-                                  memberRegistrationsResponseData
+                                  widget.memberRegistrationsResponseData
                                       .registrationExpiresAt,
                                   context) +
                               " " +
-                              convertTimeTo12HFormat(
-                                  memberRegistrationsResponseData
-                                      .registrationExpiresAt),
+                              convertTimeTo12HFormat(widget
+                                  .memberRegistrationsResponseData
+                                  .registrationExpiresAt),
                           style: const TextStyle(
                             color: Colors.grey,
                           ),
@@ -208,13 +168,15 @@ class MemberPackageDataTile extends StatelessWidget {
                     trailing: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: memberRegistrationsResponseData.isFreezed == true
-                            ? Colors.blue
-                            : memberRegistrationsResponseData
-                                        .registrationIsActive ==
-                                    false
-                                ? Colors.redAccent
-                                : Colors.green,
+                        color:
+                            widget.memberRegistrationsResponseData.isFreezed ==
+                                    true
+                                ? Colors.blue
+                                : widget.memberRegistrationsResponseData
+                                            .registrationIsActive ==
+                                        false
+                                    ? Colors.redAccent
+                                    : Colors.green,
                         boxShadow: const [
                           BoxShadow(
                               color: Colors.black54,
@@ -224,9 +186,9 @@ class MemberPackageDataTile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(3),
                       ),
                       child: Text(
-                        memberRegistrationsResponseData.isFreezed == true
+                        widget.memberRegistrationsResponseData.isFreezed == true
                             ? AppLocalizations.of(context).freezed
-                            : memberRegistrationsResponseData
+                            : widget.memberRegistrationsResponseData
                                         .registrationIsActive ==
                                     false
                                 ? AppLocalizations.of(context).inActiveTitle

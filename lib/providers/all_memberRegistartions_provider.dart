@@ -78,8 +78,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     addedPlan.packageAttendance = planData.planAttendance;
     addedPlan.packageExpiresIn = planData.planExpiresIn;
 
-    allMemberRegistrationsList.add(addedPlan);
-    allMemberAttendencesList.reversed;
+    allMemberRegistrationsList.insert(0, addedPlan);
 
     notifyListeners();
   }

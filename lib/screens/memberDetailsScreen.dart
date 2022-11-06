@@ -67,18 +67,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
     }
   }
 
-  void setBackgroundLoading() {
-    setState(() {
-      confirmationLoading = true;
-    });
-  }
-
-  void stopBackgroundLoading() {
-    setState(() {
-      confirmationLoading = false;
-    });
-  }
-
   Future<void> refresh() async {
     try {
       setState(() {
@@ -146,9 +134,8 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                     padding: const EdgeInsets.all(0),
                                     itemBuilder: (context, index) {
                                       return MemberPackageDataTile(
-                                          allMemberRegistrationsList[index],
-                                          setBackgroundLoading,
-                                          stopBackgroundLoading);
+                                        allMemberRegistrationsList[index],
+                                      );
                                     },
                                     itemCount:
                                         allMemberRegistrationsList.length,

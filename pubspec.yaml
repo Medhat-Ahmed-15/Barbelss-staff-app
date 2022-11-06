@@ -106,6 +106,7 @@ flutter:
     - assets/gifs/success.json
     - assets/gifs/sad.json
     - assets/gifs/fail.json
+    - assets/gifs/delete.json
     - assets/gifs/block.json
     - assets/gifs/unblock.json
     - assets/privacy_policy.md
