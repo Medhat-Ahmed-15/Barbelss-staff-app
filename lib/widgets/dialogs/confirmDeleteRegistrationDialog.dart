@@ -77,7 +77,7 @@ class _ConfirmDeleteRegistrationDialogState
             ),
             const SizedBox(height: 18.0),
             Text(
-              'Are you sure you want to delete',
+              AppLocalizations.of(context).confirmDelete,
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 18.0,
@@ -91,7 +91,7 @@ class _ConfirmDeleteRegistrationDialogState
               children: [
                 loading == true
                     ? FourDotsLoading()
-                    : button(Colors.red, 'Delete',
+                    : button(Colors.red, AppLocalizations.of(context).delete,
                         Theme.of(context).scaffoldBackgroundColor, () async {
                         try {
                           setState(() {
@@ -157,8 +157,8 @@ class _ConfirmDeleteRegistrationDialogState
                 const SizedBox(
                   height: 15,
                 ),
-                button(Theme.of(context).scaffoldBackgroundColor, 'Cancel',
-                    Colors.redAccent, () {
+                button(Theme.of(context).scaffoldBackgroundColor,
+                    AppLocalizations.of(context).close, Colors.redAccent, () {
                   Navigator.of(context).pop(false);
                 }),
               ],

@@ -636,6 +636,16 @@
     "dec": "Dec",
     "@language": {
       "description": " "
+    },
+
+    "delete": "Delete",
+    "@language": {
+      "description": " "
+    },
+
+    "confirmDelete": "Are you sure you want to delete it?",
+    "@language": {
+      "description": " "
     }
 
     
