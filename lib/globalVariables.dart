@@ -22,9 +22,11 @@ StaffData currentStaffData;
 Key memberDetailsScreenCentralCardKey;
 
 List<MemberData> allMembersList = [];
-List<MemberRegistrationsResponseData> allMemberRegistrationsList;
-List<PlanData> allPlansList;
-List<MemberAttendencesData> allMemberAttendencesList;
+List<MemberData> sortedMemberData = [];
+
+List<MemberRegistrationsResponseData> allMemberRegistrationsList = [];
+List<PlanData> allPlansList = [];
+List<MemberAttendencesData> allMemberAttendencesList = [];
 
 MemberData pickedMember;
 

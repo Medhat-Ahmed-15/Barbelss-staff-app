@@ -1,0 +1,309 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:gym_staff_app/globalVariables.dart';
+import 'package:http/http.dart' as http;
+
+import '../Exceptions/getRequest_exception.dart';
+import '../models/memberRegistrationsResponseData.dart';
+
+class AllMemberRegistartionsProvider with ChangeNotifier {
+  //Get All Member Registartions/////////////////////////////////////////////////////////////////////////////
+
+  Future<void> getAllMemberRegistartions() async {
+    String url =
+        'http://159.223.172.150/api/v1/registrations/clubs/${currentStaffData.staffClubId}/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    var res = await http.get(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+    );
+
+    String jSonData = res.body;
+    var decodeData = jsonDecode(jSonData);
+
+    if (decodeData['accepted'] == false) {
+      throw GetRequestException('Error');
+    }
+
+    var allMemberRegistrations = decodeData['memberRegistrations'];
+
+    allMemberRegistrationsList = (allMemberRegistrations as List)
+        .map((index) => MemberRegistrationsResponseData.fromjson(index))
+        .toList();
+  }
+
+  //Register Plan///////////////////////////////////////////////////////////////////////////
+
+  Future<void> registerPlan(
+      {String planId, num planPrice, BuildContext context}) async {
+    String url =
+        'http://159.223.172.150/api/v1/registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: json.encode({
+          "clubId": currentStaffData.staffClubId,
+          "memberId": pickedMember.memberId,
+          "staffId": currentStaffData.staffId,
+          "packageId": planId,
+          "paid": planPrice
+        }));
+
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    var planData = allPlansList.firstWhere(
+        (plan) => plan.planId == responseData['registration']['packageId']);
+
+    MemberRegistrationsResponseData addedPlan =
+        MemberRegistrationsResponseData();
+    addedPlan.registrationId = responseData['registration']['_id'];
+    addedPlan.registrationIsActive = responseData['registration']['isActive'];
+    addedPlan.registrationAttended = responseData['registration']['attended'];
+    addedPlan.registrationExpiresAt = responseData['registration']['expiresAt'];
+    addedPlan.isFreezed = responseData['registration']['isFreezed'];
+    addedPlan.registrationCreatedAt = responseData['registration']['createdAt'];
+    addedPlan.packageId = responseData['registration']['packageId'];
+    addedPlan.packageTitle = planData.planTitle;
+    addedPlan.packageAttendance = planData.planAttendance;
+    addedPlan.packageExpiresIn = planData.planExpiresIn;
+
+    allMemberRegistrationsList.add(addedPlan);
+    allMemberAttendencesList.reversed;
+
+    notifyListeners();
+  }
+
+  //Delete Registration//////////////////////////////////////////////////////////////////////////
+
+  Future<void> deleteRegistration(
+      {String registrationId, BuildContext context}) async {
+    String url =
+        'http://159.223.172.150/api/v1/cancelled-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: json.encode({
+          "registrationId": registrationId,
+          "clubId": currentStaffData.staffClubId,
+          "staffId": currentStaffData.staffId
+        }));
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    allMemberRegistrationsList.removeWhere(
+        (registration) => registration.registrationId == registrationId);
+
+    notifyListeners();
+  }
+
+  //Cancel Attendence////////////////////////////////////////////////////////////////////////////
+  Future<void> cancelAttendence(
+      {String registrationId, BuildContext context}) async {
+    String url =
+        'http://159.223.172.150/api/v1/cancelled-attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: json.encode({
+          "clubId": currentStaffData.staffClubId,
+          "registrationId": registrationId,
+          "staffId": currentStaffData.staffId
+        }));
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    var oldRegistration = allMemberRegistrationsList
+        .firstWhere((element) => element.registrationId == registrationId);
+
+    MemberRegistrationsResponseData newRegistration =
+        MemberRegistrationsResponseData();
+    newRegistration.registrationId = oldRegistration.registrationId;
+    newRegistration.registrationIsActive = oldRegistration.registrationIsActive;
+    newRegistration.registrationAttended =
+        oldRegistration.registrationAttended - 1;
+    newRegistration.registrationExpiresAt =
+        oldRegistration.registrationExpiresAt;
+    newRegistration.isFreezed = oldRegistration.isFreezed;
+    newRegistration.registrationCreatedAt =
+        oldRegistration.registrationCreatedAt;
+    newRegistration.packageId = oldRegistration.packageId;
+    newRegistration.packageTitle = oldRegistration.packageTitle;
+    newRegistration.packageAttendance = oldRegistration.packageAttendance;
+    newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
+
+    int index = allMemberRegistrationsList
+        .indexWhere((element) => element.registrationId == registrationId);
+
+    allMemberRegistrationsList[index] = newRegistration;
+
+    notifyListeners();
+  }
+
+// Confirm Arrival //////////////////////////////////////////////////////////////////////////////
+
+  Future<void> confirmArrival(
+      {String registrationId, BuildContext context}) async {
+    String url =
+        'http://159.223.172.150/api/v1/attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: json.encode({
+          "registrationId": registrationId,
+          "staffId": currentStaffData.staffId
+        }));
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    var oldRegistration = allMemberRegistrationsList
+        .firstWhere((element) => element.registrationId == registrationId);
+
+    MemberRegistrationsResponseData newRegistration =
+        MemberRegistrationsResponseData();
+    newRegistration.registrationId = oldRegistration.registrationId;
+    newRegistration.registrationIsActive = oldRegistration.registrationIsActive;
+    newRegistration.registrationAttended =
+        oldRegistration.registrationAttended + 1;
+    newRegistration.registrationExpiresAt =
+        oldRegistration.registrationExpiresAt;
+    newRegistration.isFreezed = oldRegistration.isFreezed;
+    newRegistration.registrationCreatedAt =
+        oldRegistration.registrationCreatedAt;
+    newRegistration.packageId = oldRegistration.packageId;
+    newRegistration.packageTitle = oldRegistration.packageTitle;
+    newRegistration.packageAttendance = oldRegistration.packageAttendance;
+    newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
+
+    int index = allMemberRegistrationsList
+        .indexWhere((element) => element.registrationId == registrationId);
+
+    allMemberRegistrationsList[index] = newRegistration;
+
+    notifyListeners();
+  }
+
+  //Reactivate Registration//////////////////////////////////////////////////////////////////////////
+
+  Future<void> reactivateRegestration(
+      {String registrationId, BuildContext context}) async {
+    String url =
+        'http://159.223.172.150/api/v1/freeze-registrations/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.patch(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: json.encode({
+          "staffId": currentStaffData.staffId,
+        }));
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    var oldRegistration = allMemberRegistrationsList
+        .firstWhere((element) => element.registrationId == registrationId);
+
+    MemberRegistrationsResponseData newRegistration =
+        MemberRegistrationsResponseData();
+    newRegistration.registrationId = oldRegistration.registrationId;
+    newRegistration.registrationIsActive = oldRegistration.registrationIsActive;
+    newRegistration.registrationAttended = oldRegistration.registrationAttended;
+    newRegistration.registrationExpiresAt =
+        oldRegistration.registrationExpiresAt;
+    newRegistration.isFreezed = false;
+    newRegistration.registrationCreatedAt =
+        oldRegistration.registrationCreatedAt;
+    newRegistration.packageId = oldRegistration.packageId;
+    newRegistration.packageTitle = oldRegistration.packageTitle;
+    newRegistration.packageAttendance = oldRegistration.packageAttendance;
+    newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
+
+    int index = allMemberRegistrationsList
+        .indexWhere((element) => element.registrationId == registrationId);
+
+    allMemberRegistrationsList[index] = newRegistration;
+
+    notifyListeners();
+  }
+
+  //Freeze Registration//////////////////////////////////////////////////////////////////////////
+
+  Future<void> freezeRegistration(
+      {String registrationId, BuildContext context, String duration}) async {
+    String url =
+        'http://159.223.172.150/api/v1/freeze-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.post(Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: json.encode({
+          "registrationId": registrationId,
+          "staffId": currentStaffData.staffId,
+          "freezeDuration": duration
+        }));
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    var oldRegistration = allMemberRegistrationsList
+        .firstWhere((element) => element.registrationId == registrationId);
+
+    MemberRegistrationsResponseData newRegistration =
+        MemberRegistrationsResponseData();
+    newRegistration.registrationId = oldRegistration.registrationId;
+    newRegistration.registrationIsActive = oldRegistration.registrationIsActive;
+    newRegistration.registrationAttended = oldRegistration.registrationAttended;
+    newRegistration.registrationExpiresAt =
+        oldRegistration.registrationExpiresAt;
+    newRegistration.isFreezed = true;
+    newRegistration.registrationCreatedAt =
+        oldRegistration.registrationCreatedAt;
+    newRegistration.packageId = oldRegistration.packageId;
+    newRegistration.packageTitle = oldRegistration.packageTitle;
+    newRegistration.packageAttendance = oldRegistration.packageAttendance;
+    newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
+
+    int index = allMemberRegistrationsList
+        .indexWhere((element) => element.registrationId == registrationId);
+
+    allMemberRegistrationsList[index] = newRegistration;
+
+    notifyListeners();
+  }
+}

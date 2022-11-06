@@ -15,10 +15,10 @@ class UpperContent extends StatelessWidget {
         CircleAvatar(
           radius: 36.0,
           backgroundColor: Theme.of(context).primaryColor,
-          child: const CircleAvatar(
-            backgroundColor: Colors.white,
+          child: CircleAvatar(
+            backgroundColor: Colors.grey[100],
             radius: 34.0,
-            child: Icon(
+            child: const Icon(
               Icons.person,
               color: Colors.grey,
               size: 50,

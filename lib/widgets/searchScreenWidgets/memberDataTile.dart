@@ -126,7 +126,6 @@ class _MemberDataTileState extends State<MemberDataTile> {
 
                   await Navigator.pushNamed(
                       context, MemberDetailsScreen.routeName);
-                  await widget.refresh();
                 },
               ),
             ),

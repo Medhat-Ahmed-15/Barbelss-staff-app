@@ -6,18 +6,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/memberRegistrationsResponseData.dart';
+import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/screens/memberPackageDetailsScreen.dart';
+import 'package:provider/provider.dart';
 import '../../Exceptions/getRequest_exception.dart';
 import '../dialogs/feedBackDialog.dart';
 
 class MemberPackageDataTile extends StatelessWidget {
   MemberRegistrationsResponseData memberRegistrationsResponseData;
-  Function refresh;
   Function setBackgroundLoading;
   Function stopBackgroundLoading;
   MemberPackageDataTile(
     this.memberRegistrationsResponseData,
-    this.refresh,
     this.setBackgroundLoading,
     this.stopBackgroundLoading,
   );
@@ -26,11 +26,8 @@ class MemberPackageDataTile extends StatelessWidget {
     return InkWell(
       onTap: () async {
         pickedMemberPackage = memberRegistrationsResponseData;
-        var response = await Navigator.pushNamed(
+        await Navigator.pushNamed(
             context, MemberPackageDetailsScreen.routeName);
-        if (response == true) {
-          await refresh();
-        }
       },
       child: Container(
         margin: const EdgeInsets.only(right: 15),
@@ -58,10 +55,12 @@ class MemberPackageDataTile extends StatelessWidget {
                 onDismissed: (direction) async {
                   try {
                     setBackgroundLoading();
-                    await deleteRegistration(
-                        context: context,
-                        registrationId:
-                            memberRegistrationsResponseData.registrationId);
+                    await Provider.of<AllMemberRegistartionsProvider>(context,
+                            listen: false)
+                        .deleteRegistration(
+                            context: context,
+                            registrationId:
+                                memberRegistrationsResponseData.registrationId);
 
                     stopBackgroundLoading();
                   } on SocketException {
@@ -101,8 +100,6 @@ class MemberPackageDataTile extends StatelessWidget {
                         context);
                     stopBackgroundLoading();
                   }
-
-                  await refresh();
                 },
                 confirmDismiss: (direction) async {
                   return true;

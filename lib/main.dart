@@ -2,6 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
+import 'package:gym_staff_app/providers/all_members_provider.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/providers/localLanguageProvider.dart';
 import 'package:gym_staff_app/screens/aboutScreen.dart';
@@ -41,6 +44,15 @@ class MyApp extends StatelessWidget {
         //Providing Auth Data
         ChangeNotifierProvider(
           create: (ctx) => AuthProvider(),
+        ),
+        //All Members Provider
+        ChangeNotifierProvider(
+          create: (ctx) => AllMembersProvider(),
+        ),
+
+        //All Member Registartions Provider
+        ChangeNotifierProvider(
+          create: (ctx) => AllMemberRegistartionsProvider(),
         ),
 
         ChangeNotifierProvider(

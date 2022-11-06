@@ -8,8 +8,10 @@ import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:gym_staff_app/widgets/dialogs/qrCodeDialog.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../assistant/assistantFunction.dart';
+import '../providers/all_members_provider.dart';
 import '../widgets/dialogs/feedBackDialog.dart';
 
 class AddNewMemberScreen extends StatefulWidget {
@@ -252,18 +254,19 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
       }
 
       if (isAuthenticate == true) {
-        await addNewMember(
-            context: context,
-            email: emailController.text.trim(),
-            gender: gender,
-            name: nameController.text.trim(),
-            age: int.parse(ageController.text.trim()),
-            phone: phoneController.text.substring(1).trim(),
-            membership: currentStaffData.hasMembership == true
-                ? int.parse(membershipController.text.trim())
-                : 0,
-            phoneCode: phoneCode,
-            whatsAppMessageLang: whatsAppMessageLang);
+        await Provider.of<AllMembersProvider>(context, listen: false)
+            .addNewMember(
+                context: context,
+                email: emailController.text.trim(),
+                gender: gender,
+                name: nameController.text.trim(),
+                age: int.parse(ageController.text.trim()),
+                phone: phoneController.text.substring(1).trim(),
+                membership: currentStaffData.hasMembership == true
+                    ? int.parse(membershipController.text.trim())
+                    : 0,
+                phoneCode: phoneCode,
+                whatsAppMessageLang: whatsAppMessageLang);
 
         var response = await showDialog(
           context: context,
@@ -277,10 +280,11 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         );
 
         if (response == true) {
-          await updateMemberVerification(
-              context: context,
-              verificationStatus: isAuthenticate,
-              whatsAppMessageLang: whatsAppMessageLang);
+          await Provider.of<AllMembersProvider>(context, listen: false)
+              .updateMemberVerification(
+                  context: context,
+                  verificationStatus: isAuthenticate,
+                  whatsAppMessageLang: whatsAppMessageLang);
         } else {
           setState(() {
             showToast(
@@ -307,18 +311,19 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
               buttonColor: Theme.of(context).primaryColor),
         );
       } else {
-        await addNewMember(
-            context: context,
-            email: emailController.text.trim(),
-            gender: gender,
-            name: nameController.text.trim(),
-            age: int.parse(ageController.text.trim()),
-            phone: phoneController.text.substring(1).trim(),
-            membership: currentStaffData.hasMembership == true
-                ? int.parse(membershipController.text.trim())
-                : 0,
-            phoneCode: phoneCode,
-            whatsAppMessageLang: whatsAppMessageLang);
+        await Provider.of<AllMembersProvider>(context, listen: false)
+            .addNewMember(
+                context: context,
+                email: emailController.text.trim(),
+                gender: gender,
+                name: nameController.text.trim(),
+                age: int.parse(ageController.text.trim()),
+                phone: phoneController.text.substring(1).trim(),
+                membership: currentStaffData.hasMembership == true
+                    ? int.parse(membershipController.text.trim())
+                    : 0,
+                phoneCode: phoneCode,
+                whatsAppMessageLang: whatsAppMessageLang);
 
         showDialog(
           context: context,
@@ -461,7 +466,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         loading = false;
       });
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
-      log('ERROR::: ${error.toString()}');
     }
   }
 

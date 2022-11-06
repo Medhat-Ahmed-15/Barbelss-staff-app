@@ -1,4 +1,4 @@
-package com.example.gym_staff_app
+package com.abouelassadAndShahin.barbells
 
 import io.flutter.embedding.android.FlutterActivity
 

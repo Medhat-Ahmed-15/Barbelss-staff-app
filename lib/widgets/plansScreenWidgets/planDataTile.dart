@@ -8,8 +8,10 @@ import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/models/planData.dart';
+import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
+import 'package:provider/provider.dart';
 import '../dialogs/feedBackDialog.dart';
 
 class PlanDataTile extends StatefulWidget {
@@ -213,7 +215,11 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                 setState(() {
                                   loading = true;
                                 });
-                                await registerPlan(
+                                await Provider.of<
+                                            AllMemberRegistartionsProvider>(
+                                        context,
+                                        listen: false)
+                                    .registerPlan(
                                   planId: widget.planData.planId,
                                   planPrice: widget.planData.planPrice,
                                   context: context,
@@ -239,10 +245,8 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                           callBackFunction: () {
                                             if (widget.screenComingFrom ==
                                                 'addMemberScreen') {
-                                              Navigator.of(context)
-                                                  .pushNamedAndRemoveUntil(
-                                                      MainScreen.routeName,
-                                                      ModalRoute.withName('/'));
+                                              Navigator.of(context).popUntil(
+                                                  ModalRoute.withName('/'));
                                             } else {
                                               Navigator.of(context).pop();
                                               Navigator.of(context).pop();

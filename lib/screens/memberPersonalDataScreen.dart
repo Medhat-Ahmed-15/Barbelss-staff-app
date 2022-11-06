@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
+import 'package:provider/provider.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../assistant/assistantFunction.dart';
+import '../providers/all_members_provider.dart';
 import '../widgets/dialogs/feedBackDialog.dart';
 import '../widgets/dialogs/qrCodeDialog.dart';
 import '../widgets/memberPersonalDataWidgets/MiddleContent.dart';
@@ -45,10 +47,11 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
           ),
         );
         if (response == true) {
-          await updateMemberVerification(
-              context: context,
-              verificationStatus: true,
-              whatsAppMessageLang: whatsAppMessageLang);
+          await Provider.of<AllMembersProvider>(context, listen: false)
+              .updateMemberVerification(
+                  context: context,
+                  verificationStatus: true,
+                  whatsAppMessageLang: whatsAppMessageLang);
           showToast(
             '✔',
             context,
@@ -65,8 +68,9 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
           return;
         }
       } else {
-        await updateMemberVerification(
-            context: context, verificationStatus: false);
+        await Provider.of<AllMembersProvider>(context, listen: false)
+            .updateMemberVerification(
+                context: context, verificationStatus: false);
         showToast(
           '❌',
           context,
@@ -435,7 +439,9 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                               setState(() {
                                 blockOrUnBlockLoading = true;
                               });
-                              await blockMember(context);
+                              await Provider.of<AllMembersProvider>(context,
+                                      listen: false)
+                                  .blockMember(context);
                               showDialog(
                                 context: context,
                                 barrierDismissible: true,

@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
+import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:gym_staff_app/widgets/dialogs/feedBackDialog.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:gym_staff_app/widgets/other/InternetConnectionError.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/memberDetailsScreenWidgets/memberDetailsCentralCard.dart';
 
@@ -23,9 +25,8 @@ class MemberDetailsScreen extends StatefulWidget {
 }
 
 class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
-  bool loadingMemberRegistrationsData = true;
+  bool loadingMemberRegistrationsData = false;
   bool connectionError = false;
-  bool empty = false;
   bool confirmationLoading = false;
   bool enableConfirming = true;
   bool isInit = true;
@@ -37,21 +38,18 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
     super.didChangeDependencies();
     try {
       if (isInit == true) {
-        await getAllMemberRegistartions();
+        setState(() {
+          loadingMemberRegistrationsData = true;
+          connectionError = false;
+        });
+        await Provider.of<AllMemberRegistartionsProvider>(context,
+                listen: false)
+            .getAllMemberRegistartions();
 
-        if (allMemberRegistrationsList.isEmpty) {
-          setState(() {
-            loadingMemberRegistrationsData = false;
-            connectionError = false;
-            empty = true;
-          });
-        } else {
-          setState(() {
-            loadingMemberRegistrationsData = false;
-            connectionError = false;
-            empty = false;
-          });
-        }
+        setState(() {
+          loadingMemberRegistrationsData = false;
+          connectionError = false;
+        });
 
         isInit = false;
       }
@@ -59,14 +57,12 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       setState(() {
         connectionError = true;
         loadingMemberRegistrationsData = false;
-        empty = false;
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
       setState(() {
         connectionError = false;
         loadingMemberRegistrationsData = false;
-        empty = false;
       });
     }
   }
@@ -88,40 +84,37 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       setState(() {
         loadingMemberRegistrationsData = true;
         connectionError = false;
-        empty = false;
       });
-      await getAllMemberRegistartions();
+      await Provider.of<AllMemberRegistartionsProvider>(context, listen: false)
+          .getAllMemberRegistartions();
       if (allMemberRegistrationsList.isEmpty) {
         setState(() {
           loadingMemberRegistrationsData = false;
           connectionError = false;
-          empty = true;
         });
       } else {
         setState(() {
           loadingMemberRegistrationsData = false;
           connectionError = false;
-          empty = false;
         });
       }
     } on SocketException {
       setState(() {
         connectionError = true;
         loadingMemberRegistrationsData = false;
-        empty = false;
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
       setState(() {
         connectionError = false;
         loadingMemberRegistrationsData = false;
-        empty = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<AllMemberRegistartionsProvider>(context, listen: true);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
@@ -141,7 +134,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                       ? InternetConnectionError(refresh)
                       : loadingMemberRegistrationsData == true
                           ? FourDotsLoading()
-                          : empty == true
+                          : allMemberRegistrationsList.isEmpty
                               ? EmptyAnimationWidget(refresh)
                               : RefreshIndicator(
                                   color: Theme.of(context).primaryColor,
@@ -154,7 +147,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                     itemBuilder: (context, index) {
                                       return MemberPackageDataTile(
                                           allMemberRegistrationsList[index],
-                                          refresh,
                                           setBackgroundLoading,
                                           stopBackgroundLoading);
                                     },
@@ -176,7 +168,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             ],
           ),
           //central card and list count
-          MemberDetailsCentralCard(empty),
+          MemberDetailsCentralCard(allMemberRegistrationsList.isEmpty),
           //back arrow
           Positioned(
             top: 40,
@@ -201,7 +193,6 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             child: IconButton(
               onPressed: () async {
                 await Navigator.of(context).pushNamed(PlansScreen.routeName);
-                await refresh();
               },
               icon: Icon(
                 Icons.add,
@@ -224,7 +215,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       ),
       floatingActionButton: connectionError == true
           ? const Text('')
-          : empty == true
+          : allMemberRegistrationsList.isEmpty
               ? const Text('')
               : AnimatedFloatingActionButton(
                   fabButtons: <Widget>[
@@ -307,12 +298,16 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             setState(() {
               confirmationLoading = true;
             });
-            await confirmArrival(
-                context: context,
-                registrationId: allMemberRegistrationsList[0].registrationId);
+            await Provider.of<AllMemberRegistartionsProvider>(context,
+                    listen: false)
+                .confirmArrival(
+                    context: context,
+                    registrationId:
+                        allMemberRegistrationsList[0].registrationId);
 
-            confirmationLoading = false;
-            await refresh();
+            setState(() {
+              confirmationLoading = false;
+            });
             enableConfirming = false;
 
             showDialog(
@@ -433,12 +428,16 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               setState(() {
                 confirmationLoading = true;
               });
-              await cancelAttendence(
-                  context: context,
-                  registrationId: allMemberRegistrationsList[0].registrationId);
+              await Provider.of<AllMemberRegistartionsProvider>(context,
+                      listen: false)
+                  .cancelAttendence(
+                      context: context,
+                      registrationId:
+                          allMemberRegistrationsList[0].registrationId);
 
-              confirmationLoading = false;
-              await refresh();
+              setState(() {
+                confirmationLoading = false;
+              });
               enableConfirming = true;
 
               showDialog(

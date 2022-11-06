@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import '../../Exceptions/getRequest_exception.dart';
 import '../../assistant/assistantFunction.dart';
 import 'feedBackDialog.dart';
@@ -179,12 +181,16 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                                 loading = true;
                               });
 
-                              await freezeRegistration(
-                                  registrationId: allMemberRegistrationsList[0]
-                                      .registrationId,
-                                  context: context,
-                                  duration:
-                                      '${durationController.text.trim()} $dropdownValue');
+                              await Provider.of<AllMemberRegistartionsProvider>(
+                                      context,
+                                      listen: false)
+                                  .freezeRegistration(
+                                      registrationId:
+                                          allMemberRegistrationsList[0]
+                                              .registrationId,
+                                      context: context,
+                                      duration:
+                                          '${durationController.text.trim()} $dropdownValue');
 
                               //   await refresh();
                               Navigator.of(context).pop(true);

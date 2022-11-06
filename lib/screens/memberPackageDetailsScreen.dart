@@ -3,11 +3,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/widgets/memberPackageDetailsScreenWidgets/MemberPackageDetailsScreenCentralCard.dart';
 import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:gym_staff_app/widgets/other/InternetConnectionError.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../widgets/dialogs/feedBackDialog.dart';
 import '../widgets/dialogs/pickFreezingTimeDialog.dart';
@@ -24,9 +26,8 @@ class MemberPackageDetailsScreen extends StatefulWidget {
 
 class _MemberPackageDetailsScreenState
     extends State<MemberPackageDetailsScreen> {
-  bool loadingMemberAttendencesData = true;
+  bool loadingMemberAttendencesData = false;
   bool connectionError = false;
-  bool empty = false;
   bool confirmationLoading = false;
   bool isInit = true;
 
@@ -36,32 +37,25 @@ class _MemberPackageDetailsScreenState
     super.didChangeDependencies();
     if (isInit == true) {
       try {
+        setState(() {
+          loadingMemberAttendencesData = true;
+          connectionError = false;
+        });
         await getAllMemberAttendences(pickedMemberPackage.registrationId);
-        if (allMemberAttendencesList.isEmpty) {
-          setState(() {
-            loadingMemberAttendencesData = false;
-            connectionError = false;
-            empty = true;
-          });
-        } else {
-          setState(() {
-            loadingMemberAttendencesData = false;
-            connectionError = false;
-            empty = false;
-          });
-        }
+        setState(() {
+          loadingMemberAttendencesData = false;
+          connectionError = false;
+        });
       } on SocketException {
         setState(() {
           connectionError = true;
           loadingMemberAttendencesData = false;
-          empty = false;
         });
       } catch (error) {
         showToast(AppLocalizations.of(context).somethingWentWrong, context);
         setState(() {
           connectionError = false;
           loadingMemberAttendencesData = false;
-          empty = false;
         });
       }
       isInit = false;
@@ -73,34 +67,29 @@ class _MemberPackageDetailsScreenState
       setState(() {
         loadingMemberAttendencesData = true;
         connectionError = false;
-        empty = false;
       });
       await getAllMemberAttendences(pickedMemberPackage.registrationId);
       if (allMemberAttendencesList.isEmpty) {
         setState(() {
           loadingMemberAttendencesData = false;
           connectionError = false;
-          empty = true;
         });
       } else {
         setState(() {
           loadingMemberAttendencesData = false;
           connectionError = false;
-          empty = false;
         });
       }
     } on SocketException {
       setState(() {
         connectionError = true;
         loadingMemberAttendencesData = false;
-        empty = false;
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
       setState(() {
         connectionError = false;
         loadingMemberAttendencesData = false;
-        empty = false;
       });
     }
   }
@@ -127,7 +116,7 @@ class _MemberPackageDetailsScreenState
                         ? InternetConnectionError(refresh)
                         : loadingMemberAttendencesData == true
                             ? FourDotsLoading()
-                            : empty == true
+                            : allMemberAttendencesList.isEmpty
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -170,7 +159,8 @@ class _MemberPackageDetailsScreenState
             //Back Button And Screen title
             const BackButtonAndScreenTitle(),
             //Central Card and list count
-            MemberPackageDetailsScreenCentralCard(empty),
+            MemberPackageDetailsScreenCentralCard(
+                allMemberAttendencesList.isEmpty),
             confirmationLoading == true
                 ? Container(
                     width: MediaQuery.of(context).size.width,
@@ -204,10 +194,12 @@ class _MemberPackageDetailsScreenState
                 setState(() {
                   confirmationLoading = true;
                 });
-                await reactivateRegestration(
-                    registrationId:
-                        allMemberRegistrationsList[0].registrationId,
-                    context: context);
+                await Provider.of<AllMemberRegistartionsProvider>(context,
+                        listen: false)
+                    .reactivateRegestration(
+                        registrationId:
+                            allMemberRegistrationsList[0].registrationId,
+                        context: context);
 
                 setState(() {
                   confirmationLoading = false;

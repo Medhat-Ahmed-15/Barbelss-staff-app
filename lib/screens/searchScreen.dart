@@ -2,16 +2,17 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/models/memberData.dart';
+import 'package:gym_staff_app/providers/all_members_provider.dart';
 import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:gym_staff_app/widgets/other/ListCountSubTitle.dart';
 import 'package:gym_staff_app/widgets/searchScreenWidgets/memberDataTile.dart';
+import 'package:provider/provider.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../globalVariables.dart';
 import '../widgets/dialogs/feedBackDialog.dart';
@@ -27,53 +28,47 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  bool loadingMembersData = true;
+  bool loadingMembersData = false;
   bool connectionError = false;
-  bool empty = false;
   bool isInit = true;
   bool confirmationLoading = false;
   String barcodeData;
   final searchController = TextEditingController();
-  List<MemberData> sortedMemberData;
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     if (isInit == true) {
       try {
-        await getAllMembers();
-        if (allMembersList.isEmpty) {
-          setState(() {
-            loadingMembersData = false;
-            connectionError = false;
-            empty = true;
-          });
-        } else {
-          setState(() {
-            loadingMembersData = false;
-            connectionError = false;
-            empty = false;
-            sortedMemberData = allMembersList;
-          });
-        }
+        setState(() {
+          loadingMembersData = true;
+          connectionError = false;
+        });
+        await getAllPlans();
+
+        await Provider.of<AllMembersProvider>(context, listen: false)
+            .getAllMembers();
+
+        setState(() {
+          loadingMembersData = false;
+          connectionError = false;
+        });
+        sortedMemberData = allMembersList;
       } on SocketException {
         setState(() {
           connectionError = true;
           loadingMembersData = false;
-          empty = false;
         });
       } on GetRequestException {
         setState(() {
           connectionError = false;
           loadingMembersData = false;
-          empty = true;
         });
       } catch (error) {
         showToast(AppLocalizations.of(context).somethingWentWrong, context);
         setState(() {
           connectionError = false;
           loadingMembersData = false;
-          empty = false;
         });
       }
     }
@@ -85,21 +80,19 @@ class _SearchScreenState extends State<SearchScreen> {
       setState(() {
         loadingMembersData = true;
         connectionError = false;
-        empty = false;
       });
-      await getAllMembers();
+      await Provider.of<AllMembersProvider>(context, listen: false)
+          .getAllMembers();
 
       if (allMembersList.isEmpty) {
         setState(() {
           loadingMembersData = false;
           connectionError = false;
-          empty = true;
         });
       } else {
         setState(() {
           loadingMembersData = false;
           connectionError = false;
-          empty = false;
           sortedMemberData = allMembersList;
         });
       }
@@ -107,20 +100,17 @@ class _SearchScreenState extends State<SearchScreen> {
       setState(() {
         connectionError = true;
         loadingMembersData = false;
-        empty = false;
       });
     } on GetRequestException {
       setState(() {
         connectionError = false;
         loadingMembersData = false;
-        empty = true;
       });
     } catch (error) {
       showToast(AppLocalizations.of(context).somethingWentWrong, context);
       setState(() {
         connectionError = false;
         loadingMembersData = false;
-        empty = false;
       });
     }
   }
@@ -133,6 +123,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<AllMembersProvider>(context, listen: true);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
@@ -185,7 +176,6 @@ class _SearchScreenState extends State<SearchScreen> {
                           }
                           if (sortedMemberData.isEmpty && value != '') {
                             setState(() {
-                              empty = true;
                               loadingMembersData = false;
                               connectionError = false;
                             });
@@ -193,7 +183,6 @@ class _SearchScreenState extends State<SearchScreen> {
                             setState(() {
                               loadingMembersData = false;
                               connectionError = false;
-                              empty = false;
                             });
                           }
                         },
@@ -207,7 +196,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       : Padding(
                           padding: const EdgeInsets.only(top: 10),
                           child: ListCountSubTitle(
-                              empty: empty,
                               listName: 'members',
                               membersListCount: sortedMemberData == null
                                   ? 0
@@ -229,7 +217,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ? InternetConnectionError(refresh)
                 : loadingMembersData == true
                     ? FourDotsLoading()
-                    : empty == true
+                    : allMembersList.isEmpty
                         ? EmptyAnimationWidget(refresh)
                         : RefreshIndicator(
                             color: Theme.of(context).primaryColor,
@@ -244,8 +232,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     sortedMemberData[index], refresh);
                               },
                               itemCount: sortedMemberData.length,
-                            ),
-                          ),
+                            )),
           ),
 
           confirmationLoading == true
@@ -359,7 +346,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       buttonColor: Colors.redAccent),
                 );
               } catch (error) {
-                print('ERROR::: ${error.toString()}');
                 showToast(
                     AppLocalizations.of(context).somethingWentWrong, context);
 

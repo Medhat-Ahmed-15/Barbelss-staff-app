@@ -30,43 +30,20 @@ class _PlansScreenState extends State<PlansScreen> {
   String screenComingFrom;
 
   @override
-  void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-
-    if (isInit == true) {
-      try {
-        await getAllPlans();
-
-        if (allPlansList.isEmpty) {
-          setState(() {
-            loadingPlans = false;
-            connectionError = false;
-            empty = true;
-          });
-        } else {
-          setState(() {
-            loadingPlans = false;
-            connectionError = false;
-            empty = false;
-          });
-        }
-      } on SocketException {
-        setState(() {
-          connectionError = true;
-          loadingPlans = false;
-          empty = false;
-        });
-      } catch (error) {
-        showToast(AppLocalizations.of(context).somethingWentWrong, context);
-        setState(() {
-          connectionError = false;
-          loadingPlans = false;
-          empty = false;
-        });
-      }
-
-      isInit = false;
+  void initState() {
+    super.initState();
+    if (allPlansList.isEmpty) {
+      setState(() {
+        loadingPlans = false;
+        connectionError = false;
+        empty = true;
+      });
+    } else {
+      setState(() {
+        loadingPlans = false;
+        connectionError = false;
+        empty = false;
+      });
     }
   }
 
