@@ -8,7 +8,15 @@ class MemberAttendencesData {
   String staffId;
   String memberId;
   String createdAt;
-  String staffName;
+
+  MemberAttendencesData(
+      {this.attendenceId,
+      this.clubId,
+      this.registrationId,
+      this.packageId,
+      this.staffId,
+      this.memberId,
+      this.createdAt});
 
   MemberAttendencesData.fromjson(Map<String, dynamic> json) {
     attendenceId = json['_id'];
@@ -18,6 +26,5 @@ class MemberAttendencesData {
     staffId = json['staffId'];
     memberId = json['memberId'];
     createdAt = json['createdAt'];
-    staffName = json['staff']['name'];
   }
 }

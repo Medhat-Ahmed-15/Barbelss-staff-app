@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:http/http.dart' as http;
 
 import '../Exceptions/getRequest_exception.dart';
@@ -12,7 +13,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
 
   Future<void> getAllMemberRegistartions() async {
     String url =
-        'http://159.223.172.150/api/v1/registrations/clubs/${currentStaffData.staffClubId}/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'http://159.223.172.150/api/v1/registrations/attendances/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     var res = await http.get(
       Uri.parse(url),
@@ -29,7 +30,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
       throw GetRequestException('Error');
     }
 
-    var allMemberRegistrations = decodeData['memberRegistrations'];
+    var allMemberRegistrations = decodeData['registrations'];
 
     allMemberRegistrationsList = (allMemberRegistrations as List)
         .map((index) => MemberRegistrationsResponseData.fromjson(index))
@@ -62,6 +63,19 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
       throw GetRequestException(responseData['message'] ?? 'error');
     }
 
+    MemberAttendencesData memberAttendencesData = MemberAttendencesData();
+    memberAttendencesData.attendenceId = responseData['attendance']['_id'];
+    memberAttendencesData.clubId = responseData['attendance']['clubId'];
+    memberAttendencesData.registrationId =
+        responseData['attendance']['registrationId'];
+    memberAttendencesData.packageId = responseData['attendance']['packageId'];
+    memberAttendencesData.staffId = responseData['attendance']['staffId'];
+    memberAttendencesData.memberId = responseData['attendance']['memberId'];
+    memberAttendencesData.createdAt = responseData['attendance']['createdAt'];
+
+    List<MemberAttendencesData> newMemberAttendencesData = [];
+    newMemberAttendencesData.insert(0, memberAttendencesData);
+
     var planData = allPlansList.firstWhere(
         (plan) => plan.planId == responseData['registration']['packageId']);
 
@@ -77,6 +91,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     addedPlan.packageTitle = planData.planTitle;
     addedPlan.packageAttendance = planData.planAttendance;
     addedPlan.packageExpiresIn = planData.planExpiresIn;
+    addedPlan.memberAttendencesData = newMemberAttendencesData;
 
     allMemberRegistrationsList.insert(0, addedPlan);
 
@@ -114,51 +129,62 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
 
   //Cancel Attendence////////////////////////////////////////////////////////////////////////////
   Future<void> cancelAttendence(
-      {String registrationId, BuildContext context}) async {
-    String url =
-        'http://159.223.172.150/api/v1/cancelled-attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      {String registrationId,
+      BuildContext context,
+      int numberOfSessions}) async {
+    if (numberOfSessions == 1) {
+      deleteRegistration(context: context, registrationId: registrationId);
+    } else {
+      String url =
+          'http://159.223.172.150/api/v1/cancelled-attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
-    final response = await http.post(Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-access-token': token
-        },
-        body: json.encode({
-          "clubId": currentStaffData.staffClubId,
-          "registrationId": registrationId,
-          "staffId": currentStaffData.staffId
-        }));
-    final responseData = json.decode(response.body);
+      final response = await http.post(Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-access-token': token
+          },
+          body: json.encode({
+            "clubId": currentStaffData.staffClubId,
+            "registrationId": registrationId,
+            "staffId": currentStaffData.staffId
+          }));
+      final responseData = json.decode(response.body);
 
-    if (responseData['accepted'] == false) {
-      throw GetRequestException(responseData['message'] ?? 'error');
+      if (responseData['accepted'] == false) {
+        throw GetRequestException(responseData['message'] ?? 'error');
+      }
+
+      var oldRegistration = allMemberRegistrationsList
+          .firstWhere((element) => element.registrationId == registrationId);
+
+      List<MemberAttendencesData> newMemberAttendencesData =
+          oldRegistration.memberAttendencesData;
+      newMemberAttendencesData.removeAt(0);
+
+      MemberRegistrationsResponseData newRegistration =
+          MemberRegistrationsResponseData();
+      newRegistration.registrationId = oldRegistration.registrationId;
+      newRegistration.registrationIsActive =
+          oldRegistration.registrationIsActive;
+      newRegistration.registrationAttended =
+          oldRegistration.registrationAttended - 1;
+      newRegistration.registrationExpiresAt =
+          oldRegistration.registrationExpiresAt;
+      newRegistration.isFreezed = oldRegistration.isFreezed;
+      newRegistration.registrationCreatedAt =
+          oldRegistration.registrationCreatedAt;
+      newRegistration.packageId = oldRegistration.packageId;
+      newRegistration.packageTitle = oldRegistration.packageTitle;
+      newRegistration.packageAttendance = oldRegistration.packageAttendance;
+      newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
+      newRegistration.memberAttendencesData = newMemberAttendencesData;
+
+      int index = allMemberRegistrationsList
+          .indexWhere((element) => element.registrationId == registrationId);
+
+      allMemberRegistrationsList[index] = newRegistration;
+      notifyListeners();
     }
-
-    var oldRegistration = allMemberRegistrationsList
-        .firstWhere((element) => element.registrationId == registrationId);
-
-    MemberRegistrationsResponseData newRegistration =
-        MemberRegistrationsResponseData();
-    newRegistration.registrationId = oldRegistration.registrationId;
-    newRegistration.registrationIsActive = oldRegistration.registrationIsActive;
-    newRegistration.registrationAttended =
-        oldRegistration.registrationAttended - 1;
-    newRegistration.registrationExpiresAt =
-        oldRegistration.registrationExpiresAt;
-    newRegistration.isFreezed = oldRegistration.isFreezed;
-    newRegistration.registrationCreatedAt =
-        oldRegistration.registrationCreatedAt;
-    newRegistration.packageId = oldRegistration.packageId;
-    newRegistration.packageTitle = oldRegistration.packageTitle;
-    newRegistration.packageAttendance = oldRegistration.packageAttendance;
-    newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
-
-    int index = allMemberRegistrationsList
-        .indexWhere((element) => element.registrationId == registrationId);
-
-    allMemberRegistrationsList[index] = newRegistration;
-
-    notifyListeners();
   }
 
 // Confirm Arrival //////////////////////////////////////////////////////////////////////////////
@@ -186,6 +212,20 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     var oldRegistration = allMemberRegistrationsList
         .firstWhere((element) => element.registrationId == registrationId);
 
+    MemberAttendencesData memberAttendencesData = MemberAttendencesData();
+    memberAttendencesData.attendenceId = responseData['attendance']['_id'];
+    memberAttendencesData.clubId = responseData['attendance']['clubId'];
+    memberAttendencesData.registrationId =
+        responseData['attendance']['registrationId'];
+    memberAttendencesData.packageId = responseData['attendance']['packageId'];
+    memberAttendencesData.staffId = responseData['attendance']['staffId'];
+    memberAttendencesData.memberId = responseData['attendance']['memberId'];
+    memberAttendencesData.createdAt = responseData['attendance']['createdAt'];
+
+    List<MemberAttendencesData> newMemberAttendencesData =
+        oldRegistration.memberAttendencesData;
+    newMemberAttendencesData.insert(0, memberAttendencesData);
+
     MemberRegistrationsResponseData newRegistration =
         MemberRegistrationsResponseData();
     newRegistration.registrationId = oldRegistration.registrationId;
@@ -201,6 +241,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     newRegistration.packageTitle = oldRegistration.packageTitle;
     newRegistration.packageAttendance = oldRegistration.packageAttendance;
     newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
+    newRegistration.memberAttendencesData = newMemberAttendencesData;
 
     int index = allMemberRegistrationsList
         .indexWhere((element) => element.registrationId == registrationId);
@@ -248,6 +289,8 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     newRegistration.packageTitle = oldRegistration.packageTitle;
     newRegistration.packageAttendance = oldRegistration.packageAttendance;
     newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
+    newRegistration.memberAttendencesData =
+        oldRegistration.memberAttendencesData;
 
     int index = allMemberRegistrationsList
         .indexWhere((element) => element.registrationId == registrationId);
@@ -297,6 +340,8 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     newRegistration.packageTitle = oldRegistration.packageTitle;
     newRegistration.packageAttendance = oldRegistration.packageAttendance;
     newRegistration.packageExpiresIn = oldRegistration.packageExpiresIn;
+    newRegistration.memberAttendencesData =
+        oldRegistration.memberAttendencesData;
 
     int index = allMemberRegistrationsList
         .indexWhere((element) => element.registrationId == registrationId);

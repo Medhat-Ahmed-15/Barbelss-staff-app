@@ -420,7 +420,9 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   .cancelAttendence(
                       context: context,
                       registrationId:
-                          allMemberRegistrationsList[0].registrationId);
+                          allMemberRegistrationsList[0].registrationId,
+                      numberOfSessions:
+                          allMemberRegistrationsList[0].packageAttendance);
 
               setState(() {
                 confirmationLoading = false;

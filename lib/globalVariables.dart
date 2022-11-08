@@ -26,7 +26,6 @@ List<MemberData> sortedMemberData = [];
 
 List<MemberRegistrationsResponseData> allMemberRegistrationsList = [];
 List<PlanData> allPlansList = [];
-List<MemberAttendencesData> allMemberAttendencesList = [];
 
 MemberData pickedMember;
 

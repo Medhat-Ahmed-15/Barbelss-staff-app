@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'package:gym_staff_app/models/memberAttendencesData.dart';
+
 class MemberRegistrationsResponseData {
   String registrationId;
   bool registrationIsActive;
@@ -7,24 +9,24 @@ class MemberRegistrationsResponseData {
   String registrationExpiresAt;
   bool isFreezed;
   String registrationCreatedAt;
-
   String packageId;
   String packageTitle;
   int packageAttendance;
   String packageExpiresIn;
+  List<MemberAttendencesData> memberAttendencesData;
 
-  MemberRegistrationsResponseData({
-    this.registrationId,
-    this.registrationIsActive,
-    this.registrationAttended,
-    this.registrationExpiresAt,
-    this.isFreezed,
-    this.registrationCreatedAt,
-    this.packageId,
-    this.packageTitle,
-    this.packageAttendance,
-    this.packageExpiresIn,
-  });
+  MemberRegistrationsResponseData(
+      {this.registrationId,
+      this.registrationIsActive,
+      this.registrationAttended,
+      this.registrationExpiresAt,
+      this.isFreezed,
+      this.registrationCreatedAt,
+      this.packageId,
+      this.packageTitle,
+      this.packageAttendance,
+      this.packageExpiresIn,
+      this.memberAttendencesData});
 
   MemberRegistrationsResponseData.fromjson(Map<String, dynamic> json) {
     registrationId = json['_id'];
@@ -34,9 +36,12 @@ class MemberRegistrationsResponseData {
     isFreezed = json['isFreezed'];
     registrationCreatedAt = json['createdAt'];
 
-    packageId = json['package'][0]['_id'];
-    packageTitle = json['package'][0]['title'];
-    packageAttendance = json['package'][0]['attendance'];
-    packageExpiresIn = json['package'][0]['expiresIn'];
+    packageId = json['package']['_id'];
+    packageTitle = json['package']['title'];
+    packageAttendance = json['package']['attendance'];
+    packageExpiresIn = json['package']['expiresIn'];
+    memberAttendencesData = (json['attendances'] as List)
+        .map((index) => MemberAttendencesData.fromjson(index))
+        .toList();
   }
 }

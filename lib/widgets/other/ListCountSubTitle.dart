@@ -30,7 +30,7 @@ class ListCountSubTitle extends StatelessWidget {
               ? '${empty == true || membersListCount == null ? 0 : numeral(membersListCount)}'
               : listName == 'registrations'
                   ? '${empty == true || allMemberRegistrationsList == null ? 0 : numeral(allMemberRegistrationsList.length)}'
-                  : '${empty == true || allMemberAttendencesList == null ? 0 : numeral(allMemberAttendencesList.length)}',
+                  : '${empty == true || pickedMemberPackage.memberAttendencesData == null ? 0 : numeral(pickedMemberPackage.memberAttendencesData.length)}',
           style: TextStyle(
               color: Theme.of(context).primaryColor,
               fontSize: 19,

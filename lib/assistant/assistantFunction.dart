@@ -188,29 +188,6 @@ Future<void> extractImageAndPutInFirebase(
   log('CURRENT URL2:: $qrCodeURL');
 }
 
-//Get All Member Attendences/////////////////////////////////////////////////////////////////////////////
-
-Future<void> getAllMemberAttendences(String registrationId) async {
-  String url =
-      'http://159.223.172.150/api/v1/attendances/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
-
-  var res = await http.get(
-    Uri.parse(url),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'x-access-token': token
-    },
-  );
-
-  final responseData = json.decode(res.body);
-
-  var allMemberAttendences = responseData['attendances'];
-
-  allMemberAttendencesList = (allMemberAttendences as List)
-      .map((index) => MemberAttendencesData.fromjson(index))
-      .toList();
-}
-
 //Update Member Qr Code//////////////////////////////////////////////////////////////////////////
 
 Future<void> updateMemberQrCode(

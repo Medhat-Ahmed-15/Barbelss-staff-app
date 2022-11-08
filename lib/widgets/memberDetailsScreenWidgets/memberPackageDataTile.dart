@@ -94,27 +94,13 @@ class _MemberPackageDataTileState extends State<MemberPackageDataTile> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_today,
-                              color: Theme.of(context).primaryColor,
-                              size: 20,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).attendedTitle,
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline2
-                                      .color,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                        Text(
+                          AppLocalizations.of(context).attendedTitle,
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline2.color,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
                           height: 5,
@@ -128,26 +114,13 @@ class _MemberPackageDataTileState extends State<MemberPackageDataTile> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.lock_clock,
-                              color: Theme.of(context).primaryColor,
-                              size: 20,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).expirationDateTitle,
-                              style: TextStyle(
-                                color:
-                                    Theme.of(context).textTheme.headline2.color,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          AppLocalizations.of(context).expirationDateTitle,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline2.color,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text(
                           convertDateToDayInNumberMonthInText(

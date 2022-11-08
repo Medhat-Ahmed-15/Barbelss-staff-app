@@ -5,13 +5,11 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/widgets/memberPackageDetailsScreenWidgets/MemberPackageDetailsScreenCentralCard.dart';
-import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
-import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
-import 'package:gym_staff_app/widgets/other/InternetConnectionError.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../widgets/dialogs/feedBackDialog.dart';
+import 'package:lottie/lottie.dart' as lot;
 import '../widgets/dialogs/pickFreezingTimeDialog.dart';
 import '../widgets/memberPackageDetailsScreenWidgets/BackButtonAndScreenTitle.dart';
 import '../widgets/memberPackageDetailsScreenWidgets/memberAttendencesDataTile.dart';
@@ -26,76 +24,12 @@ class MemberPackageDetailsScreen extends StatefulWidget {
 
 class _MemberPackageDetailsScreenState
     extends State<MemberPackageDetailsScreen> {
-  bool loadingMemberAttendencesData = false;
-  bool connectionError = false;
   bool confirmationLoading = false;
-  bool isInit = true;
-
-  @override
-  void didChangeDependencies() async {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    if (isInit == true) {
-      try {
-        setState(() {
-          loadingMemberAttendencesData = true;
-          connectionError = false;
-        });
-        await getAllMemberAttendences(pickedMemberPackage.registrationId);
-        setState(() {
-          loadingMemberAttendencesData = false;
-          connectionError = false;
-        });
-      } on SocketException {
-        setState(() {
-          connectionError = true;
-          loadingMemberAttendencesData = false;
-        });
-      } catch (error) {
-        showToast(AppLocalizations.of(context).somethingWentWrong, context);
-        setState(() {
-          connectionError = false;
-          loadingMemberAttendencesData = false;
-        });
-      }
-      isInit = false;
-    }
-  }
-
-  Future<void> refresh() async {
-    try {
-      setState(() {
-        loadingMemberAttendencesData = true;
-        connectionError = false;
-      });
-      await getAllMemberAttendences(pickedMemberPackage.registrationId);
-      if (allMemberAttendencesList.isEmpty) {
-        setState(() {
-          loadingMemberAttendencesData = false;
-          connectionError = false;
-        });
-      } else {
-        setState(() {
-          loadingMemberAttendencesData = false;
-          connectionError = false;
-        });
-      }
-    } on SocketException {
-      setState(() {
-        connectionError = true;
-        loadingMemberAttendencesData = false;
-      });
-    } catch (error) {
-      showToast(AppLocalizations.of(context).somethingWentWrong, context);
-      setState(() {
-        connectionError = false;
-        loadingMemberAttendencesData = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<AllMemberRegistartionsProvider>(context, listen: true);
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -112,45 +46,34 @@ class _MemberPackageDetailsScreenState
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 150),
-                    child: connectionError == true
-                        ? InternetConnectionError(refresh)
-                        : loadingMemberAttendencesData == true
-                            ? FourDotsLoading()
-                            : allMemberAttendencesList.isEmpty
-                                ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      EmptyAnimationWidget(refresh),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
-                                  )
-                                : RefreshIndicator(
-                                    color: Theme.of(context).primaryColor,
-                                    strokeWidth: 5,
-                                    onRefresh: () {
-                                      return refresh();
-                                    },
-                                    child: ListView.separated(
-                                      padding: const EdgeInsets.all(0),
-                                      itemBuilder: (context, index) {
-                                        return MemberAttendencesDataTile(
-                                            allMemberAttendencesList[index]);
-                                      },
-                                      itemCount:
-                                          allMemberAttendencesList.length,
-                                      separatorBuilder:
-                                          (BuildContext context, int index) {
-                                        return Divider(
-                                          thickness: 1,
-                                          endIndent: 10,
-                                          indent: 10,
-                                          color: Colors.grey[300],
-                                        );
-                                      },
-                                    ),
-                                  ),
+                    child: pickedMemberPackage.memberAttendencesData.isEmpty
+                        ? Center(
+                            child: SizedBox(
+                              width: 200,
+                              height: 200,
+                              child: lot.LottieBuilder.asset(
+                                  'assets/gifs/empty.json'),
+                            ),
+                          )
+                        : ListView.separated(
+                            padding: const EdgeInsets.all(0),
+                            itemBuilder: (context, index) {
+                              return MemberAttendencesDataTile(
+                                  pickedMemberPackage
+                                      .memberAttendencesData[index]);
+                            },
+                            itemCount: pickedMemberPackage
+                                .memberAttendencesData.length,
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return Divider(
+                                thickness: 1,
+                                endIndent: 10,
+                                indent: 10,
+                                color: Colors.grey[300],
+                              );
+                            },
+                          ),
                   ),
                 ),
               ],
@@ -159,8 +82,7 @@ class _MemberPackageDetailsScreenState
             //Back Button And Screen title
             const BackButtonAndScreenTitle(),
             //Central Card and list count
-            MemberPackageDetailsScreenCentralCard(
-                allMemberAttendencesList.isEmpty),
+            MemberPackageDetailsScreenCentralCard(),
             confirmationLoading == true
                 ? Container(
                     width: MediaQuery.of(context).size.width,
@@ -178,7 +100,7 @@ class _MemberPackageDetailsScreenState
                   ),
           ],
         ),
-        floatingActionButton: connectionError == true
+        floatingActionButton: pickedMemberPackage.memberAttendencesData.isEmpty
             ? const Text('')
             : freezeOrReactivateFloatingButton());
   }
