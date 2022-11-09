@@ -170,57 +170,11 @@ class _MyAboutScreenState extends State<AboutScreen> {
             Positioned(
               bottom: 0,
               child: Container(
-                padding: const EdgeInsets.only(top: 40, bottom: 10),
+                padding: const EdgeInsets.only(top: 25, bottom: 20),
                 color: Theme.of(context).primaryColor,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
-                    const Text(
-                      'FOLLOW US ON',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Divider(
-                      endIndent: 10,
-                      indent: 10,
-                      color: Colors.grey[800],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/facebook.png',
-                          height: 30,
-                          width: 30,
-                        ),
-                        const SizedBox(
-                          width: 25,
-                        ),
-                        Image.asset(
-                          'assets/images/twitter.png',
-                          height: 30,
-                          width: 30,
-                        ),
-                        const SizedBox(
-                          width: 25,
-                        ),
-                        Image.asset(
-                          'assets/images/instagram.png',
-                          height: 30,
-                          width: 30,
-                        ),
-                        const SizedBox(
-                          width: 25,
-                        ),
-                        Image.asset(
-                          'assets/images/linkedin.png',
-                          height: 30,
-                          width: 30,
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
