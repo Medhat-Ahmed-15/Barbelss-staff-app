@@ -166,15 +166,17 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                         height: 56,
                         child: ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  Theme.of(context).primaryColor),
-                              overlayColor: MaterialStateProperty.all(
-                                  Theme.of(context).scaffoldBackgroundColor),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ))),
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor),
+                            overlayColor: MaterialStateProperty.all(
+                                Theme.of(context).scaffoldBackgroundColor),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
                           onPressed: () async {
                             try {
                               setState(() {

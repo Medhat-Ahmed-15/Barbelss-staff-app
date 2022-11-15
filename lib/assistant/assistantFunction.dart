@@ -6,7 +6,6 @@ import 'dart:ui';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
-import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:gym_staff_app/models/planData.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -128,9 +127,10 @@ String convertDateToDayInNumberMonthInText(String date, BuildContext context) {
 // convert Time To 12H Format//////////////////////////////////////////////////////////////////////
 
 String convertTimeTo12HFormat(String time) {
+  time = DateTime.parse(time).toLocal().toString();
   TimeOfDay timeOfDay = TimeOfDay(
-      hour: int.parse(time.split("T")[1].split(':')[0]),
-      minute: int.parse(time.split("T")[1].split(':')[1]));
+      hour: int.parse(time.split(" ")[1].split(':')[0]),
+      minute: int.parse(time.split(" ")[1].split(':')[1]));
 
   final now = DateTime.now();
   final dt =
@@ -144,7 +144,7 @@ String convertTimeTo12HFormat(String time) {
 
 Future<void> getAllPlans() async {
   String url =
-      'http://159.223.172.150/api/v1/packages/clubs/${currentStaffData.staffClubId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'https://barbells-eg.co/api/v1/packages/clubs/${currentStaffData.staffClubId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   var res = await http.get(
     Uri.parse(url),
@@ -193,7 +193,7 @@ Future<void> extractImageAndPutInFirebase(
 Future<void> updateMemberQrCode(
     {BuildContext context, String whatsAppMessageLang}) async {
   String url =
-      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/QR-code?lang=lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'https://barbells-eg.co/api/v1/members/${pickedMember.memberId}/QR-code?lang=lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   final response = await http.patch(Uri.parse(url),
       headers: <String, String>{
@@ -218,7 +218,7 @@ Future<void> updateMemberQrCode(
 Future<void> sendVerificationCodeToWhatsApp(
     BuildContext context, String whatsAppMessageLang) async {
   String url =
-      'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/language/$whatsAppMessageLang/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'https://barbells-eg.co/api/v1/members/${pickedMember.memberId}/language/$whatsAppMessageLang/whatsapp/verification?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   final response = await http.post(
     Uri.parse(url),
@@ -240,7 +240,7 @@ Future<String> addAttendanceBymember(
     {String memberId, String qrCodeUUID, BuildContext context}) async {
   //159.223.172.150/api/v1/attendances/members/63137d0bc4cae825d788889b/QRCodes-uuids/39f3368e-8c38-4a48-beeb-138918da9970?lang=ar
   String url =
-      'http://159.223.172.150/api/v1/attendances/members/$memberId/QRCodes-uuids/$qrCodeUUID?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'https://barbells-eg.co/api/v1/attendances/members/$memberId/QRCodes-uuids/$qrCodeUUID?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   final response = await http.post(
     Uri.parse(url),
@@ -263,7 +263,7 @@ Future<String> addAttendanceBymember(
 
 Future<void> memberForgetPassword(String email, BuildContext context) async {
   String url =
-      'http://159.223.172.150/api/v1/auth/reset-password/mail/staff?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+      'https://barbells-eg.co/api/v1/auth/reset-password/mail/staff?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
   final response = await http.post(Uri.parse(url),
       headers: <String, String>{

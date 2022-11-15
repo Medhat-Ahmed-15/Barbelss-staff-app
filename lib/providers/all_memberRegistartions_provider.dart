@@ -13,7 +13,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
 
   Future<void> getAllMemberRegistartions() async {
     String url =
-        'http://159.223.172.150/api/v1/registrations/attendances/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/registrations/attendances/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     var res = await http.get(
       Uri.parse(url),
@@ -42,7 +42,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
   Future<void> registerPlan(
       {String planId, num planPrice, BuildContext context}) async {
     String url =
-        'http://159.223.172.150/api/v1/registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
@@ -103,7 +103,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
   Future<void> deleteRegistration(
       {String registrationId, BuildContext context}) async {
     String url =
-        'http://159.223.172.150/api/v1/cancelled-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/cancelled-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
@@ -136,7 +136,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
       deleteRegistration(context: context, registrationId: registrationId);
     } else {
       String url =
-          'http://159.223.172.150/api/v1/cancelled-attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+          'https://barbells-eg.co/api/v1/cancelled-attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
       final response = await http.post(Uri.parse(url),
           headers: <String, String>{
@@ -192,7 +192,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
   Future<void> confirmArrival(
       {String registrationId, BuildContext context}) async {
     String url =
-        'http://159.223.172.150/api/v1/attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/attendances?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
@@ -256,7 +256,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
   Future<void> reactivateRegestration(
       {String registrationId, BuildContext context}) async {
     String url =
-        'http://159.223.172.150/api/v1/freeze-registrations/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/freeze-registrations/registrations/$registrationId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.patch(Uri.parse(url),
         headers: <String, String>{
@@ -305,7 +305,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
   Future<void> freezeRegistration(
       {String registrationId, BuildContext context, String duration}) async {
     String url =
-        'http://159.223.172.150/api/v1/freeze-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/freeze-registrations?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{

@@ -186,7 +186,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     color: emailFocusNode.hasFocus
                         ? Theme.of(context).primaryColor
                         : Colors.black54,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -302,7 +301,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       .textTheme
                                       .headline1
                                       .color,
-                                  fontSize: 18),
+                                  fontSize: 16),
                             ),
                           ),
                         ),

@@ -143,7 +143,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
               buttontext,
               style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
-                  fontSize: 18),
+                  fontSize: 16),
             ),
           ),
         ),
@@ -273,10 +273,9 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                               children: [
                                 Text(
                                   '${AppLocalizations.of(context).memberVerification}:  ',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0,
-                                      color: Colors.grey),
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Theme.of(context).primaryColor),
                                 ),
                                 Icon(
                                   pickedMember.canAuthenticate == false
@@ -295,10 +294,9 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                               children: [
                                 Text(
                                   AppLocalizations.of(context).languageTitle,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0,
-                                      color: Colors.grey),
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Theme.of(context).primaryColor),
                                 ),
                                 Expanded(child: Container()),
                                 languageButton('English'),

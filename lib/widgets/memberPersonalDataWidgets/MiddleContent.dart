@@ -19,7 +19,6 @@ class MiddleContent extends StatelessWidget {
           bottom: 22,
         ),
         width: MediaQuery.of(context).size.width,
-        //height: 200,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             boxShadow: const [
@@ -44,10 +43,7 @@ class MiddleContent extends StatelessWidget {
               pickedMember.memberEmail == ''
                   ? AppLocalizations.of(context).emailHasNotBeenSpecified
                   : pickedMember.memberEmail,
-              style: const TextStyle(
-                  // fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
-                  color: Colors.grey),
+              style: const TextStyle(fontSize: 16.0, color: Colors.grey),
             ),
 
             const Divider(
@@ -68,7 +64,7 @@ class MiddleContent extends StatelessWidget {
               pickedMember.memberPhone,
               style: const TextStyle(
                   //  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   color: Colors.grey),
             ),
             const Divider(
@@ -88,7 +84,7 @@ class MiddleContent extends StatelessWidget {
               pickedMember.memberId,
               style: const TextStyle(
                   //  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
+                  fontSize: 16.0,
                   color: Colors.grey),
             ),
             const Divider(

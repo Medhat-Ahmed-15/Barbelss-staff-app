@@ -100,7 +100,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         currentStaffData.staffName,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
+                            fontSize: 16.0,
                             color: Colors.grey),
                       ),
                     ],

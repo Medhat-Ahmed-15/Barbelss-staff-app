@@ -29,7 +29,7 @@ class BackButtonAndScreenTitle extends StatelessWidget {
             width: 10,
           ),
           Text(
-            AppLocalizations.of(context).packageDetails,
+            pickedMemberPackage.packageTitle,
             style: TextStyle(
                 color: Theme.of(context).textTheme.headline1.color,
                 fontSize: 25,

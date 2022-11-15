@@ -25,7 +25,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> userLogin(String phone, String countryCode, String password,
       BuildContext context) async {
     String url =
-        'http://159.223.172.150/api/v1/auth/staffs/login?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/auth/staffs/login?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{

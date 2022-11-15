@@ -12,7 +12,7 @@ class AllMembersProvider with ChangeNotifier {
 
   Future<void> getAllMembers() async {
     String url =
-        'http://159.223.172.150/api/v1/members/clubs/${currentStaffData.staffClubId}/search?phone=&countryCode=?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/members/clubs/${currentStaffData.staffClubId}/search?phone=&countryCode=?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     var res = await http.get(
       Uri.parse(url),
@@ -42,7 +42,7 @@ class AllMembersProvider with ChangeNotifier {
     BuildContext context,
   ) async {
     String url =
-        'http://159.223.172.150/api/v1/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/members/${pickedMember.memberId}?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.patch(
       Uri.parse(url),
@@ -106,7 +106,7 @@ class AllMembersProvider with ChangeNotifier {
       String whatsAppMessageLang,
       BuildContext context}) async {
     String url =
-        'http://159.223.172.150/api/v1/members?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/members?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.post(Uri.parse(url),
         headers: <String, String>{
@@ -166,7 +166,7 @@ class AllMembersProvider with ChangeNotifier {
       bool verificationStatus,
       String whatsAppMessageLang}) async {
     String url =
-        'http://159.223.172.150/api/v1/members/${pickedMember.memberId}/authentication?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+        'https://barbells-eg.co/api/v1/members/${pickedMember.memberId}/authentication?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
 
     final response = await http.patch(Uri.parse(url),
         headers: <String, String>{

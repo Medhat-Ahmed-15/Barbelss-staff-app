@@ -127,10 +127,10 @@ class _PlanDataTileState extends State<PlanDataTile> {
                               child: Text(
                                 widget.planData.planAttendance.toString(),
                                 style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 20,
-                                    overflow: TextOverflow.ellipsis,
-                                    fontWeight: FontWeight.bold),
+                                  color: Colors.grey,
+                                  fontSize: 20,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
                           ],
@@ -158,9 +158,9 @@ class _PlanDataTileState extends State<PlanDataTile> {
                             Text(
                               widget.planData.planExpiresIn,
                               style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.grey,
+                                fontSize: 20,
+                              ),
                             ),
                           ],
                         ),

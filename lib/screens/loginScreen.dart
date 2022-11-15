@@ -262,7 +262,6 @@ class _LoginScreenState extends State<LoginScreen> {
           color: focusNode.hasFocus
               ? Theme.of(context).primaryColor
               : Colors.black54,
-          fontWeight: FontWeight.bold,
         ),
       ),
     );
@@ -309,8 +308,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   localeLanguage == const Locale('en')
                       ? rowWidget(
-                          Image.asset('assets/images/b8.png',
-                              height: 50, width: 50),
+                          Hero(
+                            tag: 'logo',
+                            child: Image.asset('assets/images/b8.png',
+                                height: 50, width: 50),
+                          ),
                           const Text(
                             'arbells',
                             style: TextStyle(
@@ -508,7 +510,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             AppLocalizations.of(context).forgetPasswordTitle,
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
                                 fontSize: 16,
                                 color: Theme.of(context).primaryColor),
                           ),
@@ -560,7 +561,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               .textTheme
                                               .headline1
                                               .color,
-                                          fontSize: 18),
+                                          fontSize: 16),
                                     ),
                                   ),
                                 ),

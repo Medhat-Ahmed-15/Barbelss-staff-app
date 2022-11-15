@@ -85,10 +85,7 @@ class UpperContent extends StatelessWidget {
               ),
               Text(
                 pickedMember.memberName,
-                style: const TextStyle(
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                    color: Colors.grey),
+                style: const TextStyle(fontSize: 16.0, color: Colors.grey),
               ),
               const SizedBox(
                 height: 5,

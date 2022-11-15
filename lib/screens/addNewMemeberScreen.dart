@@ -909,7 +909,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
                       child: ElevatedButton(
                         style: ButtonStyle(
                             textStyle: MaterialStateProperty.all(
-                              const TextStyle(fontSize: 18.0),
+                              const TextStyle(fontSize: 16.0),
                             ),
                             backgroundColor: MaterialStateProperty.all(
                                 Theme.of(context).primaryColor),

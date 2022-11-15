@@ -36,10 +36,13 @@ class UpperContainer extends StatelessWidget {
                   size: 25,
                 ),
               ),
-              Image.asset(
-                'assets/images/b8.png',
-                height: 35,
-                width: 35,
+              Hero(
+                tag: 'logo',
+                child: Image.asset(
+                  'assets/images/b8.png',
+                  height: 35,
+                  width: 35,
+                ),
               ),
               IconButton(
                 onPressed: () {

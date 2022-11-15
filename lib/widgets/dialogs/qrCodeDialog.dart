@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/widgets/dialogs/feedBackDialog.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -78,12 +79,7 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
             Column(
               children: [
                 loading == true
-                    ? Center(
-                        child: LoadingAnimationWidget.fourRotatingDots(
-                          color: Theme.of(context).primaryColor,
-                          size: 50,
-                        ),
-                      )
+                    ? FourDotsLoading()
                     : Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
@@ -141,14 +137,20 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.redAccent),
-                          overlayColor: MaterialStateProperty.all(
-                              Theme.of(context).primaryColor)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.redAccent),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                        ),
+                        overlayColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColor),
+                      ),
                       onPressed: () async {
                         Navigator.of(context).pop(false);
                       },

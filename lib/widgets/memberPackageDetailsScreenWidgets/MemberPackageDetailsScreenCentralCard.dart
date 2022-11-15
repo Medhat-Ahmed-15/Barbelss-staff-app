@@ -21,36 +21,8 @@ class MemberPackageDetailsScreenCentralCard extends StatelessWidget {
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    Text(
-                      '${pickedMemberPackage.packageTitle} Package',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    pickedMemberPackage.isFreezed == true
-                        ? Text(
-                            '(${AppLocalizations.of(context).freezed})',
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 13),
-                          )
-                        : const Text('')
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -59,7 +31,7 @@ class MemberPackageDetailsScreenCentralCard extends StatelessWidget {
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w900,
-                      fontSize: 60,
+                      fontSize: 70,
                     ),
                   ),
                   const SizedBox(

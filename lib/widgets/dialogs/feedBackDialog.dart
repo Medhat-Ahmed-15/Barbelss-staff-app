@@ -82,7 +82,7 @@ class _FeedBackDialogState extends State<FeedBackDialog> {
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                       side: BorderSide(
                                           color: widget.buttonColor)))),
                       onPressed: () async {
