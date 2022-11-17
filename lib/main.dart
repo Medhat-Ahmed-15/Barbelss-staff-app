@@ -7,6 +7,7 @@ import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/providers/all_members_provider.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/providers/localLanguageProvider.dart';
+import 'package:gym_staff_app/providers/offlineFeature_provider.dart';
 import 'package:gym_staff_app/screens/aboutScreen.dart';
 import 'package:gym_staff_app/screens/changeLanguageScreen.dart';
 import 'package:gym_staff_app/screens/forgotPassword_screen.dart';
@@ -23,6 +24,7 @@ import 'package:gym_staff_app/screens/splash_screen.dart';
 import 'package:gym_staff_app/screens/addNewMemeberScreen.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'helper/object_box.dart';
 import 'l10n/l10n.dart';
 
 void main() async {
@@ -30,6 +32,9 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
+
+  await ObjectBox.init();
+
   runApp(const MyApp());
 }
 
@@ -57,6 +62,10 @@ class MyApp extends StatelessWidget {
 
         ChangeNotifierProvider(
           create: (ctx) => LocaleLanguageProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (ctx) => OfflineFeautureProvider(),
         ),
       ],
       child: Consumer2<AuthProvider, LocaleLanguageProvider>(
@@ -94,7 +103,6 @@ class MyApp extends StatelessWidget {
                           builder: (ctx, snapShot) {
                             if (snapShot.connectionState ==
                                 ConnectionState.none) {
-                              print('SPLAAAASSHHH SCREEEBBBB');
                               return SplashScreen();
                             }
                             if (snapShot.data == true) {

@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
-import 'package:gym_staff_app/models/memberData.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
 import 'package:gym_staff_app/providers/all_members_provider.dart';
 import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
@@ -15,6 +15,7 @@ import 'package:gym_staff_app/widgets/searchScreenWidgets/memberDataTile.dart';
 import 'package:provider/provider.dart';
 import '../Exceptions/getRequest_exception.dart';
 import '../globalVariables.dart';
+import '../providers/offlineFeature_provider.dart';
 import '../widgets/dialogs/feedBackDialog.dart';
 import '../widgets/dialogs/scanQrCodeDialog.dart';
 import '../widgets/other/InternetConnectionError.dart';
@@ -39,21 +40,81 @@ class _SearchScreenState extends State<SearchScreen> {
   void didChangeDependencies() async {
     super.didChangeDependencies();
     if (isInit == true) {
+      setState(() {
+        loadingMembersData = true;
+        connectionError = false;
+      });
+
+      await Provider.of<OfflineFeautureProvider>(context, listen: false)
+          .getWorkStatusFromStorage();
+      if (workConnectionStatus == 'online') {
+        try {
+          bool checkDatabaseIsEmpty = ObjectBox.checkDatabaseIsEmpty();
+
+          if (workConnectionStatus == 'online' &&
+              checkDatabaseIsEmpty == true) {
+            await getAllClubDataAndSaveThemInStorage();
+            ObjectBox.insertClubData();
+          }
+
+          await getAllPlans();
+
+          await Provider.of<AllMembersProvider>(context, listen: false)
+              .getAllMembers();
+
+          setState(() {
+            loadingMembersData = false;
+            connectionError = false;
+          });
+          sortedMemberData = allMembersList;
+        } on SocketException {
+          setState(() {
+            connectionError = true;
+            loadingMembersData = false;
+          });
+        } on GetRequestException {
+          setState(() {
+            connectionError = false;
+            loadingMembersData = false;
+          });
+        } catch (error) {
+          showToast(AppLocalizations.of(context).somethingWentWrong, context);
+          setState(() {
+            connectionError = false;
+            loadingMembersData = false;
+          });
+        }
+      } else {
+        ObjectBox.getClubData();
+        sortedMemberData = allMembersList;
+      }
+
+      isInit = false;
+    }
+  }
+
+  Future<void> refresh() async {
+    if (workConnectionStatus == 'online') {
       try {
         setState(() {
           loadingMembersData = true;
           connectionError = false;
         });
-        await getAllPlans();
-
         await Provider.of<AllMembersProvider>(context, listen: false)
             .getAllMembers();
 
-        setState(() {
-          loadingMembersData = false;
-          connectionError = false;
-        });
-        sortedMemberData = allMembersList;
+        if (allMembersList.isEmpty) {
+          setState(() {
+            loadingMembersData = false;
+            connectionError = false;
+          });
+        } else {
+          setState(() {
+            loadingMembersData = false;
+            connectionError = false;
+            sortedMemberData = allMembersList;
+          });
+        }
       } on SocketException {
         setState(() {
           connectionError = true;
@@ -71,47 +132,9 @@ class _SearchScreenState extends State<SearchScreen> {
           loadingMembersData = false;
         });
       }
-    }
-    isInit = false;
-  }
-
-  Future<void> refresh() async {
-    try {
-      setState(() {
-        loadingMembersData = true;
-        connectionError = false;
-      });
-      await Provider.of<AllMembersProvider>(context, listen: false)
-          .getAllMembers();
-
-      if (allMembersList.isEmpty) {
-        setState(() {
-          loadingMembersData = false;
-          connectionError = false;
-        });
-      } else {
-        setState(() {
-          loadingMembersData = false;
-          connectionError = false;
-          sortedMemberData = allMembersList;
-        });
-      }
-    } on SocketException {
-      setState(() {
-        connectionError = true;
-        loadingMembersData = false;
-      });
-    } on GetRequestException {
-      setState(() {
-        connectionError = false;
-        loadingMembersData = false;
-      });
-    } catch (error) {
-      showToast(AppLocalizations.of(context).somethingWentWrong, context);
-      setState(() {
-        connectionError = false;
-        loadingMembersData = false;
-      });
+    } else {
+      ObjectBox.getClubData();
+      sortedMemberData = allMembersList;
     }
   }
 
@@ -123,6 +146,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<OfflineFeautureProvider>(context, listen: true);
     Provider.of<AllMembersProvider>(context, listen: true);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -213,26 +237,45 @@ class _SearchScreenState extends State<SearchScreen> {
               left: 15,
               right: 15,
             ),
-            child: connectionError == true
-                ? InternetConnectionError(refresh)
-                : loadingMembersData == true
-                    ? FourDotsLoading()
-                    : allMembersList.isEmpty
-                        ? EmptyAnimationWidget(refresh)
-                        : RefreshIndicator(
-                            color: Theme.of(context).primaryColor,
-                            strokeWidth: 5,
-                            onRefresh: () {
-                              return refresh();
-                            },
-                            child: ListView.builder(
-                              padding: const EdgeInsets.all(0),
-                              itemBuilder: (context, index) {
-                                return MemberDataTile(
-                                    sortedMemberData[index], refresh);
-                              },
-                              itemCount: sortedMemberData.length,
-                            )),
+            child: workConnectionStatus == 'offline'
+                ? allMembersList.isEmpty
+                    ? EmptyAnimationWidget(refresh)
+                    : RefreshIndicator(
+                        color: Theme.of(context).primaryColor,
+                        strokeWidth: 5,
+                        onRefresh: () {
+                          return refresh();
+                        },
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(0),
+                          itemBuilder: (context, index) {
+                            return MemberDataTile(
+                                sortedMemberData[index], refresh);
+                          },
+                          itemCount: sortedMemberData.length,
+                        ),
+                      )
+                : connectionError == true
+                    ? InternetConnectionError(refresh)
+                    : loadingMembersData == true
+                        ? FourDotsLoading()
+                        : allMembersList.isEmpty
+                            ? EmptyAnimationWidget(refresh)
+                            : RefreshIndicator(
+                                color: Theme.of(context).primaryColor,
+                                strokeWidth: 5,
+                                onRefresh: () {
+                                  return refresh();
+                                },
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.all(0),
+                                  itemBuilder: (context, index) {
+                                    return MemberDataTile(
+                                        sortedMemberData[index], refresh);
+                                  },
+                                  itemCount: sortedMemberData.length,
+                                ),
+                              ),
           ),
 
           confirmationLoading == true

@@ -1,0 +1,274 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:3277042433751473766",
+      "lastPropertyId": "8:8095750558975633293",
+      "name": "MemberAttendencesData",
+      "properties": [
+        {
+          "id": "1:5241358954501170570",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8081275980363410646",
+          "name": "attendenceId",
+          "type": 9
+        },
+        {
+          "id": "3:2170278292602645620",
+          "name": "clubId",
+          "type": 9
+        },
+        {
+          "id": "4:690378031368188195",
+          "name": "registrationId",
+          "type": 9
+        },
+        {
+          "id": "5:2960132676514182521",
+          "name": "packageId",
+          "type": 9
+        },
+        {
+          "id": "6:32578052699882140",
+          "name": "staffId",
+          "type": 9
+        },
+        {
+          "id": "7:4024953480403865323",
+          "name": "memberId",
+          "type": 9
+        },
+        {
+          "id": "8:8095750558975633293",
+          "name": "createdAt",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:2641695348687829254",
+      "lastPropertyId": "16:6915709157516983869",
+      "name": "MemberData",
+      "properties": [
+        {
+          "id": "1:5213011548525722191",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:446653268271102516",
+          "name": "memberId",
+          "type": 9
+        },
+        {
+          "id": "3:4952610577579292300",
+          "name": "clubId",
+          "type": 9
+        },
+        {
+          "id": "4:8116882161731740592",
+          "name": "memberName",
+          "type": 9
+        },
+        {
+          "id": "5:2472172255173004662",
+          "name": "memberEmail",
+          "type": 9
+        },
+        {
+          "id": "6:1480325873941322594",
+          "name": "memberPhone",
+          "type": 9
+        },
+        {
+          "id": "7:5829525266723065547",
+          "name": "countryCode",
+          "type": 9
+        },
+        {
+          "id": "8:5572854357120317637",
+          "name": "gender",
+          "type": 9
+        },
+        {
+          "id": "9:4711096227790351391",
+          "name": "staffId",
+          "type": 9
+        },
+        {
+          "id": "10:8196664111727738928",
+          "name": "birthYear",
+          "type": 9
+        },
+        {
+          "id": "11:5076980551054798833",
+          "name": "membership",
+          "type": 6
+        },
+        {
+          "id": "12:4272734845516564511",
+          "name": "qrCodeURL",
+          "type": 9
+        },
+        {
+          "id": "13:4959229988983520679",
+          "name": "qrCodeUUID",
+          "type": 9
+        },
+        {
+          "id": "14:2252141030897888578",
+          "name": "canAuthenticate",
+          "type": 1
+        },
+        {
+          "id": "15:3527483509806615196",
+          "name": "isBlocked",
+          "type": 1
+        },
+        {
+          "id": "16:6915709157516983869",
+          "name": "createdAt",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:5711936982490007564",
+      "lastPropertyId": "8:7063943295511765215",
+      "name": "PlanData",
+      "properties": [
+        {
+          "id": "1:2655322610188363126",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8265917416193382037",
+          "name": "planId",
+          "type": 9
+        },
+        {
+          "id": "3:4384840347902940318",
+          "name": "planClubId",
+          "type": 9
+        },
+        {
+          "id": "4:5310527877366672740",
+          "name": "planTitle",
+          "type": 9
+        },
+        {
+          "id": "5:1406548675491910579",
+          "name": "planAttendance",
+          "type": 6
+        },
+        {
+          "id": "6:5025555750089286984",
+          "name": "planExpiresIn",
+          "type": 9
+        },
+        {
+          "id": "7:4294353273151218611",
+          "name": "isOpen",
+          "type": 1
+        },
+        {
+          "id": "8:7063943295511765215",
+          "name": "createdAt",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:1040338965514404000",
+      "lastPropertyId": "12:2940793645541748062",
+      "name": "Registrations",
+      "properties": [
+        {
+          "id": "1:5569167664572967232",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4201647279212793466",
+          "name": "registrationId",
+          "type": 9
+        },
+        {
+          "id": "3:5599525302081520192",
+          "name": "registrationIsActive",
+          "type": 1
+        },
+        {
+          "id": "4:8836535446117826198",
+          "name": "registrationAttended",
+          "type": 6
+        },
+        {
+          "id": "5:395470171141682650",
+          "name": "registrationExpiresAt",
+          "type": 9
+        },
+        {
+          "id": "6:4464336874030855499",
+          "name": "isFreezed",
+          "type": 1
+        },
+        {
+          "id": "7:1235500044274110141",
+          "name": "registrationCreatedAt",
+          "type": 9
+        },
+        {
+          "id": "8:8895855036754817901",
+          "name": "packageId",
+          "type": 9
+        },
+        {
+          "id": "9:7935760887756393771",
+          "name": "clubId",
+          "type": 9
+        },
+        {
+          "id": "10:7526532944977469539",
+          "name": "memberId",
+          "type": 9
+        },
+        {
+          "id": "11:1045110132868236767",
+          "name": "staffId",
+          "type": 9
+        },
+        {
+          "id": "12:2940793645541748062",
+          "name": "paid",
+          "type": 6
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "4:1040338965514404000",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

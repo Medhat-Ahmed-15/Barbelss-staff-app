@@ -7,7 +7,6 @@ import 'package:gym_staff_app/models/menuItem.dart';
 import 'package:gym_staff_app/screens/aboutScreen.dart';
 import 'package:gym_staff_app/screens/searchScreen.dart';
 import 'package:gym_staff_app/screens/settingsScreen.dart';
-
 import 'menuScreen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,6 +19,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   MenuItemData currentItem = MenuItems.home;
   final drawerController = ZoomDrawerController();
+  bool isInit = true;
 
   Widget getScreen() {
     if (currentItem == MenuItems.home) {

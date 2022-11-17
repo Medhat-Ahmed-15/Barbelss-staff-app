@@ -646,12 +646,26 @@
     "confirmDelete": "Are you sure you want to delete it?",
     "@language": {
       "description": " "
+    },
+
+    "workOffline": "Offline mode",
+    "@language": {
+      "description": " "
+    },
+
+    "workOnline": "Online mode",
+    "@language": {
+      "description": " "
+    },
+
+    "sync": "Sync",
+    "@language": {
+      "description": " "
     }
 
     
 
 
-  
 
 
 

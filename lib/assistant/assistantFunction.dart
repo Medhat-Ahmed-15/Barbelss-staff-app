@@ -6,7 +6,9 @@ import 'dart:ui';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
+import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:gym_staff_app/models/planData.dart';
+import 'package:gym_staff_app/models/registrations.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/memberData.dart';
 
 void showToast(
   String message,
@@ -158,7 +162,7 @@ Future<void> getAllPlans() async {
   var decodeData = jsonDecode(jSonData);
 
   if (decodeData['accepted'] == false) {
-    throw GetRequestException('Error');
+    throw GetRequestException(decodeData['message'] ?? 'error');
   }
 
   var allPlans = decodeData['packages'];
@@ -277,4 +281,42 @@ Future<void> memberForgetPassword(String email, BuildContext context) async {
   if (responseData['accepted'] == false) {
     throw GetRequestException(responseData['message'] ?? 'error');
   }
+}
+
+//Get All Club Data/////////////////////////////////////////////////////////////////
+
+Future<void> getAllClubDataAndSaveThemInStorage() async {
+  String url =
+      'https://barbells-eg.co/api/v1/clubs/${currentStaffData.staffClubId}/all?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+  var res = await http.get(
+    Uri.parse(url),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'x-access-token': token
+    },
+  );
+
+  String jSonData = res.body;
+  var decodeData = jsonDecode(jSonData);
+
+  if (decodeData['accepted'] == false) {
+    throw GetRequestException(decodeData['message'] ?? 'error');
+  }
+
+  allMembersOfflineData = (decodeData['members'] as List)
+      .map((index) => MemberData.fromjson(index))
+      .toList();
+
+  allRegistrationsOfflineData = (decodeData['registrations'] as List)
+      .map((index) => Registrations.fromjson(index))
+      .toList();
+
+  allAttendencesOfflineData = (decodeData['attendances'] as List)
+      .map((index) => MemberAttendencesData.fromjson(index))
+      .toList();
+
+  allPlansOfflineData = (decodeData['packages'] as List)
+      .map((index) => PlanData.fromjson(index))
+      .toList();
 }

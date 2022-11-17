@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
+import 'package:gym_staff_app/models/registrations.dart';
 import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:gym_staff_app/widgets/dialogs/feedBackDialog.dart';
@@ -10,11 +11,14 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/widgets/memberDetailsScreenWidgets/memberPackageDataTile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:gym_staff_app/widgets/memberDetailsScreenWidgets/offlineMemberPackageDataTile.dart';
 import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:gym_staff_app/widgets/other/InternetConnectionError.dart';
 import 'package:provider/provider.dart';
 
+import '../helper/object_box.dart';
+import '../providers/offlineFeature_provider.dart';
 import '../widgets/memberDetailsScreenWidgets/memberDetailsCentralCard.dart';
 
 class MemberDetailsScreen extends StatefulWidget {
@@ -36,8 +40,49 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    try {
-      if (isInit == true) {
+    if (isInit == true) {
+      if (workConnectionStatus == 'online') {
+        try {
+          setState(() {
+            loadingMemberRegistrationsData = true;
+            connectionError = false;
+          });
+          await Provider.of<AllMemberRegistartionsProvider>(context,
+                  listen: false)
+              .getAllMemberRegistartions();
+
+          setState(() {
+            loadingMemberRegistrationsData = false;
+            connectionError = false;
+          });
+        } on SocketException {
+          setState(() {
+            connectionError = true;
+            loadingMemberRegistrationsData = false;
+          });
+        } catch (error) {
+          showToast(AppLocalizations.of(context).somethingWentWrong, context);
+          setState(() {
+            connectionError = false;
+            loadingMemberRegistrationsData = false;
+          });
+        }
+      } else {
+        ObjectBox.getClubData();
+        sortedMemberData = allMembersList;
+
+        currentMemberOfflineRegistrations = allRegistrationsOfflineData
+            .where((element) => element.memberId == pickedMember.memberId)
+            .toList();
+      }
+
+      isInit = false;
+    }
+  }
+
+  Future<void> refresh() async {
+    if (workConnectionStatus == 'online') {
+      try {
         setState(() {
           loadingMemberRegistrationsData = true;
           connectionError = false;
@@ -45,63 +90,43 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
         await Provider.of<AllMemberRegistartionsProvider>(context,
                 listen: false)
             .getAllMemberRegistartions();
-
+        if (allMemberRegistrationsList.isEmpty) {
+          setState(() {
+            loadingMemberRegistrationsData = false;
+            connectionError = false;
+          });
+        } else {
+          setState(() {
+            loadingMemberRegistrationsData = false;
+            connectionError = false;
+          });
+        }
+      } on SocketException {
         setState(() {
+          connectionError = true;
           loadingMemberRegistrationsData = false;
-          connectionError = false;
         });
-
-        isInit = false;
-      }
-    } on SocketException {
-      setState(() {
-        connectionError = true;
-        loadingMemberRegistrationsData = false;
-      });
-    } catch (error) {
-      showToast(AppLocalizations.of(context).somethingWentWrong, context);
-      setState(() {
-        connectionError = false;
-        loadingMemberRegistrationsData = false;
-      });
-    }
-  }
-
-  Future<void> refresh() async {
-    try {
-      setState(() {
-        loadingMemberRegistrationsData = true;
-        connectionError = false;
-      });
-      await Provider.of<AllMemberRegistartionsProvider>(context, listen: false)
-          .getAllMemberRegistartions();
-      if (allMemberRegistrationsList.isEmpty) {
+      } catch (error) {
+        showToast(AppLocalizations.of(context).somethingWentWrong, context);
         setState(() {
-          loadingMemberRegistrationsData = false;
           connectionError = false;
-        });
-      } else {
-        setState(() {
           loadingMemberRegistrationsData = false;
-          connectionError = false;
         });
       }
-    } on SocketException {
-      setState(() {
-        connectionError = true;
-        loadingMemberRegistrationsData = false;
-      });
-    } catch (error) {
-      showToast(AppLocalizations.of(context).somethingWentWrong, context);
-      setState(() {
-        connectionError = false;
-        loadingMemberRegistrationsData = false;
-      });
+    } else {
+      ObjectBox.getClubData();
+      sortedMemberData = allMembersList;
+
+      currentMemberOfflineRegistrations = allRegistrationsOfflineData
+          .where((element) => element.memberId == pickedMember.memberId)
+          .toList();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<OfflineFeautureProvider>(context, listen: true);
+
     Provider.of<AllMemberRegistartionsProvider>(context, listen: true);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -118,38 +143,67 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, top: 150),
-                  child: connectionError == true
-                      ? InternetConnectionError(refresh)
-                      : loadingMemberRegistrationsData == true
-                          ? FourDotsLoading()
-                          : allMemberRegistrationsList.isEmpty
-                              ? EmptyAnimationWidget(refresh)
-                              : RefreshIndicator(
-                                  color: Theme.of(context).primaryColor,
-                                  strokeWidth: 5,
-                                  onRefresh: () {
-                                    return refresh();
-                                  },
-                                  child: ListView.separated(
-                                    padding: const EdgeInsets.all(0),
-                                    itemBuilder: (context, index) {
-                                      return MemberPackageDataTile(
-                                        allMemberRegistrationsList[index],
-                                      );
-                                    },
-                                    itemCount:
-                                        allMemberRegistrationsList.length,
-                                    separatorBuilder:
-                                        (BuildContext context, int index) {
-                                      return Divider(
-                                        thickness: 1,
-                                        endIndent: 10,
-                                        indent: 10,
-                                        color: Colors.grey[300],
-                                      );
-                                    },
-                                  ),
-                                ),
+                  child: workConnectionStatus == 'offline'
+                      ? currentMemberOfflineRegistrations.isEmpty
+                          ? EmptyAnimationWidget(refresh)
+                          : RefreshIndicator(
+                              color: Theme.of(context).primaryColor,
+                              strokeWidth: 5,
+                              onRefresh: () {
+                                return refresh();
+                              },
+                              child: ListView.separated(
+                                padding: const EdgeInsets.all(0),
+                                itemBuilder: (context, index) {
+                                  return OfflineMemberPackageDataTile(
+                                    currentMemberOfflineRegistrations[index],
+                                  );
+                                },
+                                itemCount:
+                                    currentMemberOfflineRegistrations.length,
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return Divider(
+                                    thickness: 1,
+                                    endIndent: 10,
+                                    indent: 10,
+                                    color: Colors.grey[300],
+                                  );
+                                },
+                              ),
+                            )
+                      : connectionError == true
+                          ? InternetConnectionError(refresh)
+                          : loadingMemberRegistrationsData == true
+                              ? FourDotsLoading()
+                              : allMemberRegistrationsList.isEmpty
+                                  ? EmptyAnimationWidget(refresh)
+                                  : RefreshIndicator(
+                                      color: Theme.of(context).primaryColor,
+                                      strokeWidth: 5,
+                                      onRefresh: () {
+                                        return refresh();
+                                      },
+                                      child: ListView.separated(
+                                        padding: const EdgeInsets.all(0),
+                                        itemBuilder: (context, index) {
+                                          return MemberPackageDataTile(
+                                            allMemberRegistrationsList[index],
+                                          );
+                                        },
+                                        itemCount:
+                                            allMemberRegistrationsList.length,
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return Divider(
+                                            thickness: 1,
+                                            endIndent: 10,
+                                            indent: 10,
+                                            color: Colors.grey[300],
+                                          );
+                                        },
+                                      ),
+                                    ),
                 ),
               ),
             ],

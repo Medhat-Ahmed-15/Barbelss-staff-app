@@ -1,7 +1,11 @@
 // ignore: file_names
 // ignore_for_file: file_names
 
+import 'package:objectbox/objectbox.dart';
+
+@Entity()
 class PlanData {
+  int id;
   String planId;
   String planClubId;
   String planTitle;
@@ -12,7 +16,8 @@ class PlanData {
   String createdAt;
 
   PlanData(
-      {this.planId,
+      {this.id = 3,
+      this.planId,
       this.planClubId,
       this.planTitle,
       this.planAttendance,

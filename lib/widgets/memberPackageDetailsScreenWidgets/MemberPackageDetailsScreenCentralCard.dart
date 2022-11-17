@@ -27,7 +27,9 @@ class MemberPackageDetailsScreenCentralCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${pickedMemberPackage.registrationAttended}/${pickedMemberPackage.packageAttendance}',
+                    workConnectionStatus == 'offline'
+                        ? '${offlinePickedMemberPackage.registrationAttended}/${allPlansOfflineData.firstWhere((element) => element.planId == offlinePickedMemberPackage.packageId).planAttendance}'
+                        : '${pickedMemberPackage.registrationAttended}/${pickedMemberPackage.packageAttendance}',
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w900,

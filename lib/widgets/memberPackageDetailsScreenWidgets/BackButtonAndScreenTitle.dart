@@ -29,7 +29,12 @@ class BackButtonAndScreenTitle extends StatelessWidget {
             width: 10,
           ),
           Text(
-            pickedMemberPackage.packageTitle,
+            workConnectionStatus == 'offline'
+                ? allPlansOfflineData
+                    .firstWhere((element) =>
+                        element.planId == offlinePickedMemberPackage.packageId)
+                    .planTitle
+                : pickedMemberPackage.packageTitle,
             style: TextStyle(
                 color: Theme.of(context).textTheme.headline1.color,
                 fontSize: 25,
