@@ -26,11 +26,13 @@ class ListCountSubTitle extends StatelessWidget {
           width: 5,
         ),
         Text(
-          listName == 'members'
-              ? '${empty == true || membersListCount == null ? 0 : numeral(membersListCount)}'
-              : listName == 'registrations'
-                  ? '${empty == true || allMemberRegistrationsList == null ? 0 : numeral(allMemberRegistrationsList.length)}'
-                  : '${empty == true || pickedMemberPackage.memberAttendencesData == null ? 0 : numeral(pickedMemberPackage.memberAttendencesData.length)}',
+          workConnectionStatus == 'offline'
+              ? listName == 'members'
+                  ? '${empty == true || membersListCount == null ? 0 : numeral(membersListCount)}'
+                  : '${empty == true || offlinePickedMemberAllRegistrationsList.where((element) => element.operation != 'delete').toList() == null ? 0 : numeral(offlinePickedMemberAllRegistrationsList.where((element) => element.operation != 'delete').toList().length)}'
+              : listName == 'members'
+                  ? '${empty == true || membersListCount == null ? 0 : numeral(membersListCount)}'
+                  : '${empty == true || allMemberRegistrationsList == null ? 0 : numeral(allMemberRegistrationsList.length)}',
           style: TextStyle(
               color: Theme.of(context).primaryColor,
               fontSize: 19,

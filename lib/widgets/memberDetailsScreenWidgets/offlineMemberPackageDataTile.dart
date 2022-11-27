@@ -10,10 +10,9 @@ import 'package:gym_staff_app/widgets/dialogs/confirmDeleteRegistrationDialog.da
 
 class OfflineMemberPackageDataTile extends StatefulWidget {
   Registrations memberRegistrations;
+  Function refresh;
 
-  OfflineMemberPackageDataTile(
-    this.memberRegistrations,
-  );
+  OfflineMemberPackageDataTile(this.memberRegistrations, this.refresh);
 
   @override
   State<OfflineMemberPackageDataTile> createState() =>
@@ -61,7 +60,8 @@ class _OfflineMemberPackageDataTileState
                         ConfirmDeleteRegistrationDialog(
                             widget.memberRegistrations.registrationId),
                   );
-                  setState(() {});
+
+                  widget.refresh();
                 },
                 confirmDismiss: (direction) async {
                   return true;
@@ -80,7 +80,7 @@ class _OfflineMemberPackageDataTileState
                                 color: Theme.of(context).primaryColor,
                               )),
                           child: Text(
-                            allPlansOfflineData
+                            offlineAllPlansList
                                 .firstWhere((element) =>
                                     element.planId ==
                                     widget.memberRegistrations.packageId)
@@ -112,7 +112,7 @@ class _OfflineMemberPackageDataTileState
                           height: 5,
                         ),
                         Text(
-                          '${widget.memberRegistrations.registrationAttended}/${allPlansOfflineData.firstWhere((element) => element.planId == widget.memberRegistrations.packageId).planAttendance}',
+                          '${widget.memberRegistrations.registrationAttended}/${offlineAllPlansList.firstWhere((element) => element.planId == widget.memberRegistrations.packageId).planAttendance}',
                           style: const TextStyle(
                             color: Colors.grey,
                           ),

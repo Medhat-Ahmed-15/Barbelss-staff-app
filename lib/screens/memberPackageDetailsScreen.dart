@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
 import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/widgets/memberPackageDetailsScreenWidgets/MemberPackageDetailsScreenCentralCard.dart';
@@ -38,12 +39,12 @@ class _MemberPackageDetailsScreenState
 
     if (isInit == true) {
       if (workConnectionStatus == 'offline') {
-        memberAttendencesOfflineData =
-            allAttendencesOfflineData.where((element) {
-          return element.registrationId ==
-                  offlinePickedMemberPackage.registrationId &&
-              element.memberId == offlinePickedMemberPackage.memberId;
-        }).toList();
+        ObjectBox.getClubData();
+        memberAttendencesOfflineData = offlineAllAttendancesList
+            .where((element) =>
+                element.registrationId ==
+                offlinePickedMemberPackage.registrationId)
+            .toList();
       }
 
       isInit = false;
@@ -72,7 +73,11 @@ class _MemberPackageDetailsScreenState
                   child: Padding(
                     padding: const EdgeInsets.only(top: 150),
                     child: workConnectionStatus == 'offline'
-                        ? memberAttendencesOfflineData.isEmpty
+                        ? memberAttendencesOfflineData
+                                .where(
+                                    (element) => element.operation != 'delete')
+                                .toList()
+                                .isEmpty
                             ? Center(
                                 child: SizedBox(
                                   width: 200,
@@ -85,9 +90,16 @@ class _MemberPackageDetailsScreenState
                                 padding: const EdgeInsets.all(0),
                                 itemBuilder: (context, index) {
                                   return MemberAttendencesDataTile(
-                                      memberAttendencesOfflineData[index]);
+                                      memberAttendencesOfflineData
+                                          .where((element) =>
+                                              element.operation != 'delete')
+                                          .toList()[index]);
                                 },
-                                itemCount: memberAttendencesOfflineData.length,
+                                itemCount: memberAttendencesOfflineData
+                                    .where((element) =>
+                                        element.operation != 'delete')
+                                    .toList()
+                                    .length,
                                 separatorBuilder:
                                     (BuildContext context, int index) {
                                   return Divider(
@@ -153,7 +165,10 @@ class _MemberPackageDetailsScreenState
           ],
         ),
         floatingActionButton: workConnectionStatus == 'offline'
-            ? memberAttendencesOfflineData.isEmpty
+            ? memberAttendencesOfflineData
+                    .where((element) => element.operation != 'delete')
+                    .toList()
+                    .isEmpty
                 ? const Text('')
                 : freezeOrReactivateFloatingButton()
             : pickedMemberPackage.memberAttendencesData.isEmpty
@@ -167,11 +182,91 @@ class _MemberPackageDetailsScreenState
       child: FloatingActionButton.extended(
           heroTag: 'FreezeOrReactivateButton',
           onPressed: () async {
-            if (allMemberRegistrationsList[0].isFreezed == true) {
-              try {
+            setState(() {
+              confirmationLoading = true;
+            });
+            if (workConnectionStatus == 'offline') {
+              if (offlinePickedMemberPackage.isFreezed == true) {
+                if (offlinePickedMember.isBlocked == true) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText:
+                            AppLocalizations.of(context).sorryMemberIsBlocked,
+                        gif: 'assets/gifs/fail.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Colors.redAccent),
+                  );
+
+                  setState(() {
+                    confirmationLoading = false;
+                  });
+
+                  return;
+                }
+
+                if (ObjectBox.checkIfRegistrationIsActiveOrExpired(
+                        offlinePickedMemberPackage.registrationId) ==
+                    'expired') {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: 'Sorry registration\'s date is expired',
+                        gif: 'assets/gifs/fail.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Colors.redAccent),
+                  );
+
+                  setState(() {
+                    confirmationLoading = false;
+                  });
+
+                  return;
+                }
+
+                ObjectBox.reactivateRegistration(
+                    context: context,
+                    memberData: offlinePickedMember,
+                    registartionId: offlinePickedMemberPackage.registrationId,
+                    sync: false);
+
                 setState(() {
-                  confirmationLoading = true;
+                  confirmationLoading = false;
                 });
+                Navigator.of(context).pop(true);
+
+                showToast(
+                    AppLocalizations.of(context)
+                        .packageHasBeenReactivatedSuccessfully,
+                    context);
+                return;
+              } else {
+                showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => PickFreezingTimeDialog(
+                        workConnectionStatus == 'offline'
+                            ? offlinePickedMemberPackage.registrationId
+                            : pickedMemberPackage.registrationId,
+                        workConnectionStatus == 'offline'
+                            ? offlinePickedMemberPackage.packageId
+                            : pickedMemberPackage.packageId));
+                return;
+              }
+            }
+
+            if (pickedMemberPackage.isFreezed == true) {
+              try {
                 await Provider.of<AllMemberRegistartionsProvider>(context,
                         listen: false)
                     .reactivateRegestration(
@@ -231,15 +326,42 @@ class _MemberPackageDetailsScreenState
                 });
               }
             } else {
-              showDialog(
+              if (pickedMemberPackage.registrationIsActive == false) {
+                showDialog(
                   context: context,
                   barrierDismissible: true,
-                  builder: (BuildContext context) => PickFreezingTimeDialog());
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText:
+                          AppLocalizations.of(context).registrationIsExpired,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+
+                return;
+              }
+              await showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => PickFreezingTimeDialog(
+                      workConnectionStatus == 'offline'
+                          ? offlinePickedMemberPackage.registrationId
+                          : pickedMemberPackage.registrationId,
+                      workConnectionStatus == 'offline'
+                          ? offlinePickedMemberPackage.packageId
+                          : pickedMemberPackage.packageId));
+              setState(() {
+                confirmationLoading = false;
+              });
             }
           },
           label: Text(
             workConnectionStatus == 'offline'
-                ? allRegistrationsOfflineData[0].isFreezed == false
+                ? offlinePickedMemberAllRegistrationsList[0].isFreezed == false
                     ? AppLocalizations.of(context).freeze
                     : AppLocalizations.of(context).reactivate
                 : allMemberRegistrationsList[0].isFreezed == false

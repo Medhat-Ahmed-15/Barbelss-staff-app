@@ -37,12 +37,20 @@ class MemberDetailsCentralCard extends StatelessWidget {
                     foregroundColor: Theme.of(context).primaryColor,
                     radius: 45,
                     child: Text(
-                      pickedMember.memberName.contains(' ')
-                          ? pickedMember.memberName[0].toUpperCase() +
-                              pickedMember.memberName
-                                  .split(' ')[1][0]
-                                  .toUpperCase()
-                          : pickedMember.memberName[0].toUpperCase(),
+                      workConnectionStatus == 'offline'
+                          ? offlinePickedMember.memberName.contains(' ')
+                              ? offlinePickedMember.memberName[0]
+                                      .toUpperCase() +
+                                  offlinePickedMember.memberName
+                                      .split(' ')[1][0]
+                                      .toUpperCase()
+                              : pickedMember.memberName[0].toUpperCase()
+                          : pickedMember.memberName.contains(' ')
+                              ? pickedMember.memberName[0].toUpperCase() +
+                                  pickedMember.memberName
+                                      .split(' ')[1][0]
+                                      .toUpperCase()
+                              : pickedMember.memberName[0].toUpperCase(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1.color,
@@ -54,7 +62,9 @@ class MemberDetailsCentralCard extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    pickedMember.memberName,
+                    workConnectionStatus == 'offline'
+                        ? offlinePickedMember.memberName
+                        : pickedMember.memberName,
                     style: const TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,

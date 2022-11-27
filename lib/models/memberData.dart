@@ -5,6 +5,7 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class MemberData {
   int id;
+  @Index()
   String memberId;
   String clubId;
   String memberName;
@@ -20,9 +21,11 @@ class MemberData {
   bool canAuthenticate;
   bool isBlocked;
   String createdAt;
+  bool sync;
+  String operation;
 
   MemberData(
-      {this.id = 0,
+      {this.id,
       this.clubId,
       this.countryCode,
       this.memberEmail,
@@ -37,7 +40,9 @@ class MemberData {
       this.canAuthenticate,
       this.memberId,
       this.memberName,
-      this.memberPhone});
+      this.memberPhone,
+      this.sync = true,
+      this.operation = ''});
 
   MemberData.fromjson(Map<String, dynamic> json) {
     memberId = json['_id'];
@@ -55,5 +60,7 @@ class MemberData {
     qrCodeURL = json['QRCodeURL'];
     qrCodeUUID = json['QRCodeUUID'];
     canAuthenticate = json['canAuthenticate'];
+    sync = true;
+    operation = '';
   }
 }

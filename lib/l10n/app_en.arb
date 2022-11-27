@@ -392,7 +392,7 @@
       "description": " "
     },
 
-    "registrations": "registrations",
+    "registrations": "subscriptions",
     "@language": {
       "description": " "
     },
@@ -522,7 +522,7 @@
       "description": " "
     },
 
-    "loginSubtitleTwo": "your member registrations with us",
+    "loginSubtitleTwo": "your member subscriptions with us",
     "@language": {
       "description": " "
     },
@@ -659,6 +659,76 @@
     },
 
     "sync": "Sync",
+    "@language": {
+      "description": " "
+    },
+
+    "unAbleToPerformAction": "Unable to perform action, the system is in offline mode",
+    "@language": {
+      "description": " "
+    },
+
+    "syncingData": "Syncing data please wait...",
+    "@language": {
+      "description": " "
+    },
+
+    "datahasBeensyncedSuccessfully": "Data has been synced successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "dataIsAlreadySynced": "Data is already synced",
+    "@language": {
+      "description": " "
+    },
+
+    "switchedToOfflineMode": "Switched to offline mode",
+    "@language": {
+      "description": " "
+    },
+
+    "backOnline": "Back online",
+    "@language": {
+      "description": " "
+    },
+
+    "dataMustBeSyncedFirst": "Data must be synced first before switching to online mode",
+    "@language": {
+      "description": " "
+    },
+
+    "emailIsUsed": "Email already exists",
+    "@language": {
+      "description": " "
+    },
+
+    "phoneIsUsed": "Phone number already exists",
+    "@language": {
+      "description": " "
+    },
+
+    "membershipIsused": "Membership already exists",
+    "@language": {
+      "description": " "
+    },
+
+    "registrationIsExpired": "This subscription is expired",
+    "@language": {
+      "description": " "
+    },
+
+    "sorryPackageHasBeenExpired": "Sorry, your package has been expired",
+    "@language": {
+      "description": " "
+    },
+
+    "sorryNoMoreSessionsToCancel": "Sorry, no more sessions to cancel",
+    "@language": {
+      "description": " "
+    },
+
+    "syncingData": "Syncing Data...",
     "@language": {
       "description": " "
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/helper/object_box.dart';
 import 'package:gym_staff_app/providers/offlineFeature_provider.dart';
+import 'package:gym_staff_app/screens/searchScreen.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:lottie/lottie.dart' as lot;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -84,16 +85,12 @@ class _InternetConnectionErrorState extends State<InternetConnectionError> {
                     loading = true;
                   });
 
+                  Navigator.of(context).popUntil(ModalRoute.withName('/'));
+
                   await Provider.of<OfflineFeautureProvider>(context,
                           listen: false)
                       .setWorkStatusInStorage('offline');
                   ObjectBox.getClubData();
-                  sortedMemberData = allMembersList;
-                  currentMemberOfflineRegistrations =
-                      allRegistrationsOfflineData
-                          .where((element) =>
-                              element.memberId == pickedMember.memberId)
-                          .toList();
 
                   setState(() {
                     loading = false;

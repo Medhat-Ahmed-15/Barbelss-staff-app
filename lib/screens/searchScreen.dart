@@ -54,13 +54,15 @@ class _SearchScreenState extends State<SearchScreen> {
           if (workConnectionStatus == 'online' &&
               checkDatabaseIsEmpty == true) {
             await getAllClubDataAndSaveThemInStorage();
-            ObjectBox.insertClubData();
+            showToast('syncing Data', context);
           }
 
           await getAllPlans();
 
           await Provider.of<AllMembersProvider>(context, listen: false)
               .getAllMembers();
+
+          ObjectBox.getClubData();
 
           setState(() {
             loadingMembersData = false;
@@ -86,7 +88,10 @@ class _SearchScreenState extends State<SearchScreen> {
         }
       } else {
         ObjectBox.getClubData();
-        sortedMemberData = allMembersList;
+        connectionError = false;
+        loadingMembersData = false;
+        Provider.of<OfflineFeautureProvider>(context, listen: false)
+            .setNotifyListner();
       }
 
       isInit = false;
@@ -94,27 +99,33 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Future<void> refresh() async {
+    setState(() {
+      loadingMembersData = true;
+      connectionError = false;
+    });
+
+    await Provider.of<OfflineFeautureProvider>(context, listen: false)
+        .getWorkStatusFromStorage();
+
     if (workConnectionStatus == 'online') {
       try {
-        setState(() {
-          loadingMembersData = true;
-          connectionError = false;
-        });
+        bool checkDatabaseIsEmpty = ObjectBox.checkDatabaseIsEmpty();
+
+        if (workConnectionStatus == 'online' && checkDatabaseIsEmpty == true) {
+          showToast(AppLocalizations.of(context).syncingData, context);
+          await getAllClubDataAndSaveThemInStorage();
+        }
+
+        await getAllPlans();
+
         await Provider.of<AllMembersProvider>(context, listen: false)
             .getAllMembers();
 
-        if (allMembersList.isEmpty) {
-          setState(() {
-            loadingMembersData = false;
-            connectionError = false;
-          });
-        } else {
-          setState(() {
-            loadingMembersData = false;
-            connectionError = false;
-            sortedMemberData = allMembersList;
-          });
-        }
+        setState(() {
+          loadingMembersData = false;
+          connectionError = false;
+        });
+        sortedMemberData = allMembersList;
       } on SocketException {
         setState(() {
           connectionError = true;
@@ -134,7 +145,10 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     } else {
       ObjectBox.getClubData();
-      sortedMemberData = allMembersList;
+      connectionError = false;
+      loadingMembersData = false;
+      Provider.of<OfflineFeautureProvider>(context, listen: false)
+          .setNotifyListner();
     }
   }
 
@@ -187,27 +201,53 @@ class _SearchScreenState extends State<SearchScreen> {
                           border: InputBorder.none,
                         ),
                         onChanged: (value) async {
-                          sortedMemberData = [];
-                          for (var memberData in allMembersList) {
-                            if (value != '') {
-                              if (memberData.memberPhone
-                                  .startsWith(value.substring(1))) {
-                                sortedMemberData.add(memberData);
+                          if (workConnectionStatus == 'offline') {
+                            offlineSortedMemberData = [];
+                            for (var memberData in offlineAllMembersData) {
+                              if (value != '') {
+                                if (memberData.memberPhone
+                                    .startsWith(value.substring(1))) {
+                                  offlineSortedMemberData.add(memberData);
+                                }
+                              } else {
+                                offlineSortedMemberData = offlineAllMembersData;
                               }
-                            } else {
-                              sortedMemberData = allMembersList;
                             }
-                          }
-                          if (sortedMemberData.isEmpty && value != '') {
-                            setState(() {
-                              loadingMembersData = false;
-                              connectionError = false;
-                            });
+                            if (offlineSortedMemberData.isEmpty &&
+                                value != '') {
+                              setState(() {
+                                loadingMembersData = false;
+                                connectionError = false;
+                              });
+                            } else {
+                              setState(() {
+                                loadingMembersData = false;
+                                connectionError = false;
+                              });
+                            }
                           } else {
-                            setState(() {
-                              loadingMembersData = false;
-                              connectionError = false;
-                            });
+                            sortedMemberData = [];
+                            for (var memberData in allMembersList) {
+                              if (value != '') {
+                                if (memberData.memberPhone
+                                    .startsWith(value.substring(1))) {
+                                  sortedMemberData.add(memberData);
+                                }
+                              } else {
+                                sortedMemberData = allMembersList;
+                              }
+                            }
+                            if (sortedMemberData.isEmpty && value != '') {
+                              setState(() {
+                                loadingMembersData = false;
+                                connectionError = false;
+                              });
+                            } else {
+                              setState(() {
+                                loadingMembersData = false;
+                                connectionError = false;
+                              });
+                            }
                           }
                         },
                       ),
@@ -221,9 +261,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           padding: const EdgeInsets.only(top: 10),
                           child: ListCountSubTitle(
                               listName: 'members',
-                              membersListCount: sortedMemberData == null
-                                  ? 0
-                                  : sortedMemberData.length),
+                              membersListCount:
+                                  workConnectionStatus == 'offline'
+                                      ? offlineSortedMemberData == null
+                                          ? 0
+                                          : offlineSortedMemberData.length
+                                      : sortedMemberData == null
+                                          ? 0
+                                          : sortedMemberData.length),
                         ),
                 ],
               ),
@@ -238,7 +283,7 @@ class _SearchScreenState extends State<SearchScreen> {
               right: 15,
             ),
             child: workConnectionStatus == 'offline'
-                ? allMembersList.isEmpty
+                ? offlineAllMembersData.isEmpty
                     ? EmptyAnimationWidget(refresh)
                     : RefreshIndicator(
                         color: Theme.of(context).primaryColor,
@@ -250,9 +295,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           padding: const EdgeInsets.all(0),
                           itemBuilder: (context, index) {
                             return MemberDataTile(
-                                sortedMemberData[index], refresh);
+                                offlineSortedMemberData[index], refresh);
                           },
-                          itemCount: sortedMemberData.length,
+                          itemCount: offlineSortedMemberData.length,
                         ),
                       )
                 : connectionError == true
@@ -298,6 +343,24 @@ class _SearchScreenState extends State<SearchScreen> {
           color: Theme.of(context).iconTheme.color,
         ),
         onPressed: () async {
+          if (workConnectionStatus == 'offline') {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) => FeedBackDialog(
+                  titleText: AppLocalizations.of(context).unAbleToPerformAction,
+                  gif: 'assets/gifs/fail.json',
+                  enableButton: true,
+                  buttonText: AppLocalizations.of(context).doneTitle,
+                  callBackFunction: () {
+                    Navigator.of(context).pop();
+                  },
+                  buttonColor: Colors.redAccent),
+            );
+
+            return;
+          }
+
           String value = await showDialog(
             context: context,
             barrierDismissible: true,

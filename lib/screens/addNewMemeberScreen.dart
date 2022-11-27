@@ -5,6 +5,8 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
+import 'package:gym_staff_app/models/memberData.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:gym_staff_app/widgets/dialogs/qrCodeDialog.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -39,7 +41,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
   String gender = '';
   String whatsAppMessageLang = 'en';
 
-  bool isAuthenticate = true;
+  bool isAuthenticate = workConnectionStatus == 'offline' ? false : true;
   bool maleChosen = false;
   bool femaleChosen = false;
   bool arabicChosen = false;
@@ -223,6 +225,25 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         return;
       }
 
+      //check phone is unique
+
+      if (ObjectBox.checkPhoneIsUnique(
+                  phoneController.text.substring(1).trim()) ==
+              false &&
+          workConnectionStatus == 'offline') {
+        setState(() {
+          phoneErrorText = AppLocalizations.of(context).phoneIsUsed;
+          nameErrorText = '';
+          loading = false;
+          ageErrorText = '';
+          emailErrorText = '';
+          membershipErrorText = '';
+          currentStep = 0;
+        });
+
+        return;
+      }
+
       if (phoneController.text.substring(1).trim().length != 10) {
         setState(() {
           phoneErrorText = AppLocalizations.of(context).invalidPhoneNumber;
@@ -248,6 +269,80 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
               AppLocalizations.of(context).membershipIsRequired;
           loading = false;
           currentStep = 3;
+        });
+
+        return;
+      }
+
+      //check membership is unique
+      if (currentStaffData.hasMembership == true &&
+          ObjectBox.checkMembershipIsUnique(
+                  int.parse(membershipController.text.trim())) ==
+              false &&
+          workConnectionStatus == 'offline') {
+        setState(() {
+          nameErrorText = '';
+          phoneErrorText = '';
+          emailErrorText = '';
+          ageErrorText = '';
+          membershipErrorText = AppLocalizations.of(context).membershipIsused;
+          loading = false;
+          currentStep = 3;
+        });
+
+        return;
+      }
+
+      //check email is unique
+      if (ObjectBox.checkEmailIsUnique(emailController.text.trim()) == false &&
+          workConnectionStatus == 'offline' &&
+          emailController.text.trim().isNotEmpty) {
+        setState(() {
+          emailErrorText = AppLocalizations.of(context).emailIsUsed;
+          nameErrorText = '';
+          phoneErrorText = '';
+          ageErrorText = '';
+          genderErrorText = '';
+          membershipErrorText = '';
+          currentStep = 0;
+          loading = false;
+        });
+        return;
+      }
+      //if system is in offline mode
+      if (workConnectionStatus == 'offline') {
+        ObjectBox.insertNewMember(
+            age: int.parse(ageController.text.trim()),
+            email: emailController.text.trim(),
+            gender: gender,
+            membership: currentStaffData.hasMembership == true
+                ? int.parse(membershipController.text.trim())
+                : 0,
+            name: nameController.text.trim(),
+            phone: phoneController.text.substring(1).trim(),
+            phoneCode: phoneCode,
+            memberId: DateTime.now().toString(),
+            sync: false,
+            context: context);
+
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) => FeedBackDialog(
+              titleText:
+                  AppLocalizations.of(context).memberAddedSuccessfullyTitle,
+              gif: 'assets/gifs/success.json',
+              enableButton: true,
+              buttonText: AppLocalizations.of(context).enrollNowTitle,
+              callBackFunction: () {
+                Navigator.of(context).pushNamed(PlansScreen.routeName,
+                    arguments: 'addMemberScreen');
+              },
+              buttonColor: Theme.of(context).primaryColor),
+        );
+
+        setState(() {
+          loading = false;
         });
 
         return;
@@ -462,6 +557,7 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         });
       }
     } catch (error) {
+      print(error.toString());
       setState(() {
         loading = false;
       });
@@ -788,6 +884,27 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
               ),
               trailing: Switch(
                 onChanged: (bool value) {
+                  if (value == true) {
+                    if (workConnectionStatus == 'offline') {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) => FeedBackDialog(
+                            titleText: AppLocalizations.of(context)
+                                .unAbleToPerformAction,
+                            gif: 'assets/gifs/fail.json',
+                            enableButton: true,
+                            buttonText: AppLocalizations.of(context).doneTitle,
+                            callBackFunction: () {
+                              Navigator.of(context).pop();
+                            },
+                            buttonColor: Colors.redAccent),
+                      );
+
+                      return;
+                    }
+                  }
+
                   setState(() {
                     isAuthenticate = value;
                   });

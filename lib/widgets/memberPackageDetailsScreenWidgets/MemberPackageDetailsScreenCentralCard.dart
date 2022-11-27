@@ -28,7 +28,7 @@ class MemberPackageDetailsScreenCentralCard extends StatelessWidget {
                 children: [
                   Text(
                     workConnectionStatus == 'offline'
-                        ? '${offlinePickedMemberPackage.registrationAttended}/${allPlansOfflineData.firstWhere((element) => element.planId == offlinePickedMemberPackage.packageId).planAttendance}'
+                        ? '${offlinePickedMemberPackage.registrationAttended}/${offlineAllPlansList.firstWhere((element) => element.planId == offlinePickedMemberPackage.packageId).planAttendance}'
                         : '${pickedMemberPackage.registrationAttended}/${pickedMemberPackage.packageAttendance}',
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,

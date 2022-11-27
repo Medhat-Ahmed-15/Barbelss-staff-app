@@ -15,8 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../helper/object_box.dart';
 import '../models/memberData.dart';
 
 void showToast(
@@ -89,10 +91,13 @@ String convertDateToDayInNumberMonthInText(String date, BuildContext context) {
   String monthInText;
   String dayInNumber;
 
-  dayInNumber = date.split('T')[0].split('-')[2];
+  dayInNumber = date.split(date.contains('T') ? "T" : " ")[0].split('-')[2];
 
   if (dayInNumber.split('')[0].contains('0')) {
-    dayInNumber = date.split('T')[0].split('-')[2].split('')[1];
+    dayInNumber = date
+        .split(date.contains('T') ? "T" : " ")[0]
+        .split('-')[2]
+        .split('')[1];
   }
 
   int month = int.parse(date.split('T')[0].split('-')[1]);
@@ -133,8 +138,10 @@ String convertDateToDayInNumberMonthInText(String date, BuildContext context) {
 String convertTimeTo12HFormat(String time) {
   time = DateTime.parse(time).toLocal().toString();
   TimeOfDay timeOfDay = TimeOfDay(
-      hour: int.parse(time.split(" ")[1].split(':')[0]),
-      minute: int.parse(time.split(" ")[1].split(':')[1]));
+      hour: int.parse(
+          time.split(time.contains('T') ? "T" : " ")[1].split(':')[0]),
+      minute: int.parse(
+          time.split(time.contains('T') ? "T" : " ")[1].split(':')[1]));
 
   final now = DateTime.now();
   final dt =
@@ -142,6 +149,253 @@ String convertTimeTo12HFormat(String time) {
   final format = DateFormat.jm();
 
   return format.format(dt);
+}
+
+//Calculate Expiration Date
+
+String calcExpirationOReActivationDate(String duration) {
+  var type = duration.split(' ')[1];
+  int count = int.parse(duration.split(' ')[0]);
+  if (type == 'year') {
+    return Jiffy().add(years: count).format();
+  } else if (type == 'month') {
+    return Jiffy().add(months: count).format();
+  } else if (type == 'week') {
+    return Jiffy().add(weeks: count).format();
+  } else {
+    return Jiffy().add(days: count).format();
+  }
+}
+
+//Calculate Expiration Date
+
+String calcNewExpirationDateForRegistartion(String oldDate, String duration) {
+  var year = int.parse(
+      oldDate.split(oldDate.contains('T') ? "T" : " ")[0].split('-')[0]);
+  var month = int.parse(
+      oldDate.split(oldDate.contains('T') ? "T" : " ")[0].split('-')[1]);
+  var type = duration.split(' ')[1];
+  int count = int.parse(duration.split(' ')[0]);
+
+  if (type == 'year') {
+    return DateTime.parse(oldDate)
+        .add(Duration(
+            days: 356 * count,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            milliseconds: 0,
+            microseconds: 0))
+        .toString();
+  } else if (type == 'month') {
+    switch (month) {
+      case 1:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 31 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 2:
+        {
+          if (Jiffy(year.toString(), "yyyy").isLeapYear) {
+            return DateTime.parse(oldDate)
+                .add(Duration(
+                    days: 29 * count,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    milliseconds: 0,
+                    microseconds: 0))
+                .toString();
+          } else {
+            return DateTime.parse(oldDate)
+                .add(Duration(
+                    days: 28 * count,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    milliseconds: 0,
+                    microseconds: 0))
+                .toString();
+          }
+        }
+        break;
+
+      case 3:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 31 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 4:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 30 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 5:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 31 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 6:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 30 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 7:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 31 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 8:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 31 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 9:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 30 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 10:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 31 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 11:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 30 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      case 12:
+        {
+          return DateTime.parse(oldDate)
+              .add(Duration(
+                  days: 31 * count,
+                  hours: 0,
+                  minutes: 0,
+                  seconds: 0,
+                  milliseconds: 0,
+                  microseconds: 0))
+              .toString();
+        }
+        break;
+
+      default:
+        {
+          return '';
+        }
+        break;
+    }
+  } else if (type == 'week') {
+    return DateTime.parse(oldDate)
+        .add(Duration(
+            days: 7 * count,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            milliseconds: 0,
+            microseconds: 0))
+        .toString();
+  } else {
+    return DateTime.parse(oldDate)
+        .add(Duration(
+            days: count,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            milliseconds: 0,
+            microseconds: 0))
+        .toString();
+  }
 }
 
 //Get All Plans/////////////////////////////////////////////////////////////////
@@ -304,19 +558,21 @@ Future<void> getAllClubDataAndSaveThemInStorage() async {
     throw GetRequestException(decodeData['message'] ?? 'error');
   }
 
-  allMembersOfflineData = (decodeData['members'] as List)
+  offlineAllMembersData = (decodeData['members'] as List)
       .map((index) => MemberData.fromjson(index))
       .toList();
 
-  allRegistrationsOfflineData = (decodeData['registrations'] as List)
+  offlineAllRegistrationsList = (decodeData['registrations'] as List)
       .map((index) => Registrations.fromjson(index))
       .toList();
 
-  allAttendencesOfflineData = (decodeData['attendances'] as List)
+  offlineAllAttendancesList = (decodeData['attendances'] as List)
       .map((index) => MemberAttendencesData.fromjson(index))
       .toList();
 
-  allPlansOfflineData = (decodeData['packages'] as List)
+  offlineAllPlansList = (decodeData['packages'] as List)
       .map((index) => PlanData.fromjson(index))
       .toList();
+
+  ObjectBox.insertClubData();
 }

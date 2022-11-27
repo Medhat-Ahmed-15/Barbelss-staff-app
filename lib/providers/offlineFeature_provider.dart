@@ -35,4 +35,8 @@ class OfflineFeautureProvider extends ChangeNotifier {
 
     workConnectionStatus = extractedWorkStatus['workStatus'];
   }
+
+  void setNotifyListner() {
+    notifyListeners();
+  }
 }

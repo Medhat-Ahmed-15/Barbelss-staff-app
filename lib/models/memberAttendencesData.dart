@@ -5,6 +5,7 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class MemberAttendencesData {
   int id;
+  @Index()
   String attendenceId;
   String clubId;
   String registrationId;
@@ -12,16 +13,21 @@ class MemberAttendencesData {
   String staffId;
   String memberId;
   String createdAt;
+  bool sync;
+  String operation;
 
-  MemberAttendencesData(
-      {this.id = 2,
-      this.attendenceId,
-      this.clubId,
-      this.registrationId,
-      this.packageId,
-      this.staffId,
-      this.memberId,
-      this.createdAt});
+  MemberAttendencesData({
+    this.id,
+    this.attendenceId,
+    this.clubId,
+    this.registrationId,
+    this.packageId,
+    this.staffId,
+    this.memberId,
+    this.createdAt,
+    this.sync = true,
+    this.operation = '',
+  });
 
   MemberAttendencesData.fromjson(Map<String, dynamic> json) {
     attendenceId = json['_id'];
@@ -31,5 +37,7 @@ class MemberAttendencesData {
     staffId = json['staffId'];
     memberId = json['memberId'];
     createdAt = json['createdAt'];
+    sync = true;
+    operation = '';
   }
 }

@@ -3,6 +3,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
 import 'package:lottie/lottie.dart' as lot;
 import 'package:provider/provider.dart';
 import '../../Exceptions/getRequest_exception.dart';
@@ -97,53 +99,20 @@ class _ConfirmDeleteRegistrationDialogState
                           setState(() {
                             loading = true;
                           });
-                          await Provider.of<AllMemberRegistartionsProvider>(
-                                  context,
-                                  listen: false)
-                              .deleteRegistration(
-                                  context: context,
-                                  registrationId: widget.registrationId);
+
+                          if (workConnectionStatus == 'offline') {
+                            ObjectBox.removeMemberRegistration(
+                                widget.registrationId, context, false);
+                          } else {
+                            await Provider.of<AllMemberRegistartionsProvider>(
+                                    context,
+                                    listen: false)
+                                .deleteRegistration(
+                                    context: context,
+                                    registrationId: widget.registrationId);
+                          }
 
                           Navigator.of(context).pop();
-                        } on SocketException {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) => FeedBackDialog(
-                                titleText: AppLocalizations.of(context)
-                                    .connectionStatusMessage,
-                                gif: 'assets/gifs/fail.json',
-                                enableButton: true,
-                                buttonText:
-                                    AppLocalizations.of(context).doneTitle,
-                                callBackFunction: () {
-                                  Navigator.of(context).pop();
-                                },
-                                buttonColor: Colors.redAccent),
-                          );
-
-                          setState(() {
-                            loading = false;
-                          });
-                        } on GetRequestException catch (error) {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) => FeedBackDialog(
-                                titleText: error.toStringMessage(),
-                                gif: 'assets/gifs/fail.json',
-                                enableButton: true,
-                                buttonText:
-                                    AppLocalizations.of(context).doneTitle,
-                                callBackFunction: () {
-                                  Navigator.of(context).pop();
-                                },
-                                buttonColor: Colors.redAccent),
-                          );
-
-                          setState(() {
-                            loading = false;
-                          });
                         } catch (error) {
                           showToast(
                               AppLocalizations.of(context).somethingWentWrong,

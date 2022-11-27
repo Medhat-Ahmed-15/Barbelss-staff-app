@@ -6,6 +6,7 @@ import 'package:gym_staff_app/models/memberData.dart';
 import 'package:http/http.dart' as http;
 
 import '../Exceptions/getRequest_exception.dart';
+import '../helper/object_box.dart';
 
 class AllMembersProvider with ChangeNotifier {
   //Get All Members/////////////////////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@ class AllMembersProvider with ChangeNotifier {
 
   //Block Member//////////////////////////////////////////////////////////
 
-  Future<void> blockMember(
+  Future<void> blockOrUnblockMember(
     BuildContext context,
   ) async {
     String url =
@@ -90,6 +91,7 @@ class AllMembersProvider with ChangeNotifier {
     sortedMemberData = allMembersList;
 
     notifyListeners();
+    ObjectBox.blockOrUnblockMember(pickedMember.memberId, true);
   }
 
   //Add New Member/////////////////////////////////////////////////////////////////////////////////
@@ -156,7 +158,18 @@ class AllMembersProvider with ChangeNotifier {
     allMembersList.insert(0, pickedMember);
     sortedMemberData = allMembersList;
 
-    notifyListeners();
+    ObjectBox.insertNewMember(
+        age: age,
+        memberId: responseData['newMember']['_id'],
+        email: email,
+        gender: gender,
+        membership: membership,
+        name: name,
+        phone: phone,
+        phoneCode: phoneCode,
+        sync: true,
+        context: context);
+    //Dee feeha notify listner
   }
 
   //Update Verify Member Registration//////////////////////////////////////////////////////////////////////////
@@ -214,6 +227,10 @@ class AllMembersProvider with ChangeNotifier {
 
     sortedMemberData = allMembersList;
 
+    notifyListeners();
+  }
+
+  void setNotifyListner() {
     notifyListeners();
   }
 }

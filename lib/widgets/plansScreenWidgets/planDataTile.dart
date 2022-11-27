@@ -7,9 +7,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
 import 'package:gym_staff_app/models/planData.dart';
 import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
-import 'package:gym_staff_app/screens/mainScreen.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:provider/provider.dart';
 import '../dialogs/feedBackDialog.dart';
@@ -26,6 +26,7 @@ class PlanDataTile extends StatefulWidget {
 
 class _PlanDataTileState extends State<PlanDataTile> {
   bool loading = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -81,7 +82,7 @@ class _PlanDataTileState extends State<PlanDataTile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      widget.planData.planPrice.toString(),
+                      widget.planData.planPriceAsDouble.toString(),
                       style: TextStyle(
                         color: Theme.of(context).textTheme.headline2.color,
                         fontSize: 70,
@@ -190,6 +191,137 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ))),
                             onPressed: () async {
+                              if (workConnectionStatus == 'offline') {
+                                if (offlinePickedMember.isBlocked == true) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) =>
+                                        FeedBackDialog(
+                                            titleText:
+                                                AppLocalizations.of(context)
+                                                    .sorryMemberIsBlocked,
+                                            gif: 'assets/gifs/fail.json',
+                                            enableButton: true,
+                                            buttonText:
+                                                AppLocalizations.of(context)
+                                                    .doneTitle,
+                                            callBackFunction: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            buttonColor: Colors.redAccent),
+                                  );
+                                  return;
+                                }
+                                if (ObjectBox
+                                        .checkIfMemberAlreadyRegisteredInApackage(
+                                            offlinePickedMember.memberId) ==
+                                    true) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) =>
+                                        FeedBackDialog(
+                                            titleText:
+                                                'This member already subscribing to a subscription',
+                                            gif: 'assets/gifs/fail.json',
+                                            enableButton: true,
+                                            buttonText:
+                                                AppLocalizations.of(context)
+                                                    .doneTitle,
+                                            callBackFunction: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            buttonColor: Colors.redAccent),
+                                  );
+                                  return;
+                                }
+
+                                if (ObjectBox
+                                        .checkIfMemberAlreadyRegisteredInApackageAndFreezed(
+                                            offlinePickedMember.memberId) ==
+                                    true) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) =>
+                                        FeedBackDialog(
+                                            titleText:
+                                                'Sorry,subscription is freezed',
+                                            gif: 'assets/gifs/fail.json',
+                                            enableButton: true,
+                                            buttonText:
+                                                AppLocalizations.of(context)
+                                                    .doneTitle,
+                                            callBackFunction: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            buttonColor: Colors.redAccent),
+                                  );
+                                  return;
+                                }
+
+                                var id = DateTime.now().toString();
+
+                                ObjectBox.insertNewSubscription(
+                                    isFreezed: false,
+                                    packageId: widget.planData.planId,
+                                    paidInDouble:
+                                        widget.planData.planPriceAsDouble,
+                                    registartionAttended: 1,
+                                    registartionCreatedAt: DateTime.now()
+                                        .toString()
+                                        .replaceAll(' ', 'T'),
+                                    registartionExpiresAt:
+                                        calcExpirationOReActivationDate(
+                                            widget.planData.planExpiresIn),
+                                    registrationId: id,
+                                    registrationIsActive:
+                                        widget.planData.planAttendance == 1
+                                            ? false
+                                            : true,
+                                    sync: false);
+
+                                ObjectBox.insertNewAttendance(
+                                    packageId: widget.planData.planId,
+                                    registrationId: id,
+                                    sync: false);
+
+                                Provider.of<AllMemberRegistartionsProvider>(
+                                        context,
+                                        listen: false)
+                                    .setNotifyListner();
+
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext context) =>
+                                      FeedBackDialog(
+                                          titleText:
+                                              AppLocalizations.of(context)
+                                                  .registrationDoneTitle,
+                                          gif: 'assets/gifs/success.json',
+                                          enableButton: true,
+                                          buttonText:
+                                              AppLocalizations.of(context)
+                                                  .doneTitle,
+                                          callBackFunction: () {
+                                            if (widget.screenComingFrom ==
+                                                'addMemberScreen') {
+                                              Navigator.of(context).popUntil(
+                                                  ModalRoute.withName('/'));
+                                            } else {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          buttonColor:
+                                              Theme.of(context).primaryColor),
+                                );
+
+                                return;
+                              }
+
                               if (pickedMember.isBlocked == true) {
                                 showDialog(
                                   context: context,
@@ -211,6 +343,7 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                 );
                                 return;
                               }
+
                               try {
                                 setState(() {
                                   loading = true;
@@ -221,7 +354,7 @@ class _PlanDataTileState extends State<PlanDataTile> {
                                         listen: false)
                                     .registerPlan(
                                   planId: widget.planData.planId,
-                                  planPrice: widget.planData.planPrice,
+                                  planPrice: widget.planData.planPriceAsDouble,
                                   context: context,
                                 );
 

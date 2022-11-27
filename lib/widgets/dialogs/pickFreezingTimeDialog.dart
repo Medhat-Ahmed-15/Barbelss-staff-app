@@ -7,10 +7,14 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import '../../Exceptions/getRequest_exception.dart';
 import '../../assistant/assistantFunction.dart';
+import '../../helper/object_box.dart';
 import 'feedBackDialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PickFreezingTimeDialog extends StatefulWidget {
+  String registrationId;
+  String packageId;
+  PickFreezingTimeDialog(this.registrationId, this.packageId);
   @override
   State<PickFreezingTimeDialog> createState() => _PickFreezingTimeDialogState();
 }
@@ -183,13 +187,87 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                                 loading = true;
                               });
 
+                              if (workConnectionStatus == 'offline') {
+                                if (offlinePickedMember.isBlocked == true) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) =>
+                                        FeedBackDialog(
+                                            titleText:
+                                                AppLocalizations.of(context)
+                                                    .sorryMemberIsBlocked,
+                                            gif: 'assets/gifs/fail.json',
+                                            enableButton: true,
+                                            buttonText:
+                                                AppLocalizations.of(context)
+                                                    .doneTitle,
+                                            callBackFunction: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            buttonColor: Colors.redAccent),
+                                  );
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                  return;
+                                }
+
+                                if (ObjectBox
+                                        .checkIfRegistrationIsActiveOrExpired(
+                                            widget.registrationId) ==
+                                    'expired') {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) =>
+                                        FeedBackDialog(
+                                            titleText:
+                                                'Sorry can not freeze an expired registration',
+                                            gif: 'assets/gifs/fail.json',
+                                            enableButton: true,
+                                            buttonText:
+                                                AppLocalizations.of(context)
+                                                    .doneTitle,
+                                            callBackFunction: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            buttonColor: Colors.redAccent),
+                                  );
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                  return;
+                                }
+
+                                ObjectBox.freezeRegistration(
+                                    context: context,
+                                    freezeDuration:
+                                        '${durationController.text.trim()} $dropdownValue',
+                                    memberData: offlinePickedMember,
+                                    packageId: widget.packageId,
+                                    registartionId: widget.registrationId,
+                                    sync: false);
+
+                                Navigator.of(context).pop(true);
+                                Navigator.of(context).pop(true);
+                                showToast(
+                                    AppLocalizations.of(context)
+                                        .packageHasBeenFreezedSuccessfully,
+                                    context);
+
+                                setState(() {
+                                  loading = false;
+                                });
+
+                                return;
+                              }
+
                               await Provider.of<AllMemberRegistartionsProvider>(
                                       context,
                                       listen: false)
                                   .freezeRegistration(
-                                      registrationId:
-                                          allMemberRegistrationsList[0]
-                                              .registrationId,
+                                      registrationId: widget.registrationId,
                                       context: context,
                                       duration:
                                           '${durationController.text.trim()} $dropdownValue');
@@ -232,6 +310,7 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                                 loading = false;
                               });
                             } catch (error) {
+                              print(error.toString());
                               showToast(
                                   AppLocalizations.of(context)
                                       .somethingWentWrong,

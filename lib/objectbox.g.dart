@@ -14,6 +14,7 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'models/freezeData.dart';
 import 'models/memberAttendencesData.dart';
 import 'models/memberData.dart';
 import 'models/planData.dart';
@@ -23,186 +24,214 @@ export 'package:objectbox/objectbox.dart'; // so that callers only have to impor
 
 final _entities = <ModelEntity>[
   ModelEntity(
-      id: const IdUid(1, 3277042433751473766),
+      id: const IdUid(1, 6056883884754354610),
       name: 'MemberAttendencesData',
-      lastPropertyId: const IdUid(8, 8095750558975633293),
+      lastPropertyId: const IdUid(10, 2596117925268838224),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 5241358954501170570),
+            id: const IdUid(1, 8169497247661579549),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 8081275980363410646),
+            id: const IdUid(2, 2345819803651470036),
             name: 'attendenceId',
             type: 9,
-            flags: 0),
+            flags: 2048,
+            indexId: const IdUid(1, 1159075281728089432)),
         ModelProperty(
-            id: const IdUid(3, 2170278292602645620),
+            id: const IdUid(3, 8188357564399082483),
             name: 'clubId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 690378031368188195),
+            id: const IdUid(4, 7066691399028144783),
             name: 'registrationId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 2960132676514182521),
+            id: const IdUid(5, 3395273663782249141),
             name: 'packageId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 32578052699882140),
+            id: const IdUid(6, 8869910621790644374),
             name: 'staffId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 4024953480403865323),
+            id: const IdUid(7, 6431169059026718264),
             name: 'memberId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 8095750558975633293),
+            id: const IdUid(8, 4255425999697188401),
             name: 'createdAt',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 1246980052512881873),
+            name: 'sync',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 2596117925268838224),
+            name: 'operation',
             type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(2, 2641695348687829254),
+      id: const IdUid(2, 1378476243543860403),
       name: 'MemberData',
-      lastPropertyId: const IdUid(16, 6915709157516983869),
+      lastPropertyId: const IdUid(18, 4367868579330038011),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 5213011548525722191),
+            id: const IdUid(1, 1327096607227096529),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 446653268271102516),
+            id: const IdUid(2, 2346699890881089942),
             name: 'memberId',
             type: 9,
-            flags: 0),
+            flags: 2048,
+            indexId: const IdUid(2, 1837140264222339056)),
         ModelProperty(
-            id: const IdUid(3, 4952610577579292300),
+            id: const IdUid(3, 3151209096687426663),
             name: 'clubId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 8116882161731740592),
+            id: const IdUid(4, 4104382264962712542),
             name: 'memberName',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 2472172255173004662),
+            id: const IdUid(5, 2734083810871850484),
             name: 'memberEmail',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 1480325873941322594),
+            id: const IdUid(6, 1637269263225563133),
             name: 'memberPhone',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 5829525266723065547),
+            id: const IdUid(7, 1390623700632304518),
             name: 'countryCode',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 5572854357120317637),
+            id: const IdUid(8, 8766273012310475773),
             name: 'gender',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(9, 4711096227790351391),
+            id: const IdUid(9, 2283240956786735449),
             name: 'staffId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(10, 8196664111727738928),
+            id: const IdUid(10, 5909434463870896822),
             name: 'birthYear',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(11, 5076980551054798833),
+            id: const IdUid(11, 2700222471103630308),
             name: 'membership',
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(12, 4272734845516564511),
+            id: const IdUid(12, 4066257226581993699),
             name: 'qrCodeURL',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(13, 4959229988983520679),
+            id: const IdUid(13, 4476010865810478439),
             name: 'qrCodeUUID',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(14, 2252141030897888578),
+            id: const IdUid(14, 7297387878379818925),
             name: 'canAuthenticate',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(15, 3527483509806615196),
+            id: const IdUid(15, 8121602908880867042),
             name: 'isBlocked',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(16, 6915709157516983869),
+            id: const IdUid(16, 1699879179378669295),
             name: 'createdAt',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(17, 2525735113657400380),
+            name: 'sync',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(18, 4367868579330038011),
+            name: 'operation',
             type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(3, 5711936982490007564),
+      id: const IdUid(3, 6117331727512201037),
       name: 'PlanData',
-      lastPropertyId: const IdUid(8, 7063943295511765215),
+      lastPropertyId: const IdUid(9, 9218704704895438055),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 2655322610188363126),
+            id: const IdUid(1, 2055748579743814447),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 8265917416193382037),
+            id: const IdUid(2, 3153108036962973229),
             name: 'planId',
             type: 9,
-            flags: 0),
+            flags: 2048,
+            indexId: const IdUid(3, 3634938526974646890)),
         ModelProperty(
-            id: const IdUid(3, 4384840347902940318),
+            id: const IdUid(3, 4155091816015290920),
             name: 'planClubId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 5310527877366672740),
+            id: const IdUid(4, 9130022310736290158),
             name: 'planTitle',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 1406548675491910579),
+            id: const IdUid(5, 2971009903352727492),
             name: 'planAttendance',
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 5025555750089286984),
+            id: const IdUid(6, 9187614272923877199),
             name: 'planExpiresIn',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 4294353273151218611),
+            id: const IdUid(7, 6444831550383976250),
+            name: 'planPriceAsDouble',
+            type: 8,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 4580966611257982922),
             name: 'isOpen',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 7063943295511765215),
+            id: const IdUid(9, 9218704704895438055),
             name: 'createdAt',
             type: 9,
             flags: 0)
@@ -210,70 +239,151 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(4, 1040338965514404000),
+      id: const IdUid(4, 3406677903734350214),
       name: 'Registrations',
-      lastPropertyId: const IdUid(12, 2940793645541748062),
+      lastPropertyId: const IdUid(14, 5664607878573124509),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 5569167664572967232),
+            id: const IdUid(1, 4520363289792743168),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 4201647279212793466),
+            id: const IdUid(2, 3053439158363842617),
             name: 'registrationId',
             type: 9,
-            flags: 0),
+            flags: 2048,
+            indexId: const IdUid(4, 428676365675191002)),
         ModelProperty(
-            id: const IdUid(3, 5599525302081520192),
+            id: const IdUid(3, 8078348712793049997),
             name: 'registrationIsActive',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 8836535446117826198),
+            id: const IdUid(4, 8775719121391207079),
             name: 'registrationAttended',
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 395470171141682650),
+            id: const IdUid(5, 1821000588783123408),
             name: 'registrationExpiresAt',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 4464336874030855499),
+            id: const IdUid(6, 3473648902154709816),
             name: 'isFreezed',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 1235500044274110141),
+            id: const IdUid(7, 4180076389178885717),
             name: 'registrationCreatedAt',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 8895855036754817901),
+            id: const IdUid(8, 7549396928965287341),
             name: 'packageId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(9, 7935760887756393771),
+            id: const IdUid(9, 3133062373805329446),
             name: 'clubId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(10, 7526532944977469539),
+            id: const IdUid(10, 9039426038273245385),
             name: 'memberId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(11, 1045110132868236767),
+            id: const IdUid(11, 97440965990419427),
             name: 'staffId',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(12, 2940793645541748062),
-            name: 'paid',
+            id: const IdUid(12, 1225971394730537049),
+            name: 'paidInDouble',
+            type: 8,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 7766414752817843838),
+            name: 'sync',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 5664607878573124509),
+            name: 'operation',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(5, 5749498089857437392),
+      name: 'FreezeData',
+      lastPropertyId: const IdUid(12, 2441504589874321887),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 1229900531739855747),
+            name: 'id',
             type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 2559956367324272576),
+            name: 'freezeId',
+            type: 9,
+            flags: 2048,
+            indexId: const IdUid(5, 7049012826544978838)),
+        ModelProperty(
+            id: const IdUid(3, 7598401897659363695),
+            name: 'clubId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 7398454180954510446),
+            name: 'staffId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 4730986890483889962),
+            name: 'memberId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 4746919108582063692),
+            name: 'registrationId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 964660946994162657),
+            name: 'packageId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 5655410925035416110),
+            name: 'reactivationDate',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 2997959157087849375),
+            name: 'freezeDuration',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 4609835529531803954),
+            name: 'registrationNewExpirationDate',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 3887069025824403465),
+            name: 'sync',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 2441504589874321887),
+            name: 'operation',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -300,8 +410,8 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(4, 1040338965514404000),
-      lastIndexId: const IdUid(0, 0),
+      lastEntityId: const IdUid(5, 5749498089857437392),
+      lastIndexId: const IdUid(5, 7049012826544978838),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
@@ -340,7 +450,10 @@ ModelDefinition getObjectBoxModel() {
           final createdAtOffset = object.createdAt == null
               ? null
               : fbb.writeString(object.createdAt);
-          fbb.startTable(9);
+          final operationOffset = object.operation == null
+              ? null
+              : fbb.writeString(object.operation);
+          fbb.startTable(11);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(1, attendenceIdOffset);
           fbb.addOffset(2, clubIdOffset);
@@ -349,6 +462,8 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(5, staffIdOffset);
           fbb.addOffset(6, memberIdOffset);
           fbb.addOffset(7, createdAtOffset);
+          fbb.addBool(8, object.sync);
+          fbb.addOffset(9, operationOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -372,7 +487,9 @@ ModelDefinition getObjectBoxModel() {
               memberId: const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 16),
               createdAt: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 18));
+                  .vTableGetNullable(buffer, rootOffset, 18),
+              sync: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 20),
+              operation: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22));
 
           return object;
         }),
@@ -417,7 +534,10 @@ ModelDefinition getObjectBoxModel() {
           final createdAtOffset = object.createdAt == null
               ? null
               : fbb.writeString(object.createdAt);
-          fbb.startTable(17);
+          final operationOffset = object.operation == null
+              ? null
+              : fbb.writeString(object.operation);
+          fbb.startTable(19);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(1, memberIdOffset);
           fbb.addOffset(2, clubIdOffset);
@@ -434,6 +554,8 @@ ModelDefinition getObjectBoxModel() {
           fbb.addBool(13, object.canAuthenticate);
           fbb.addBool(14, object.isBlocked);
           fbb.addOffset(15, createdAtOffset);
+          fbb.addBool(16, object.sync);
+          fbb.addOffset(17, operationOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -465,7 +587,9 @@ ModelDefinition getObjectBoxModel() {
               canAuthenticate: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 30),
               memberId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 6),
               memberName: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 10),
-              memberPhone: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 14));
+              memberPhone: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 14),
+              sync: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 36),
+              operation: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 38));
 
           return object;
         }),
@@ -492,15 +616,16 @@ ModelDefinition getObjectBoxModel() {
           final createdAtOffset = object.createdAt == null
               ? null
               : fbb.writeString(object.createdAt);
-          fbb.startTable(9);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(1, planIdOffset);
           fbb.addOffset(2, planClubIdOffset);
           fbb.addOffset(3, planTitleOffset);
           fbb.addInt64(4, object.planAttendance);
           fbb.addOffset(5, planExpiresInOffset);
-          fbb.addBool(6, object.isOpen);
-          fbb.addOffset(7, createdAtOffset);
+          fbb.addFloat64(6, object.planPriceAsDouble);
+          fbb.addBool(7, object.isOpen);
+          fbb.addOffset(8, createdAtOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -522,9 +647,10 @@ ModelDefinition getObjectBoxModel() {
               planExpiresIn: const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 14),
               isOpen: const fb.BoolReader()
-                  .vTableGetNullable(buffer, rootOffset, 16),
+                  .vTableGetNullable(buffer, rootOffset, 18),
               createdAt: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 18));
+                  .vTableGetNullable(buffer, rootOffset, 20),
+              planPriceAsDouble: const fb.Float64Reader().vTableGetNullable(buffer, rootOffset, 16));
 
           return object;
         }),
@@ -557,7 +683,10 @@ ModelDefinition getObjectBoxModel() {
               object.memberId == null ? null : fbb.writeString(object.memberId);
           final staffIdOffset =
               object.staffId == null ? null : fbb.writeString(object.staffId);
-          fbb.startTable(13);
+          final operationOffset = object.operation == null
+              ? null
+              : fbb.writeString(object.operation);
+          fbb.startTable(15);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(1, registrationIdOffset);
           fbb.addBool(2, object.registrationIsActive);
@@ -569,7 +698,9 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(8, clubIdOffset);
           fbb.addOffset(9, memberIdOffset);
           fbb.addOffset(10, staffIdOffset);
-          fbb.addInt64(11, object.paid);
+          fbb.addFloat64(11, object.paidInDouble);
+          fbb.addBool(12, object.sync);
+          fbb.addOffset(13, operationOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -598,7 +729,89 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGetNullable(buffer, rootOffset, 20),
               memberId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
               staffId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 24),
-              paid: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 26));
+              paidInDouble: const fb.Float64Reader().vTableGetNullable(buffer, rootOffset, 26),
+              sync: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 28),
+              operation: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 30));
+
+          return object;
+        }),
+    FreezeData: EntityDefinition<FreezeData>(
+        model: _entities[4],
+        toOneRelations: (FreezeData object) => [],
+        toManyRelations: (FreezeData object) => {},
+        getId: (FreezeData object) => object.id,
+        setId: (FreezeData object, int id) {
+          object.id = id;
+        },
+        objectToFB: (FreezeData object, fb.Builder fbb) {
+          final freezeIdOffset =
+              object.freezeId == null ? null : fbb.writeString(object.freezeId);
+          final clubIdOffset =
+              object.clubId == null ? null : fbb.writeString(object.clubId);
+          final staffIdOffset =
+              object.staffId == null ? null : fbb.writeString(object.staffId);
+          final memberIdOffset =
+              object.memberId == null ? null : fbb.writeString(object.memberId);
+          final registrationIdOffset = object.registrationId == null
+              ? null
+              : fbb.writeString(object.registrationId);
+          final packageIdOffset = object.packageId == null
+              ? null
+              : fbb.writeString(object.packageId);
+          final reactivationDateOffset = object.reactivationDate == null
+              ? null
+              : fbb.writeString(object.reactivationDate);
+          final freezeDurationOffset = object.freezeDuration == null
+              ? null
+              : fbb.writeString(object.freezeDuration);
+          final registrationNewExpirationDateOffset =
+              object.registrationNewExpirationDate == null
+                  ? null
+                  : fbb.writeString(object.registrationNewExpirationDate);
+          final operationOffset = object.operation == null
+              ? null
+              : fbb.writeString(object.operation);
+          fbb.startTable(13);
+          fbb.addInt64(0, object.id ?? 0);
+          fbb.addOffset(1, freezeIdOffset);
+          fbb.addOffset(2, clubIdOffset);
+          fbb.addOffset(3, staffIdOffset);
+          fbb.addOffset(4, memberIdOffset);
+          fbb.addOffset(5, registrationIdOffset);
+          fbb.addOffset(6, packageIdOffset);
+          fbb.addOffset(7, reactivationDateOffset);
+          fbb.addOffset(8, freezeDurationOffset);
+          fbb.addOffset(9, registrationNewExpirationDateOffset);
+          fbb.addBool(10, object.sync);
+          fbb.addOffset(11, operationOffset);
+          fbb.finish(fbb.endTable());
+          return object.id ?? 0;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = FreezeData(
+              id: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 4),
+              freezeId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 6),
+              clubId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 8),
+              staffId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 10),
+              memberId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 12),
+              registrationId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 14),
+              packageId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 16),
+              reactivationDate: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 18),
+              freezeDuration: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 20),
+              registrationNewExpirationDate: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
+              sync: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 24),
+              operation: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26));
 
           return object;
         })
@@ -640,6 +853,14 @@ class MemberAttendencesData_ {
   /// see [MemberAttendencesData.createdAt]
   static final createdAt =
       QueryStringProperty<MemberAttendencesData>(_entities[0].properties[7]);
+
+  /// see [MemberAttendencesData.sync]
+  static final sync =
+      QueryBooleanProperty<MemberAttendencesData>(_entities[0].properties[8]);
+
+  /// see [MemberAttendencesData.operation]
+  static final operation =
+      QueryStringProperty<MemberAttendencesData>(_entities[0].properties[9]);
 }
 
 /// [MemberData] entity fields to define ObjectBox queries.
@@ -707,6 +928,14 @@ class MemberData_ {
   /// see [MemberData.createdAt]
   static final createdAt =
       QueryStringProperty<MemberData>(_entities[1].properties[15]);
+
+  /// see [MemberData.sync]
+  static final sync =
+      QueryBooleanProperty<MemberData>(_entities[1].properties[16]);
+
+  /// see [MemberData.operation]
+  static final operation =
+      QueryStringProperty<MemberData>(_entities[1].properties[17]);
 }
 
 /// [PlanData] entity fields to define ObjectBox queries.
@@ -734,13 +963,17 @@ class PlanData_ {
   static final planExpiresIn =
       QueryStringProperty<PlanData>(_entities[2].properties[5]);
 
+  /// see [PlanData.planPriceAsDouble]
+  static final planPriceAsDouble =
+      QueryDoubleProperty<PlanData>(_entities[2].properties[6]);
+
   /// see [PlanData.isOpen]
   static final isOpen =
-      QueryBooleanProperty<PlanData>(_entities[2].properties[6]);
+      QueryBooleanProperty<PlanData>(_entities[2].properties[7]);
 
   /// see [PlanData.createdAt]
   static final createdAt =
-      QueryStringProperty<PlanData>(_entities[2].properties[7]);
+      QueryStringProperty<PlanData>(_entities[2].properties[8]);
 }
 
 /// [Registrations] entity fields to define ObjectBox queries.
@@ -789,7 +1022,66 @@ class Registrations_ {
   static final staffId =
       QueryStringProperty<Registrations>(_entities[3].properties[10]);
 
-  /// see [Registrations.paid]
-  static final paid =
-      QueryIntegerProperty<Registrations>(_entities[3].properties[11]);
+  /// see [Registrations.paidInDouble]
+  static final paidInDouble =
+      QueryDoubleProperty<Registrations>(_entities[3].properties[11]);
+
+  /// see [Registrations.sync]
+  static final sync =
+      QueryBooleanProperty<Registrations>(_entities[3].properties[12]);
+
+  /// see [Registrations.operation]
+  static final operation =
+      QueryStringProperty<Registrations>(_entities[3].properties[13]);
+}
+
+/// [FreezeData] entity fields to define ObjectBox queries.
+class FreezeData_ {
+  /// see [FreezeData.id]
+  static final id =
+      QueryIntegerProperty<FreezeData>(_entities[4].properties[0]);
+
+  /// see [FreezeData.freezeId]
+  static final freezeId =
+      QueryStringProperty<FreezeData>(_entities[4].properties[1]);
+
+  /// see [FreezeData.clubId]
+  static final clubId =
+      QueryStringProperty<FreezeData>(_entities[4].properties[2]);
+
+  /// see [FreezeData.staffId]
+  static final staffId =
+      QueryStringProperty<FreezeData>(_entities[4].properties[3]);
+
+  /// see [FreezeData.memberId]
+  static final memberId =
+      QueryStringProperty<FreezeData>(_entities[4].properties[4]);
+
+  /// see [FreezeData.registrationId]
+  static final registrationId =
+      QueryStringProperty<FreezeData>(_entities[4].properties[5]);
+
+  /// see [FreezeData.packageId]
+  static final packageId =
+      QueryStringProperty<FreezeData>(_entities[4].properties[6]);
+
+  /// see [FreezeData.reactivationDate]
+  static final reactivationDate =
+      QueryStringProperty<FreezeData>(_entities[4].properties[7]);
+
+  /// see [FreezeData.freezeDuration]
+  static final freezeDuration =
+      QueryStringProperty<FreezeData>(_entities[4].properties[8]);
+
+  /// see [FreezeData.registrationNewExpirationDate]
+  static final registrationNewExpirationDate =
+      QueryStringProperty<FreezeData>(_entities[4].properties[9]);
+
+  /// see [FreezeData.sync]
+  static final sync =
+      QueryBooleanProperty<FreezeData>(_entities[4].properties[10]);
+
+  /// see [FreezeData.operation]
+  static final operation =
+      QueryStringProperty<FreezeData>(_entities[4].properties[11]);
 }

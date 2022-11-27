@@ -2,7 +2,6 @@
 import 'dart:io';
 import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
-import 'package:gym_staff_app/models/registrations.dart';
 import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:gym_staff_app/widgets/dialogs/feedBackDialog.dart';
@@ -69,11 +68,15 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
         }
       } else {
         ObjectBox.getClubData();
-        sortedMemberData = allMembersList;
-
-        currentMemberOfflineRegistrations = allRegistrationsOfflineData
-            .where((element) => element.memberId == pickedMember.memberId)
+        offlinePickedMemberAllRegistrationsList = offlineAllRegistrationsList
+            .where(
+                (element) => offlinePickedMember.memberId == element.memberId)
             .toList();
+
+        setState(() {
+          connectionError = false;
+          loadingMemberRegistrationsData = false;
+        });
       }
 
       isInit = false;
@@ -115,11 +118,14 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       }
     } else {
       ObjectBox.getClubData();
-      sortedMemberData = allMembersList;
-
-      currentMemberOfflineRegistrations = allRegistrationsOfflineData
-          .where((element) => element.memberId == pickedMember.memberId)
+      offlinePickedMemberAllRegistrationsList = offlineAllRegistrationsList
+          .where((element) => element.memberId == offlinePickedMember.memberId)
           .toList();
+
+      setState(() {
+        connectionError = false;
+        loadingMemberRegistrationsData = false;
+      });
     }
   }
 
@@ -128,6 +134,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
     Provider.of<OfflineFeautureProvider>(context, listen: true);
 
     Provider.of<AllMemberRegistartionsProvider>(context, listen: true);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
@@ -144,7 +151,10 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15, top: 150),
                   child: workConnectionStatus == 'offline'
-                      ? currentMemberOfflineRegistrations.isEmpty
+                      ? offlinePickedMemberAllRegistrationsList
+                              .where((element) => element.operation != 'delete')
+                              .toList()
+                              .isEmpty
                           ? EmptyAnimationWidget(refresh)
                           : RefreshIndicator(
                               color: Theme.of(context).primaryColor,
@@ -156,11 +166,18 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                 padding: const EdgeInsets.all(0),
                                 itemBuilder: (context, index) {
                                   return OfflineMemberPackageDataTile(
-                                    currentMemberOfflineRegistrations[index],
-                                  );
+                                      offlinePickedMemberAllRegistrationsList
+                                          .where((element) =>
+                                              element.operation != 'delete')
+                                          .toList()[index],
+                                      refresh);
                                 },
                                 itemCount:
-                                    currentMemberOfflineRegistrations.length,
+                                    offlinePickedMemberAllRegistrationsList
+                                        .where((element) =>
+                                            element.operation != 'delete')
+                                        .toList()
+                                        .length,
                                 separatorBuilder:
                                     (BuildContext context, int index) {
                                   return Divider(
@@ -209,7 +226,9 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             ],
           ),
           //central card and list count
-          MemberDetailsCentralCard(allMemberRegistrationsList.isEmpty),
+          MemberDetailsCentralCard(workConnectionStatus == 'offline'
+              ? offlinePickedMemberAllRegistrationsList.isEmpty
+              : allMemberRegistrationsList.isEmpty),
           //back arrow
           Positioned(
             top: 40,
@@ -256,7 +275,8 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       ),
       floatingActionButton: connectionError == true
           ? const Text('')
-          : allMemberRegistrationsList.isEmpty
+          : allMemberRegistrationsList.isEmpty &&
+                  offlineAllRegistrationsList.isEmpty
               ? const Text('')
               : AnimatedFloatingActionButton(
                   fabButtons: <Widget>[
@@ -297,6 +317,85 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                     Navigator.of(context).pop();
                   },
                   buttonColor: Colors.redAccent),
+            );
+            return;
+          }
+
+          if (workConnectionStatus == 'offline') {
+            if (offlinePickedMember.isBlocked == true) {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) => FeedBackDialog(
+                    titleText:
+                        AppLocalizations.of(context).sorryMemberIsBlocked,
+                    gif: 'assets/gifs/fail.json',
+                    enableButton: true,
+                    buttonText: AppLocalizations.of(context).doneTitle,
+                    callBackFunction: () {
+                      Navigator.of(context).pop();
+                    },
+                    buttonColor: Colors.redAccent),
+              );
+              return;
+            }
+            if (offlinePickedMemberAllRegistrationsList[0].isFreezed == true) {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) => FeedBackDialog(
+                    titleText: AppLocalizations.of(context).packageIsfreezed,
+                    gif: 'assets/gifs/fail.json',
+                    enableButton: true,
+                    buttonText: AppLocalizations.of(context).doneTitle,
+                    callBackFunction: () {
+                      Navigator.of(context).pop();
+                    },
+                    buttonColor: Colors.redAccent),
+              );
+              return;
+            }
+
+            if (offlinePickedMemberAllRegistrationsList[0]
+                    .registrationAttended >=
+                offlineAllPlansList
+                    .firstWhere((element) =>
+                        element.planId ==
+                        offlinePickedMemberAllRegistrationsList[0].packageId)
+                    .planAttendance) {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) => FeedBackDialog(
+                    titleText:
+                        AppLocalizations.of(context).sorryPackageHasBeenExpired,
+                    gif: 'assets/gifs/fail.json',
+                    enableButton: true,
+                    buttonText: AppLocalizations.of(context).doneTitle,
+                    callBackFunction: () {
+                      Navigator.of(context).pop();
+                    },
+                    buttonColor: Colors.redAccent),
+              );
+
+              return;
+            }
+            ObjectBox.updateMemberAttandance(
+                offlinePickedMemberAllRegistrationsList[0], context, false);
+            enableConfirming = false;
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) => FeedBackDialog(
+                  titleText: AppLocalizations.of(context)
+                      .updatedAttendenceSuccessfully,
+                  gif: 'assets/gifs/success.json',
+                  enableButton: true,
+                  buttonText: AppLocalizations.of(context).doneTitle,
+                  callBackFunction: () {
+                    Navigator.of(context).pop();
+                  },
+                  buttonColor: Theme.of(context).primaryColor),
             );
             return;
           }
@@ -431,6 +530,81 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
       child: FloatingActionButton.extended(
           heroTag: 'cancelButton',
           onPressed: () async {
+            if (workConnectionStatus == 'offline') {
+              if (offlinePickedMember.isBlocked == true) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText:
+                          AppLocalizations.of(context).sorryMemberIsBlocked,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+                return;
+              }
+              if (offlinePickedMemberAllRegistrationsList[0].isFreezed ==
+                  true) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText: AppLocalizations.of(context).packageIsfreezed,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+                return;
+              }
+
+              if (offlinePickedMemberAllRegistrationsList[0]
+                      .registrationAttended <=
+                  0) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText: AppLocalizations.of(context)
+                          .sorryNoMoreSessionsToCancel,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+
+                return;
+              }
+              ObjectBox.removeMemberAttendance(
+                  offlinePickedMemberAllRegistrationsList[0], context, false);
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) => FeedBackDialog(
+                    titleText: AppLocalizations.of(context)
+                        .cancelledAttendenceSuccessfully,
+                    gif: 'assets/gifs/sad.json',
+                    enableButton: true,
+                    buttonText: AppLocalizations.of(context).doneTitle,
+                    callBackFunction: () {
+                      Navigator.of(context).pop();
+                    },
+                    buttonColor: Theme.of(context).primaryColor),
+              );
+              return;
+            }
+
             if (pickedMember.isBlocked == true) {
               showDialog(
                 context: context,

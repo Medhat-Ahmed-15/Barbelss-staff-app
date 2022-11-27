@@ -6,25 +6,27 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class PlanData {
   int id;
+  @Index()
   String planId;
   String planClubId;
   String planTitle;
   int planAttendance;
   String planExpiresIn;
-  num planPrice;
+  double planPriceAsDouble;
   bool isOpen;
   String createdAt;
 
-  PlanData(
-      {this.id = 3,
-      this.planId,
-      this.planClubId,
-      this.planTitle,
-      this.planAttendance,
-      this.planExpiresIn,
-      this.isOpen,
-      this.createdAt,
-      this.planPrice});
+  PlanData({
+    this.id,
+    this.planId,
+    this.planClubId,
+    this.planTitle,
+    this.planAttendance,
+    this.planExpiresIn,
+    this.isOpen,
+    this.createdAt,
+    this.planPriceAsDouble,
+  });
 
   PlanData.fromjson(Map<String, dynamic> json) {
     planId = json['_id'];
@@ -32,7 +34,7 @@ class PlanData {
     planTitle = json['title'];
     planAttendance = json['attendance'];
     planExpiresIn = json['expiresIn'];
-    planPrice = json['price'];
+    planPriceAsDouble = json['price'].toDouble();
     createdAt = json['createdAt'];
     isOpen = json['isOpen'];
   }

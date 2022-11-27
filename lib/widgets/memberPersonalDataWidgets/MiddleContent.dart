@@ -40,9 +40,13 @@ class MiddleContent extends StatelessWidget {
               ),
             ),
             Text(
-              pickedMember.memberEmail == ''
-                  ? AppLocalizations.of(context).emailHasNotBeenSpecified
-                  : pickedMember.memberEmail,
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.memberEmail == ''
+                      ? AppLocalizations.of(context).emailHasNotBeenSpecified
+                      : offlinePickedMember.memberEmail
+                  : pickedMember.memberEmail == ''
+                      ? AppLocalizations.of(context).emailHasNotBeenSpecified
+                      : pickedMember.memberEmail,
               style: const TextStyle(fontSize: 16.0, color: Colors.grey),
             ),
 
@@ -61,7 +65,9 @@ class MiddleContent extends StatelessWidget {
                   color: Theme.of(context).primaryColor),
             ),
             Text(
-              pickedMember.memberPhone,
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.memberPhone
+                  : pickedMember.memberPhone,
               style: const TextStyle(
                   //  fontWeight: FontWeight.bold,
                   fontSize: 16.0,
@@ -81,7 +87,9 @@ class MiddleContent extends StatelessWidget {
                   color: Theme.of(context).primaryColor),
             ),
             Text(
-              pickedMember.memberId,
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.memberId
+                  : pickedMember.memberId,
               style: const TextStyle(
                   //  fontWeight: FontWeight.bold,
                   fontSize: 16.0,

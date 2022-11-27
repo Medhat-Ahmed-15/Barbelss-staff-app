@@ -5,6 +5,7 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class Registrations {
   int id;
+  @Index()
   String registrationId;
   bool registrationIsActive;
   int registrationAttended;
@@ -15,10 +16,12 @@ class Registrations {
   String clubId;
   String memberId;
   String staffId;
-  int paid;
+  double paidInDouble;
+  bool sync;
+  String operation;
 
   Registrations(
-      {this.id = 1,
+      {this.id,
       this.registrationId,
       this.registrationIsActive,
       this.registrationAttended,
@@ -29,7 +32,9 @@ class Registrations {
       this.clubId,
       this.memberId,
       this.staffId,
-      this.paid});
+      this.paidInDouble,
+      this.sync = true,
+      this.operation = ''});
 
   Registrations.fromjson(Map<String, dynamic> json) {
     registrationId = json['_id'];
@@ -39,9 +44,11 @@ class Registrations {
     isFreezed = json['isFreezed'];
     registrationCreatedAt = json['createdAt'];
     packageId = json['packageId'];
-    paid = json['paid'];
+    paidInDouble = json['paid'].toDouble();
     staffId = json['staffId'];
     memberId = json['memberId'];
     clubId = json['clubId'];
+    sync = true;
+    operation = '';
   }
 }

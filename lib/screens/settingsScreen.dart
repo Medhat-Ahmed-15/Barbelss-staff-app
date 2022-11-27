@@ -381,7 +381,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                           if (ObjectBox.checkDatabaseIsEmpty() == false) {
                             showToast(
-                                "Data must be synced first before switching to online mode",
+                                AppLocalizations.of(context)
+                                    .dataMustBeSyncedFirst,
                                 context);
                             return;
                           }
@@ -390,20 +391,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   listen: false)
                               .setWorkStatusInStorage('online');
 
-                          showSimpleNotification(
-                            const Text("Back online!"),
-                            background: Colors.green,
-                          );
+                          // showSimpleNotification(
+                          //   Text(AppLocalizations.of(context).backOnline),
+                          //   background: Colors.green,
+                          // );
                         } else {
                           switchModeLoading = false;
                           await Provider.of<OfflineFeautureProvider>(context,
                                   listen: false)
                               .setWorkStatusInStorage('offline');
 
-                          showSimpleNotification(
-                            const Text("Switched to offline mode"),
-                            background: Colors.grey,
-                          );
+                          // showSimpleNotification(
+                          //   Text(AppLocalizations.of(context)
+                          //       .switchedToOfflineMode),
+                          //   background: Colors.grey,
+                          // );
                         }
                       },
                       value: workConnectionStatus == 'offline' ? true : false,
@@ -420,42 +422,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   height: 15,
                 ),
 
-                syncLoading == true
-                    ? FourDotsLoading()
-                    : button(
-                        buttonColor: Colors.redAccent,
-                        buttontext: AppLocalizations.of(context).sync,
-                        iconData: Icons.sync_outlined,
-                        function: () async {
-                          if (ObjectBox.checkDatabaseIsEmpty() == true) {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (BuildContext context) => FeedBackDialog(
-                                  titleText: "Data is already synced",
-                                  gif: 'assets/gifs/fail.json',
-                                  enableButton: true,
-                                  buttonText:
-                                      AppLocalizations.of(context).doneTitle,
-                                  callBackFunction: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  buttonColor: Colors.redAccent),
-                            );
-                            return;
-                          }
+                button(
+                  buttonColor: Colors.redAccent,
+                  buttontext: AppLocalizations.of(context).sync,
+                  iconData: Icons.sync_outlined,
+                  function: () async {
+                    if (ObjectBox.checkDatabaseIsEmpty() == true) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (BuildContext context) => FeedBackDialog(
+                            titleText: AppLocalizations.of(context)
+                                .dataIsAlreadySynced,
+                            gif: 'assets/gifs/fail.json',
+                            enableButton: true,
+                            buttonText: AppLocalizations.of(context).doneTitle,
+                            callBackFunction: () {
+                              Navigator.of(context).pop();
+                            },
+                            buttonColor: Colors.redAccent),
+                      );
+                      return;
+                    }
 
-                          setState(() {
-                            syncLoading = true;
-                          });
+                    setState(() {
+                      syncLoading = true;
+                    });
 
-                          ObjectBox.deleteClubData();
+                    ObjectBox.deleteClubData();
 
-                          setState(() {
-                            syncLoading = false;
-                          });
-                        },
-                      ),
+                    // await Future.delayed(const Duration(seconds: 10));
+
+                    setState(() {
+                      syncLoading = false;
+                    });
+
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) => FeedBackDialog(
+                          titleText: AppLocalizations.of(context)
+                              .datahasBeensyncedSuccessfully,
+                          gif: 'assets/gifs/success.json',
+                          enableButton: true,
+                          buttonText: AppLocalizations.of(context).close,
+                          callBackFunction: () {
+                            Navigator.of(context).pop();
+                          },
+                          buttonColor: Theme.of(context).primaryColor),
+                    );
+                  },
+                ),
 
                 const SizedBox(
                   height: 25,
@@ -468,11 +485,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   child: Center(
-                    child: SizedBox(
-                      width: 250,
-                      height: 250,
-                      child: lot.LottieBuilder.asset(
-                          'assets/gifs/loadingSync.json'),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 250,
+                          height: 250,
+                          child: lot.LottieBuilder.asset(
+                              'assets/gifs/loadingSync.json'),
+                        ),
+                        Text(
+                          AppLocalizations.of(context).syncingData,
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              color: Theme.of(context).scaffoldBackgroundColor),
+                        ),
+                      ],
                     ),
                   ),
                   color: Colors.black38,

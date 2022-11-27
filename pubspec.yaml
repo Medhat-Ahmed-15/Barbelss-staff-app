@@ -66,6 +66,7 @@ dependencies:
   numeral: ^2.0.1
   objectbox: ^1.6.2
   objectbox_flutter_libs: any
+  jiffy: ^5.0.0
 
 flutter_native_splash:
   image: assets/images/b8.png

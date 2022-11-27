@@ -8,8 +8,9 @@ import 'package:gym_staff_app/assistant/assistantFunction.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:gym_staff_app/widgets/plansScreenWidgets/planDataTile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:lottie/lottie.dart' as lot;
-
+import 'package:provider/provider.dart';
+import '../helper/object_box.dart';
+import '../providers/offlineFeature_provider.dart';
 import '../widgets/other/EmptyAnimationWidget.dart';
 import '../widgets/other/FourDotsLoading.dart';
 import '../widgets/other/InternetConnectionError.dart';
@@ -22,70 +23,45 @@ class PlansScreen extends StatefulWidget {
 }
 
 class _PlansScreenState extends State<PlansScreen> {
-  bool loadingPlans = true;
+  bool loadingPlans = false;
   bool connectionError = false;
-  bool empty = false;
-  bool isInit = true;
 
   String screenComingFrom;
 
-  @override
-  void initState() {
-    super.initState();
-    if (allPlansList.isEmpty) {
-      setState(() {
-        loadingPlans = false;
-        connectionError = false;
-        empty = true;
-      });
-    } else {
-      setState(() {
-        loadingPlans = false;
-        connectionError = false;
-        empty = false;
-      });
-    }
-  }
-
   Future<void> refresh() async {
-    try {
-      setState(() {
-        loadingPlans = true;
-        connectionError = false;
-        empty = false;
-      });
-      await getAllPlans();
-      if (allPlansList.isEmpty) {
+    if (workConnectionStatus == 'online') {
+      try {
         setState(() {
-          loadingPlans = false;
+          loadingPlans = true;
           connectionError = false;
-          empty = true;
         });
-      } else {
+        await getAllPlans();
+      } on SocketException {
         setState(() {
+          connectionError = true;
           loadingPlans = false;
+        });
+      } catch (error) {
+        showToast(AppLocalizations.of(context).somethingWentWrong, context);
+        setState(() {
           connectionError = false;
-          empty = false;
+          loadingPlans = false;
         });
       }
-    } on SocketException {
+    } else {
+      ObjectBox.getClubData();
+
       setState(() {
-        connectionError = true;
         loadingPlans = false;
-        empty = false;
-      });
-    } catch (error) {
-      showToast(AppLocalizations.of(context).somethingWentWrong, context);
-      setState(() {
         connectionError = false;
-        loadingPlans = false;
-        empty = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<OfflineFeautureProvider>(context, listen: true);
+
     screenComingFrom = ModalRoute.of(context).settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
@@ -138,28 +114,47 @@ class _PlansScreenState extends State<PlansScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 15, right: 15),
-            child: connectionError == true
-                ? InternetConnectionError(refresh)
-                : loadingPlans == true
-                    ? FourDotsLoading()
-                    : empty == true
-                        ? EmptyAnimationWidget(refresh)
-                        : Swiper(
-                            outer: true,
-                            pagination: const SwiperPagination(
-                              builder: SwiperPagination.dots,
-                            ),
-                            itemBuilder: (BuildContext context, int index) {
-                              return PlanDataTile(
-                                  allPlansList[index], screenComingFrom);
-                            },
-                            itemCount: allPlansList.length,
-                            itemWidth: MediaQuery.of(context).size.width * 0.75,
-                            itemHeight:
-                                MediaQuery.of(context).size.height * 0.7,
-                            loop: true,
-                            layout: SwiperLayout.STACK,
-                          ),
+            child: workConnectionStatus == 'offline'
+                ? offlineAllPlansList.isEmpty
+                    ? EmptyAnimationWidget(refresh)
+                    : Swiper(
+                        outer: true,
+                        pagination: const SwiperPagination(
+                          builder: SwiperPagination.dots,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return PlanDataTile(
+                              offlineAllPlansList[index], screenComingFrom);
+                        },
+                        itemCount: offlineAllPlansList.length,
+                        itemWidth: MediaQuery.of(context).size.width * 0.75,
+                        itemHeight: MediaQuery.of(context).size.height * 0.7,
+                        loop: true,
+                        layout: SwiperLayout.STACK,
+                      )
+                : connectionError == true
+                    ? InternetConnectionError(refresh)
+                    : loadingPlans == true
+                        ? FourDotsLoading()
+                        : allPlansList.isEmpty
+                            ? EmptyAnimationWidget(refresh)
+                            : Swiper(
+                                outer: true,
+                                pagination: const SwiperPagination(
+                                  builder: SwiperPagination.dots,
+                                ),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return PlanDataTile(
+                                      allPlansList[index], screenComingFrom);
+                                },
+                                itemCount: allPlansList.length,
+                                itemWidth:
+                                    MediaQuery.of(context).size.width * 0.75,
+                                itemHeight:
+                                    MediaQuery.of(context).size.height * 0.7,
+                                loop: true,
+                                layout: SwiperLayout.STACK,
+                              ),
           ),
         ],
       ),

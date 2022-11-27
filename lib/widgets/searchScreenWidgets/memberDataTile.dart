@@ -122,7 +122,11 @@ class _MemberDataTileState extends State<MemberDataTile> {
                   ),
                 ),
                 onTap: () async {
-                  pickedMember = widget.memberData;
+                  if (workConnectionStatus == 'offline') {
+                    offlinePickedMember = widget.memberData;
+                  } else {
+                    pickedMember = widget.memberData;
+                  }
 
                   await Navigator.pushNamed(
                       context, MemberDetailsScreen.routeName);

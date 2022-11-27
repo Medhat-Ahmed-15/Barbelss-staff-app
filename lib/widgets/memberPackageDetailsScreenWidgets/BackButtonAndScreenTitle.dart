@@ -30,7 +30,7 @@ class BackButtonAndScreenTitle extends StatelessWidget {
           ),
           Text(
             workConnectionStatus == 'offline'
-                ? allPlansOfflineData
+                ? offlineAllPlansList
                     .firstWhere((element) =>
                         element.planId == offlinePickedMemberPackage.packageId)
                     .planTitle

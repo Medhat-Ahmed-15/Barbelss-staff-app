@@ -263,7 +263,35 @@
 
     "workOnline": "وضع على شبكة الإنترنت",
 
-    "sync": "دمج البيانات"
+    "sync": "دمج البيانات",
+
+    "unAbleToPerformAction": "غير قادر على تنفيذ الإجراء ، النظام في وضع غير متصل بالشبكة",
+
+    "syncingData": "جاري مزامنة البيانات الرجاء الانتظار ...",
+
+    "datahasBeensyncedSuccessfully": "تمت مزامنة البيانات بنجاح",
+
+    "dataIsAlreadySynced": "البيانات متزامنة بالفعل",
+
+    "switchedToOfflineMode": "تحول إلى وضع غير متصل بالشبكة",
+
+    "backOnline": "يرجع متصل",
+
+    "dataMustBeSyncedFirst": "Data must be synced first before switching to online mode",
+
+    "emailIsUsed": "البريد الالكتروني موجود بالفعل",
+
+    "phoneIsUsed": "رقم الهاتف موجود بالفعل",
+
+    "membershipIsused": "العضوية موجودة بالفعل",
+
+    "registrationIsExpired": "انتهت صلاحية هذا الاشتراك",
+
+    "sorryPackageHasBeenExpired": "عذرا ، انتهت صلاحية الحزمة الخاصة بك",
+
+    "sorryNoMoreSessionsToCancel": "عذرا ، لا مزيد من التسجيلات للإلغاء",
+
+    "syncingData": "تحميل البيانات..."
 
 
 

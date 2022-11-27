@@ -11,7 +11,13 @@ class UpperContent extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: pickedMember.isBlocked == true ? Colors.redAccent : Colors.green,
+        color: workConnectionStatus == 'offline'
+            ? offlinePickedMember.isBlocked == true
+                ? Colors.redAccent
+                : Colors.green
+            : pickedMember.isBlocked == true
+                ? Colors.redAccent
+                : Colors.green,
         boxShadow: const [
           BoxShadow(
               color: Colors.black54, offset: Offset(0, 4), blurRadius: 5.0)
@@ -23,9 +29,13 @@ class UpperContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            pickedMember.isBlocked == true
-                ? AppLocalizations.of(context).blocked
-                : AppLocalizations.of(context).activeTitle,
+            workConnectionStatus == 'offline'
+                ? offlinePickedMember.isBlocked == true
+                    ? AppLocalizations.of(context).blocked
+                    : AppLocalizations.of(context).activeTitle
+                : pickedMember.isBlocked == true
+                    ? AppLocalizations.of(context).blocked
+                    : AppLocalizations.of(context).activeTitle,
             style: TextStyle(
               color: Theme.of(context).textTheme.headline1.color,
             ),
@@ -34,9 +44,13 @@ class UpperContent extends StatelessWidget {
             width: 10,
           ),
           Icon(
-            pickedMember.isBlocked == true
-                ? Icons.cancel_outlined
-                : Icons.check,
+            workConnectionStatus == 'offline'
+                ? offlinePickedMember.isBlocked == true
+                    ? Icons.cancel_outlined
+                    : Icons.check
+                : pickedMember.isBlocked == true
+                    ? Icons.cancel_outlined
+                    : Icons.check,
             color: Theme.of(context).scaffoldBackgroundColor,
           )
         ],
@@ -56,10 +70,17 @@ class UpperContent extends StatelessWidget {
             foregroundColor: Theme.of(context).primaryColor,
             radius: 35,
             child: Text(
-              pickedMember.memberName.contains(' ')
-                  ? pickedMember.memberName[0].toUpperCase() +
-                      pickedMember.memberName.split(' ')[1][0].toUpperCase()
-                  : pickedMember.memberName[0].toUpperCase(),
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.memberName.contains(' ')
+                      ? offlinePickedMember.memberName[0].toUpperCase() +
+                          offlinePickedMember.memberName
+                              .split(' ')[1][0]
+                              .toUpperCase()
+                      : offlinePickedMember.memberName[0].toUpperCase()
+                  : pickedMember.memberName.contains(' ')
+                      ? pickedMember.memberName[0].toUpperCase() +
+                          pickedMember.memberName.split(' ')[1][0].toUpperCase()
+                      : pickedMember.memberName[0].toUpperCase(),
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: Theme.of(context).textTheme.headline1.color,
@@ -84,29 +105,47 @@ class UpperContent extends StatelessWidget {
                 height: 5,
               ),
               Text(
-                pickedMember.memberName,
+                workConnectionStatus == 'offline'
+                    ? offlinePickedMember.memberName
+                    : pickedMember.memberName,
                 style: const TextStyle(fontSize: 16.0, color: Colors.grey),
               ),
               const SizedBox(
                 height: 5,
               ),
-              pickedMember.memberName.length > 15 ||
-                      MediaQuery.of(context).size.width < 370
-                  ? memberStatusContainer(context)
-                  : const SizedBox(
-                      height: 0,
-                      width: 0,
-                    )
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.memberName.length > 15 ||
+                          MediaQuery.of(context).size.width < 370
+                      ? memberStatusContainer(context)
+                      : const SizedBox(
+                          height: 0,
+                          width: 0,
+                        )
+                  : pickedMember.memberName.length > 15 ||
+                          MediaQuery.of(context).size.width < 370
+                      ? memberStatusContainer(context)
+                      : const SizedBox(
+                          height: 0,
+                          width: 0,
+                        )
             ],
           ),
           Expanded(child: Container()),
-          pickedMember.memberName.length > 15 ||
-                  MediaQuery.of(context).size.width < 370
-              ? const SizedBox(
-                  height: 0,
-                  width: 0,
-                )
-              : memberStatusContainer(context)
+          workConnectionStatus == 'offline'
+              ? offlinePickedMember.memberName.length > 15 ||
+                      MediaQuery.of(context).size.width < 370
+                  ? const SizedBox(
+                      height: 0,
+                      width: 0,
+                    )
+                  : memberStatusContainer(context)
+              : pickedMember.memberName.length > 15 ||
+                      MediaQuery.of(context).size.width < 370
+                  ? const SizedBox(
+                      height: 0,
+                      width: 0,
+                    )
+                  : memberStatusContainer(context)
         ],
       ),
     );

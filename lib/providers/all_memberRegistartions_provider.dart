@@ -6,6 +6,7 @@ import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:http/http.dart' as http;
 
 import '../Exceptions/getRequest_exception.dart';
+import '../helper/object_box.dart';
 import '../models/memberRegistrationsResponseData.dart';
 
 class AllMemberRegistartionsProvider with ChangeNotifier {
@@ -96,6 +97,24 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     allMemberRegistrationsList.insert(0, addedPlan);
 
     notifyListeners();
+
+    ObjectBox.insertNewSubscription(
+      isFreezed: responseData['registration']['isFreezed'],
+      packageId: responseData['attendance']['packageId'],
+      paidInDouble: planData.planPriceAsDouble,
+      registartionAttended: 1,
+      registartionCreatedAt: responseData['registration']['createdAt'],
+      registartionExpiresAt: responseData['registration']['expiresAt'],
+      registrationId: responseData['registration']['_id'],
+      registrationIsActive: responseData['registration']['isActive'],
+      sync: true,
+    );
+
+    ObjectBox.insertNewAttendance(
+      packageId: responseData['attendance']['packageId'],
+      registrationId: responseData['attendance']['registrationId'],
+      sync: true,
+    );
   }
 
   //Delete Registration//////////////////////////////////////////////////////////////////////////
@@ -124,7 +143,8 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     allMemberRegistrationsList.removeWhere(
         (registration) => registration.registrationId == registrationId);
 
-    notifyListeners();
+    ObjectBox.removeMemberRegistration(
+        registrationId, context, true); //feeha notify listner
   }
 
   //Cancel Attendence////////////////////////////////////////////////////////////////////////////
@@ -183,7 +203,18 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
           .indexWhere((element) => element.registrationId == registrationId);
 
       allMemberRegistrationsList[index] = newRegistration;
-      notifyListeners();
+
+      offlinePickedMemberAllRegistrationsList = offlineAllRegistrationsList
+          .where((element) => pickedMember.memberId == element.memberId)
+          .toList();
+
+      var offlineActivememberRegeistartion =
+          offlinePickedMemberAllRegistrationsList
+              .firstWhere((element) => element.registrationIsActive == true);
+
+      ObjectBox.removeMemberAttendance(
+          offlineActivememberRegeistartion, context, true);
+      //feeha notify listner
     }
   }
 
@@ -248,7 +279,16 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
 
     allMemberRegistrationsList[index] = newRegistration;
 
-    notifyListeners();
+    offlinePickedMemberAllRegistrationsList = offlineAllRegistrationsList
+        .where((element) => pickedMember.memberId == element.memberId)
+        .toList();
+
+    var offlineActivememberRegeistartion =
+        offlinePickedMemberAllRegistrationsList
+            .firstWhere((element) => element.registrationIsActive == true);
+
+    ObjectBox.updateMemberAttandance(
+        offlineActivememberRegeistartion, context, true); //feeha notify listner
   }
 
   //Reactivate Registration//////////////////////////////////////////////////////////////////////////
@@ -297,7 +337,11 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
 
     allMemberRegistrationsList[index] = newRegistration;
 
-    notifyListeners();
+    ObjectBox.reactivateRegistration(
+        context: context,
+        memberData: pickedMember,
+        registartionId: oldRegistration.registrationId,
+        sync: true); //feeha notify listner
   }
 
   //Freeze Registration//////////////////////////////////////////////////////////////////////////
@@ -318,6 +362,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
           "freezeDuration": duration
         }));
     final responseData = json.decode(response.body);
+    print(responseData);
 
     if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message'] ?? 'error');
@@ -332,7 +377,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     newRegistration.registrationIsActive = oldRegistration.registrationIsActive;
     newRegistration.registrationAttended = oldRegistration.registrationAttended;
     newRegistration.registrationExpiresAt =
-        oldRegistration.registrationExpiresAt;
+        responseData['freezedRegistration']['registrationNewExpirationDate'];
     newRegistration.isFreezed = true;
     newRegistration.registrationCreatedAt =
         oldRegistration.registrationCreatedAt;
@@ -348,6 +393,16 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
 
     allMemberRegistrationsList[index] = newRegistration;
 
+    ObjectBox.freezeRegistration(
+        context: context,
+        freezeDuration: duration,
+        memberData: pickedMember,
+        packageId: oldRegistration.packageId,
+        registartionId: oldRegistration.registrationId,
+        sync: true); //feeha notify listner
+  }
+
+  void setNotifyListner() {
     notifyListeners();
   }
 }

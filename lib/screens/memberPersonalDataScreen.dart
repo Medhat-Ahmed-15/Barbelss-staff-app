@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:provider/provider.dart';
 import '../Exceptions/getRequest_exception.dart';
@@ -30,6 +31,23 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
   String whatsAppMessageLang = 'en';
 
   void setMemberVerification() async {
+    if (workConnectionStatus == 'offline') {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => FeedBackDialog(
+            titleText: AppLocalizations.of(context).unAbleToPerformAction,
+            gif: 'assets/gifs/fail.json',
+            enableButton: true,
+            buttonText: AppLocalizations.of(context).doneTitle,
+            callBackFunction: () {
+              Navigator.of(context).pop();
+            },
+            buttonColor: Colors.redAccent),
+      );
+
+      return;
+    }
     try {
       setState(() {
         allowVerification = true;
@@ -278,12 +296,22 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                                       color: Theme.of(context).primaryColor),
                                 ),
                                 Icon(
-                                  pickedMember.canAuthenticate == false
-                                      ? Icons.cancel_outlined
-                                      : Icons.check,
-                                  color: pickedMember.canAuthenticate == false
-                                      ? Colors.redAccent
-                                      : Colors.green,
+                                  workConnectionStatus == 'offline'
+                                      ? offlinePickedMember.canAuthenticate ==
+                                              false
+                                          ? Icons.cancel_outlined
+                                          : Icons.check
+                                      : pickedMember.canAuthenticate == false
+                                          ? Icons.cancel_outlined
+                                          : Icons.check,
+                                  color: workConnectionStatus == 'offline'
+                                      ? offlinePickedMember.canAuthenticate ==
+                                              false
+                                          ? Colors.redAccent
+                                          : Colors.green
+                                      : pickedMember.canAuthenticate == false
+                                          ? Colors.redAccent
+                                          : Colors.green,
                                 ),
                               ],
                             ),
@@ -320,10 +348,17 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                       : button(
                           setMemberVerification,
                           Colors.blue,
-                          pickedMember.canAuthenticate == true
-                              ? AppLocalizations.of(context)
-                                  .disAllowVerification
-                              : AppLocalizations.of(context).allowVerification),
+                          workConnectionStatus == 'offline'
+                              ? offlinePickedMember.canAuthenticate == true
+                                  ? AppLocalizations.of(context)
+                                      .disAllowVerification
+                                  : AppLocalizations.of(context)
+                                      .allowVerification
+                              : pickedMember.canAuthenticate == true
+                                  ? AppLocalizations.of(context)
+                                      .disAllowVerification
+                                  : AppLocalizations.of(context)
+                                      .allowVerification),
                   const SizedBox(
                     height: 20,
                   ),
@@ -332,6 +367,25 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                   resendQrCodeLoading == true
                       ? FourDotsLoading()
                       : button(() async {
+                          if (workConnectionStatus == 'offline') {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) => FeedBackDialog(
+                                  titleText: AppLocalizations.of(context)
+                                      .unAbleToPerformAction,
+                                  gif: 'assets/gifs/fail.json',
+                                  enableButton: true,
+                                  buttonText:
+                                      AppLocalizations.of(context).doneTitle,
+                                  callBackFunction: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  buttonColor: Colors.redAccent),
+                            );
+
+                            return;
+                          }
                           setState(() {
                             resendQrCodeLoading = true;
                           });
@@ -437,23 +491,41 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                               setState(() {
                                 blockOrUnBlockLoading = true;
                               });
-                              await Provider.of<AllMembersProvider>(context,
-                                      listen: false)
-                                  .blockMember(context);
+                              if (workConnectionStatus == 'offline') {
+                                ObjectBox.blockOrUnblockMember(
+                                    offlinePickedMember.memberId, false);
+                              } else {
+                                await Provider.of<AllMembersProvider>(context,
+                                        listen: false)
+                                    .blockOrUnblockMember(context);
+                              }
+
                               showDialog(
                                 context: context,
                                 barrierDismissible: true,
                                 builder: (BuildContext context) =>
                                     FeedBackDialog(
-                                        titleText: pickedMember.isBlocked ==
-                                                false
-                                            ? AppLocalizations.of(context)
-                                                .memberIsUnBlockedSuccessfullly
-                                            : AppLocalizations.of(context)
-                                                .memberIsBlockedSuccessfullly,
-                                        gif: pickedMember.isBlocked == false
-                                            ? 'assets/gifs/unblock.json'
-                                            : 'assets/gifs/block.json',
+                                        titleText: workConnectionStatus ==
+                                                'offline'
+                                            ? offlinePickedMember.isBlocked ==
+                                                    false
+                                                ? AppLocalizations.of(context)
+                                                    .memberIsUnBlockedSuccessfullly
+                                                : AppLocalizations.of(context)
+                                                    .memberIsBlockedSuccessfullly
+                                            : pickedMember.isBlocked == false
+                                                ? AppLocalizations.of(context)
+                                                    .memberIsUnBlockedSuccessfullly
+                                                : AppLocalizations.of(context)
+                                                    .memberIsBlockedSuccessfullly,
+                                        gif: workConnectionStatus == 'offline'
+                                            ? offlinePickedMember.isBlocked ==
+                                                    false
+                                                ? 'assets/gifs/unblock.json'
+                                                : 'assets/gifs/block.json'
+                                            : pickedMember.isBlocked == false
+                                                ? 'assets/gifs/unblock.json'
+                                                : 'assets/gifs/block.json',
                                         enableButton: true,
                                         buttonText: AppLocalizations.of(context)
                                             .doneTitle,
@@ -463,6 +535,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                                         buttonColor:
                                             Theme.of(context).primaryColor),
                               );
+
                               blockOrUnBlockLoading = false;
                               setState(() {});
                             } on GetRequestException catch (error) {
@@ -513,12 +586,20 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                                   context);
                             }
                           },
-                          pickedMember.isBlocked == true
-                              ? Colors.green
-                              : Colors.redAccent,
-                          pickedMember.isBlocked == true
-                              ? AppLocalizations.of(context).unblockMember
-                              : AppLocalizations.of(context).blockMember,
+                          workConnectionStatus == 'offline'
+                              ? offlinePickedMember.isBlocked == true
+                                  ? Colors.green
+                                  : Colors.redAccent
+                              : pickedMember.isBlocked == true
+                                  ? Colors.green
+                                  : Colors.redAccent,
+                          workConnectionStatus == 'offline'
+                              ? offlinePickedMember.isBlocked == true
+                                  ? AppLocalizations.of(context).unblockMember
+                                  : AppLocalizations.of(context).blockMember
+                              : pickedMember.isBlocked == true
+                                  ? AppLocalizations.of(context).unblockMember
+                                  : AppLocalizations.of(context).blockMember,
                         ),
 
                   const SizedBox(

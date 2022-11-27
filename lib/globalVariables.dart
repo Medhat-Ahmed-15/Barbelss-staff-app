@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:gym_staff_app/models/freezeData.dart';
 import 'package:gym_staff_app/models/memberData.dart';
 import 'package:gym_staff_app/models/planData.dart';
 import 'package:gym_staff_app/models/registrations.dart';
@@ -15,6 +16,7 @@ Box<MemberData> memberDataBox;
 Box<Registrations> registrationsBox;
 Box<MemberAttendencesData> memberAttendenceDataBox;
 Box<PlanData> planDataBox;
+Box<FreezeData> freezeBox;
 
 String token = '';
 String qrCodeURL = '';
@@ -36,14 +38,16 @@ List<MemberData> sortedMemberData = [];
 List<MemberRegistrationsResponseData> allMemberRegistrationsList = [];
 List<PlanData> allPlansList = [];
 
-List<MemberData> allMembersOfflineData = [];
-List<PlanData> allPlansOfflineData = [];
-List<Registrations> allRegistrationsOfflineData = [];
-List<Registrations> currentMemberOfflineRegistrations = [];
-
-List<MemberAttendencesData> allAttendencesOfflineData = [];
+List<MemberData> offlineAllMembersData = [];
+List<MemberData> offlineSortedMemberData = [];
+List<PlanData> offlineAllPlansList = [];
+List<Registrations> offlineAllRegistrationsList = [];
+List<Registrations> offlinePickedMemberAllRegistrationsList = [];
+List<MemberAttendencesData> offlineAllAttendancesList = [];
+List<FreezeData> offlineAllFreezeList = [];
 
 MemberData pickedMember;
+MemberData offlinePickedMember;
 
 MemberRegistrationsResponseData pickedMemberPackage;
 Registrations offlinePickedMemberPackage;
