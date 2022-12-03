@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:gym_staff_app/providers/all_memberRegistartions_provider.dart';
+import 'package:gym_staff_app/providers/all_members_provider.dart';
+import 'package:gym_staff_app/screens/addNewNoteScreen.dart';
 import 'package:gym_staff_app/screens/plansScreen.dart';
 import 'package:gym_staff_app/widgets/dialogs/feedBackDialog.dart';
 import 'package:flutter/material.dart';
@@ -135,6 +137,8 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
 
     Provider.of<AllMemberRegistartionsProvider>(context, listen: true);
 
+    Provider.of<AllMembersProvider>(context, listen: true);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
@@ -152,7 +156,7 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                   padding: const EdgeInsets.only(left: 15, top: 150),
                   child: workConnectionStatus == 'offline'
                       ? offlinePickedMemberAllRegistrationsList
-                              .where((element) => element.operation != 'delete')
+                              .where((element) => element.operation != 'DELETE')
                               .toList()
                               .isEmpty
                           ? EmptyAnimationWidget(refresh)
@@ -168,14 +172,14 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
                                   return OfflineMemberPackageDataTile(
                                       offlinePickedMemberAllRegistrationsList
                                           .where((element) =>
-                                              element.operation != 'delete')
+                                              element.operation != 'DELETE')
                                           .toList()[index],
                                       refresh);
                                 },
                                 itemCount:
                                     offlinePickedMemberAllRegistrationsList
                                         .where((element) =>
-                                            element.operation != 'delete')
+                                            element.operation != 'DELETE')
                                         .toList()
                                         .length,
                                 separatorBuilder:
@@ -280,6 +284,14 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
               ? const Text('')
               : AnimatedFloatingActionButton(
                   fabButtons: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: addToBlacklistOrRemoveFromBlacklistButton(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: addNoteButton(),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: cancelArrivalFloatingButton(),
@@ -727,6 +739,82 @@ class _MemberDetailsScreenState extends State<MemberDetailsScreen> {
             color: Theme.of(context).iconTheme.color,
           ),
           backgroundColor: Colors.redAccent),
+    );
+  }
+
+//Add Notes
+  Widget addNoteButton() {
+    return SizedBox(
+      width: 200,
+      child: FloatingActionButton.extended(
+          heroTag: 'addNoteButton',
+          onPressed: () {
+            Navigator.pushNamed(context, AddNewNoteScreen.routeName);
+          },
+          label: Text(
+            AppLocalizations.of(context).addNote,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.headline1.color),
+          ),
+          icon: Icon(
+            Icons.note_add,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          backgroundColor: Colors.blue),
+    );
+  }
+
+//add or remove blacklist
+  Widget addToBlacklistOrRemoveFromBlacklistButton() {
+    return SizedBox(
+      width: workConnectionStatus == 'offline'
+          ? offlinePickedMember.isBlacklist == false
+              ? 200
+              : 250
+          : pickedMember.isBlacklist == false
+              ? 200
+              : 250,
+      child: FloatingActionButton.extended(
+          heroTag: 'addToBlackListButton',
+          onPressed: () async {
+            if (workConnectionStatus == 'offline') {
+              ObjectBox.addtoBlackListOrRemoveFromBlacklist(
+                  offlinePickedMember.memberId, false, context);
+            } else {
+              setState(() {
+                confirmationLoading = true;
+              });
+              await Provider.of<AllMembersProvider>(context, listen: false)
+                  .addtoBlackListOrRemoveFromBlacklist(context);
+              setState(() {
+                confirmationLoading = false;
+              });
+            }
+          },
+          label: Text(
+            workConnectionStatus == 'offline'
+                ? offlinePickedMember.isBlacklist == true
+                    ? AppLocalizations.of(context).removefromBlacklist
+                    : AppLocalizations.of(context).addToBlackList
+                : pickedMember.isBlacklist == true
+                    ? AppLocalizations.of(context).removefromBlacklist
+                    : AppLocalizations.of(context).addToBlackList,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.headline1.color),
+          ),
+          icon: Icon(
+            workConnectionStatus == 'offline'
+                ? offlinePickedMember.isBlacklist == true
+                    ? Icons.person
+                    : Icons.person_off_sharp
+                : pickedMember.isBlacklist == true
+                    ? Icons.person
+                    : Icons.person_off_sharp,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          backgroundColor: Colors.black54),
     );
   }
 }

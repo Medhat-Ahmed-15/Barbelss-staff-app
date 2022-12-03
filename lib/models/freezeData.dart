@@ -31,4 +31,19 @@ class FreezeData {
       this.sync,
       this.operation,
       this.reactivation});
+
+  FreezeData.fromjson(Map<String, dynamic> json) {
+    memberId = json['_id'];
+    clubId = json['clubId'];
+    staffId = json['staffId'];
+    freezeId = json['freezeId'];
+    registrationId = json['registrationId'];
+    packageId = json['packageId'];
+    reactivationDate = json['reactivationDate'];
+    freezeDuration = json['freezeDuration'];
+    registrationNewExpirationDate = json['registrationNewExpirationDate'];
+    reactivation = json['reactivation'];
+    sync = true;
+    operation = '';
+  }
 }

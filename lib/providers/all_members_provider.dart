@@ -79,7 +79,12 @@ class AllMembersProvider with ChangeNotifier {
     memberData.qrCodeURL = responseData['member']['QRCodeURL'];
     memberData.qrCodeUUID = responseData['member']['QRCodeUUID'];
     memberData.membership = responseData['member']['membership'] ?? '';
+    memberData.isBlacklist = responseData['member']['isBlacklist'] ?? false;
     memberData.canAuthenticate = responseData['member']['canAuthenticate'];
+    var allMembernotes = (responseData['member']['notes'] as List)
+        .map((index) => Notes.fromjson(index))
+        .toList();
+    memberData.notes = allMembernotes;
 
     pickedMember = memberData;
 
@@ -90,8 +95,157 @@ class AllMembersProvider with ChangeNotifier {
 
     sortedMemberData = allMembersList;
 
-    notifyListeners();
     ObjectBox.blockOrUnblockMember(pickedMember.memberId, true);
+  }
+
+  //Blacklist Member//////////////////////////////////////////////////////////
+
+  Future<void> addtoBlackListOrRemoveFromBlacklist(
+    BuildContext context,
+  ) async {
+    String url =
+        'https://barbells-eg.co/api/v1/members/${pickedMember.memberId}/blacklist?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.patch(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode(
+        {
+          "status": pickedMember.isBlacklist == true ? 'REMOVE' : 'ADD',
+        },
+      ),
+    );
+
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    MemberData memberData = MemberData();
+    memberData.memberId = responseData['member']['_id'];
+    memberData.clubId = responseData['member']['clubId'];
+    memberData.memberName = responseData['member']['name'];
+    memberData.staffId = responseData['member']['staffId'];
+    memberData.gender = responseData['member']['gender'];
+    memberData.memberEmail = responseData['member']['email'];
+    memberData.birthYear = responseData['member']['birthYear'];
+    memberData.isBlocked = responseData['member']['isBlocked'];
+    memberData.createdAt = responseData['member']['createdAt'];
+    memberData.memberPhone = responseData['member']['phone'];
+    memberData.countryCode = responseData['member']['countryCode'];
+    memberData.qrCodeURL = responseData['member']['QRCodeURL'];
+    memberData.qrCodeUUID = responseData['member']['QRCodeUUID'];
+    memberData.membership = responseData['member']['membership'] ?? '';
+    memberData.canAuthenticate = responseData['member']['canAuthenticate'];
+
+    memberData.isBlacklist = responseData['member']['isBlacklist'];
+    var allMembernotes = (responseData['member']['notes'] as List)
+        .map((index) => Notes.fromjson(index))
+        .toList();
+    memberData.notes = allMembernotes;
+
+    pickedMember = memberData;
+
+    int allMembersListIndex = allMembersList
+        .indexWhere((member) => member.memberId == pickedMember.memberId);
+
+    allMembersList[allMembersListIndex] = pickedMember;
+
+    sortedMemberData = allMembersList;
+
+    ObjectBox.addtoBlackListOrRemoveFromBlacklist(
+        pickedMember.memberId, true, context);
+
+    notifyListeners();
+  }
+
+  //Add Notes//////////////////////////////////////////////////////////
+
+  Future<void> addNotes(BuildContext context, String note) async {
+    String url =
+        'https://barbells-eg.co/api/v1/members/${pickedMember.memberId}/notes?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.patch(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+      body: json.encode(
+        {
+          "noteMaker": currentStaffData.staffName,
+          "note": note,
+        },
+      ),
+    );
+
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    MemberData memberData = MemberData();
+    memberData.memberId = responseData['member']['_id'];
+    memberData.clubId = responseData['member']['clubId'];
+    memberData.memberName = responseData['member']['name'];
+    memberData.staffId = responseData['member']['staffId'];
+    memberData.gender = responseData['member']['gender'];
+    memberData.memberEmail = responseData['member']['email'];
+    memberData.birthYear = responseData['member']['birthYear'];
+    memberData.isBlocked = responseData['member']['isBlocked'];
+    memberData.createdAt = responseData['member']['createdAt'];
+    memberData.memberPhone = responseData['member']['phone'];
+    memberData.countryCode = responseData['member']['countryCode'];
+    memberData.qrCodeURL = responseData['member']['QRCodeURL'];
+    memberData.qrCodeUUID = responseData['member']['QRCodeUUID'];
+    memberData.membership = responseData['member']['membership'] ?? '';
+    memberData.isBlacklist = responseData['member']['isBlacklist'] ?? false;
+    memberData.canAuthenticate = responseData['member']['canAuthenticate'];
+    var allMembernotes = (responseData['member']['notes'] as List)
+        .map((index) => Notes.fromjson(index))
+        .toList();
+    memberData.notes = allMembernotes;
+
+    pickedMember = memberData;
+
+    int allMembersListIndex = allMembersList
+        .indexWhere((member) => member.memberId == pickedMember.memberId);
+
+    allMembersList[allMembersListIndex] = pickedMember;
+
+    sortedMemberData = allMembersList;
+
+    ObjectBox.insertNewNote(note: note, sync: true);
+  }
+
+  //Remove Notes//////////////////////////////////////////////////////////
+
+  Future<void> removeNote(BuildContext context, String noteId) async {
+    String url =
+        'https://barbells-eg.co/api/v1/members/${pickedMember.memberId}/notes/$noteId?lang=${localeLanguage == const Locale('en') ? 'en' : 'ar'}';
+
+    final response = await http.delete(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-access-token': token
+      },
+    );
+
+    final responseData = json.decode(response.body);
+
+    if (responseData['accepted'] == false) {
+      throw GetRequestException(responseData['message'] ?? 'error');
+    }
+
+    pickedMember.notes.removeWhere((element) => element.noteId == noteId);
+
+    notifyListeners();
   }
 
   //Add New Member/////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +306,13 @@ class AllMembersProvider with ChangeNotifier {
     memberData.createdAt = responseData['newMember']['createdAt'];
     memberData.qrCodeURL = responseData['newMember']['QRCodeURL'] ?? '';
     memberData.qrCodeURL = responseData['newMember']['QRCodeUUID'] ?? '';
+    memberData.isBlacklist = responseData['newMember']['isBlacklist'] ?? false;
+    if (responseData['newMember']['notes'] != null) {
+      var allMembernotes = (responseData['newMember']['notes'] as List)
+          .map((index) => Notes.fromjson(index))
+          .toList();
+      memberData.notes = allMembernotes;
+    }
 
     pickedMember = memberData;
 
@@ -215,8 +376,14 @@ class AllMembersProvider with ChangeNotifier {
     memberData.countryCode = responseData['updatedMember']['countryCode'];
     memberData.qrCodeURL = responseData['updatedMember']['QRCodeURL'];
     memberData.qrCodeUUID = responseData['updatedMember']['QRCodeUUID'];
+    memberData.isBlacklist =
+        responseData['updatedMember']['isBlacklist'] ?? false;
     memberData.canAuthenticate =
         responseData['updatedMember']['canAuthenticate'];
+    var allMembernotes = (responseData['updatedMember']['notes'] as List)
+        .map((index) => Notes.fromjson(index))
+        .toList();
+    memberData.notes = allMembernotes;
 
     pickedMember = memberData;
 

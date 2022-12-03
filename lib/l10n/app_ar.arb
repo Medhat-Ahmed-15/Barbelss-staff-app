@@ -291,7 +291,23 @@
 
     "sorryNoMoreSessionsToCancel": "عذرا ، لا مزيد من التسجيلات للإلغاء",
 
-    "syncingData": "تحميل البيانات..."
+    "syncingData": "تحميل البيانات...",
+
+    "packages": "الاشتراكات",
+
+    "payments": "المدفوعات",
+
+    "addNote": "أضف ملاحظة",
+
+    "addToBlackList": "أضف إلى القائمة السوداء",
+
+    "removefromBlacklist": "إزالة من القائمة السوداء",
+
+    "notes": "ملحوظات",
+
+    "youMustAddNoteToSave": "يجب ألا تكون الملاحظة فارغة",
+
+    "noteAddedsccessfully": "تمت إضافة الملاحظة بنجاح"
 
 
 

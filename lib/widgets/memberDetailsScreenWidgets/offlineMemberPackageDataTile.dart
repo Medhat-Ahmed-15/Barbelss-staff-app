@@ -58,7 +58,9 @@ class _OfflineMemberPackageDataTileState
                     barrierDismissible: false,
                     builder: (BuildContext context) =>
                         ConfirmDeleteRegistrationDialog(
-                            widget.memberRegistrations.registrationId),
+                      itemToDelete: 'registration',
+                      registrationId: widget.memberRegistrations.registrationId,
+                    ),
                   );
 
                   widget.refresh();

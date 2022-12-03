@@ -8,6 +8,7 @@ import 'package:gym_staff_app/providers/auth_provider.dart';
 import 'package:gym_staff_app/providers/localLanguageProvider.dart';
 import 'package:gym_staff_app/providers/offlineFeature_provider.dart';
 import 'package:gym_staff_app/screens/aboutScreen.dart';
+import 'package:gym_staff_app/screens/addNewNoteScreen.dart';
 import 'package:gym_staff_app/screens/changeLanguageScreen.dart';
 import 'package:gym_staff_app/screens/forgotPassword_screen.dart';
 import 'package:gym_staff_app/screens/mainScreen.dart';
@@ -127,6 +128,7 @@ class MyApp extends StatelessWidget {
                         MemberDetailsScreen(),
                     PlansScreen.routeName: (ctx) => PlansScreen(),
                     SettingsScreen.routeName: (ctx) => SettingsScreen(),
+                    AddNewNoteScreen.routeName: (ctx) => AddNewNoteScreen(),
                     ChangeLanguageScreen.routeName: (ctx) =>
                         ChangeLanguageScreen(),
                   },

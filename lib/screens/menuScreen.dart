@@ -2,9 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/models/menuItem.dart';
 import 'package:gym_staff_app/providers/auth_provider.dart';
-import 'package:gym_staff_app/screens/aboutScreen.dart';
-import 'package:gym_staff_app/screens/mainScreen.dart';
-import 'package:gym_staff_app/screens/settingsScreen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/widgets/menuScreenWidgets/loadingUserDataListTile.dart';
 import 'package:gym_staff_app/widgets/menuScreenWidgets/userDataListTile.dart';
@@ -14,9 +11,22 @@ class MenuItems {
   static MenuItemData home = MenuItemData('Home', Icons.home);
   static MenuItemData settings = MenuItemData('Settings', Icons.settings);
   static MenuItemData aboutUs = MenuItemData('About Us', Icons.info);
+  static MenuItemData payments =
+      MenuItemData('payments', Icons.attach_money_sharp);
+  static MenuItemData packages =
+      MenuItemData('packages', Icons.confirmation_number_outlined);
   static MenuItemData logOut = MenuItemData('Log Out', Icons.exit_to_app);
+  static MenuItemData divider = MenuItemData('divider', Icons.exit_to_app);
 
-  static List<MenuItemData> all = [home, settings, aboutUs, logOut];
+  static List<MenuItemData> all = [
+    home,
+    settings,
+    aboutUs,
+    packages,
+    payments,
+    divider,
+    logOut
+  ];
 }
 
 class MenuScreen extends StatefulWidget {
@@ -46,6 +56,11 @@ class _MenuScreenState extends State<MenuScreen> {
                 : userDataListTile(),
             const Spacer(),
             ...MenuItems.all.map((item) {
+              if (item.title == 'divider') {
+                return const Divider(
+                  color: Colors.grey,
+                );
+              }
               return buildMenuItemData(item, context);
             }),
             const Spacer(
@@ -94,7 +109,11 @@ class _MenuScreenState extends State<MenuScreen> {
                     ? AppLocalizations.of(context).aboutUsIconTitle
                     : item.title == 'Log Out'
                         ? AppLocalizations.of(context).logOutIconTitle
-                        : '',
+                        : item.title == 'payments'
+                            ? AppLocalizations.of(context).payments
+                            : item.title == 'packages'
+                                ? AppLocalizations.of(context).packages
+                                : '',
         style: TextStyle(
             color: Theme.of(context).textTheme.headline1.color,
             fontWeight: FontWeight.bold),

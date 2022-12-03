@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_staff_app/globalVariables.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/helper/object_box.dart';
+import 'package:gym_staff_app/widgets/memberPersonalDataWidgets/BottomContent.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:provider/provider.dart';
 import '../Exceptions/getRequest_exception.dart';
@@ -23,8 +25,7 @@ class MemberPersonalDataScreen extends StatefulWidget {
 
 class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
   bool allowVerification = false;
-  bool resendQrCodeLoading = false;
-  bool blockOrUnBlockLoading = false;
+  bool loading = false;
   bool arabicChosen = false;
   bool englishChosen = true;
 
@@ -134,7 +135,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: 200,
         height: 56,
         decoration: const BoxDecoration(
           boxShadow: [
@@ -218,6 +219,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<AllMembersProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
@@ -339,277 +341,268 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 50,
-                  ),
-
-                  //Allow verification
-                  allowVerification == true
-                      ? FourDotsLoading()
-                      : button(
-                          setMemberVerification,
-                          Colors.blue,
-                          workConnectionStatus == 'offline'
-                              ? offlinePickedMember.canAuthenticate == true
-                                  ? AppLocalizations.of(context)
-                                      .disAllowVerification
-                                  : AppLocalizations.of(context)
-                                      .allowVerification
-                              : pickedMember.canAuthenticate == true
-                                  ? AppLocalizations.of(context)
-                                      .disAllowVerification
-                                  : AppLocalizations.of(context)
-                                      .allowVerification),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  //Resend Qr Code
-                  resendQrCodeLoading == true
-                      ? FourDotsLoading()
-                      : button(() async {
-                          if (workConnectionStatus == 'offline') {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (BuildContext context) => FeedBackDialog(
-                                  titleText: AppLocalizations.of(context)
-                                      .unAbleToPerformAction,
-                                  gif: 'assets/gifs/fail.json',
-                                  enableButton: true,
-                                  buttonText:
-                                      AppLocalizations.of(context).doneTitle,
-                                  callBackFunction: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  buttonColor: Colors.redAccent),
-                            );
-
-                            return;
-                          }
-                          setState(() {
-                            resendQrCodeLoading = true;
-                          });
-                          try {
-                            var response = await showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (BuildContext context) => QrCodeDialog(
-                                pickedMember.memberName,
-                                pickedMember.memberEmail,
-                                pickedMember.memberPhone,
-                                context,
-                              ),
-                            );
-
-                            if (response == true) {
-                              await updateMemberQrCode(
-                                  context: context,
-                                  whatsAppMessageLang: whatsAppMessageLang);
-
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) =>
-                                    FeedBackDialog(
-                                        titleText: AppLocalizations.of(context)
-                                            .updateQrCodeSuccessfully,
-                                        gif: 'assets/gifs/success.json',
-                                        enableButton: true,
-                                        buttonText: AppLocalizations.of(context)
-                                            .doneTitle,
-                                        callBackFunction: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        buttonColor:
-                                            Theme.of(context).primaryColor),
-                              );
-
-                              setState(() {
-                                resendQrCodeLoading = false;
-                              });
-                            } else {
-                              setState(() {
-                                resendQrCodeLoading = false;
-                              });
-                            }
-                          } on GetRequestException catch (error) {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (BuildContext context) => FeedBackDialog(
-                                  titleText: error.toStringMessage(),
-                                  gif: 'assets/gifs/fail.json',
-                                  enableButton: true,
-                                  buttonText:
-                                      AppLocalizations.of(context).doneTitle,
-                                  callBackFunction: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  buttonColor: Colors.redAccent),
-                            );
-
-                            setState(() {
-                              resendQrCodeLoading = false;
-                            });
-                          } on SocketException {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (BuildContext context) => FeedBackDialog(
-                                  titleText: AppLocalizations.of(context)
-                                      .connectionStatusMessage,
-                                  gif: 'assets/gifs/fail.json',
-                                  enableButton: true,
-                                  buttonText:
-                                      AppLocalizations.of(context).doneTitle,
-                                  callBackFunction: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  buttonColor: Colors.redAccent),
-                            );
-
-                            setState(() {
-                              resendQrCodeLoading = false;
-                            });
-                          } catch (error) {
-                            showToast(
-                                AppLocalizations.of(context).somethingWentWrong,
-                                context);
-                          }
-                        }, Colors.grey,
-                          AppLocalizations.of(context).resendQrCode),
-                  const SizedBox(
-                    height: 20,
-                  ),
-
-                  //Block and Unblock Member
-                  blockOrUnBlockLoading == true
-                      ? FourDotsLoading()
-                      : button(
-                          () async {
-                            try {
-                              setState(() {
-                                blockOrUnBlockLoading = true;
-                              });
-                              if (workConnectionStatus == 'offline') {
-                                ObjectBox.blockOrUnblockMember(
-                                    offlinePickedMember.memberId, false);
-                              } else {
-                                await Provider.of<AllMembersProvider>(context,
-                                        listen: false)
-                                    .blockOrUnblockMember(context);
-                              }
-
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) =>
-                                    FeedBackDialog(
-                                        titleText: workConnectionStatus ==
-                                                'offline'
-                                            ? offlinePickedMember.isBlocked ==
-                                                    false
-                                                ? AppLocalizations.of(context)
-                                                    .memberIsUnBlockedSuccessfullly
-                                                : AppLocalizations.of(context)
-                                                    .memberIsBlockedSuccessfullly
-                                            : pickedMember.isBlocked == false
-                                                ? AppLocalizations.of(context)
-                                                    .memberIsUnBlockedSuccessfullly
-                                                : AppLocalizations.of(context)
-                                                    .memberIsBlockedSuccessfullly,
-                                        gif: workConnectionStatus == 'offline'
-                                            ? offlinePickedMember.isBlocked ==
-                                                    false
-                                                ? 'assets/gifs/unblock.json'
-                                                : 'assets/gifs/block.json'
-                                            : pickedMember.isBlocked == false
-                                                ? 'assets/gifs/unblock.json'
-                                                : 'assets/gifs/block.json',
-                                        enableButton: true,
-                                        buttonText: AppLocalizations.of(context)
-                                            .doneTitle,
-                                        callBackFunction: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        buttonColor:
-                                            Theme.of(context).primaryColor),
-                              );
-
-                              blockOrUnBlockLoading = false;
-                              setState(() {});
-                            } on GetRequestException catch (error) {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) =>
-                                    FeedBackDialog(
-                                        titleText: error.toStringMessage(),
-                                        gif: 'assets/gifs/fail.json',
-                                        enableButton: true,
-                                        buttonText: AppLocalizations.of(context)
-                                            .doneTitle,
-                                        callBackFunction: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        buttonColor: Colors.redAccent),
-                              );
-
-                              setState(() {
-                                blockOrUnBlockLoading = false;
-                              });
-                            } on SocketException {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) =>
-                                    FeedBackDialog(
-                                        titleText: AppLocalizations.of(context)
-                                            .connectionStatusMessage,
-                                        gif: 'assets/gifs/fail.json',
-                                        enableButton: true,
-                                        buttonText: AppLocalizations.of(context)
-                                            .doneTitle,
-                                        callBackFunction: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        buttonColor: Colors.redAccent),
-                              );
-
-                              setState(() {
-                                blockOrUnBlockLoading = false;
-                              });
-                            } catch (error) {
-                              showToast(
-                                  AppLocalizations.of(context)
-                                      .somethingWentWrong,
-                                  context);
-                            }
-                          },
-                          workConnectionStatus == 'offline'
-                              ? offlinePickedMember.isBlocked == true
-                                  ? Colors.green
-                                  : Colors.redAccent
-                              : pickedMember.isBlocked == true
-                                  ? Colors.green
-                                  : Colors.redAccent,
-                          workConnectionStatus == 'offline'
-                              ? offlinePickedMember.isBlocked == true
-                                  ? AppLocalizations.of(context).unblockMember
-                                  : AppLocalizations.of(context).blockMember
-                              : pickedMember.isBlocked == true
-                                  ? AppLocalizations.of(context).unblockMember
-                                  : AppLocalizations.of(context).blockMember,
-                        ),
-
-                  const SizedBox(
                     height: 30,
                   ),
+
+                  BottomContent(),
                 ],
               ),
             ),
           ),
+          loading == true
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: FourDotsLoading(),
+                  color: Colors.black38,
+                )
+              : const SizedBox(
+                  height: 0,
+                ),
         ],
+      ),
+      floatingActionButton: AnimatedFloatingActionButton(
+        fabButtons: <Widget>[
+          //Allow verification
+          allowVerification == true
+              ? FourDotsLoading()
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: button(
+                      setMemberVerification,
+                      Colors.blue,
+                      workConnectionStatus == 'offline'
+                          ? offlinePickedMember.canAuthenticate == true
+                              ? AppLocalizations.of(context)
+                                  .disAllowVerification
+                              : AppLocalizations.of(context).allowVerification
+                          : pickedMember.canAuthenticate == true
+                              ? AppLocalizations.of(context)
+                                  .disAllowVerification
+                              : AppLocalizations.of(context).allowVerification),
+                ),
+
+          //Resend Qr Code
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: button(() async {
+              if (workConnectionStatus == 'offline') {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText:
+                          AppLocalizations.of(context).unAbleToPerformAction,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+
+                return;
+              }
+              setState(() {
+                loading = true;
+              });
+              try {
+                var response = await showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => QrCodeDialog(
+                    pickedMember.memberName,
+                    pickedMember.memberEmail,
+                    pickedMember.memberPhone,
+                    context,
+                  ),
+                );
+
+                if (response == true) {
+                  await updateMemberQrCode(
+                      context: context,
+                      whatsAppMessageLang: whatsAppMessageLang);
+
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: AppLocalizations.of(context)
+                            .updateQrCodeSuccessfully,
+                        gif: 'assets/gifs/success.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Theme.of(context).primaryColor),
+                  );
+
+                  setState(() {
+                    loading = false;
+                  });
+                } else {
+                  setState(() {
+                    loading = false;
+                  });
+                }
+              } on GetRequestException catch (error) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText: error.toStringMessage(),
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+
+                setState(() {
+                  loading = false;
+                });
+              } on SocketException {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText:
+                          AppLocalizations.of(context).connectionStatusMessage,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+
+                setState(() {
+                  loading = false;
+                });
+              } catch (error) {
+                showToast(
+                    AppLocalizations.of(context).somethingWentWrong, context);
+              }
+            }, Colors.grey, AppLocalizations.of(context).resendQrCode),
+          ),
+
+          //Block and Unblock Member
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: button(
+              () async {
+                try {
+                  setState(() {
+                    loading = true;
+                  });
+                  if (workConnectionStatus == 'offline') {
+                    ObjectBox.blockOrUnblockMember(
+                        offlinePickedMember.memberId, false);
+                  } else {
+                    await Provider.of<AllMembersProvider>(context,
+                            listen: false)
+                        .blockOrUnblockMember(context);
+                  }
+
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: workConnectionStatus == 'offline'
+                            ? offlinePickedMember.isBlocked == false
+                                ? AppLocalizations.of(context)
+                                    .memberIsUnBlockedSuccessfullly
+                                : AppLocalizations.of(context)
+                                    .memberIsBlockedSuccessfullly
+                            : pickedMember.isBlocked == false
+                                ? AppLocalizations.of(context)
+                                    .memberIsUnBlockedSuccessfullly
+                                : AppLocalizations.of(context)
+                                    .memberIsBlockedSuccessfullly,
+                        gif: workConnectionStatus == 'offline'
+                            ? offlinePickedMember.isBlocked == false
+                                ? 'assets/gifs/unblock.json'
+                                : 'assets/gifs/block.json'
+                            : pickedMember.isBlocked == false
+                                ? 'assets/gifs/unblock.json'
+                                : 'assets/gifs/block.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Theme.of(context).primaryColor),
+                  );
+
+                  loading = false;
+                  setState(() {});
+                } on GetRequestException catch (error) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: error.toStringMessage(),
+                        gif: 'assets/gifs/fail.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Colors.redAccent),
+                  );
+
+                  setState(() {
+                    loading = false;
+                  });
+                } on SocketException {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: AppLocalizations.of(context)
+                            .connectionStatusMessage,
+                        gif: 'assets/gifs/fail.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Colors.redAccent),
+                  );
+
+                  setState(() {
+                    loading = false;
+                  });
+                } catch (error) {
+                  showToast(
+                      AppLocalizations.of(context).somethingWentWrong, context);
+                }
+              },
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.isBlocked == true
+                      ? Colors.green
+                      : Colors.redAccent
+                  : pickedMember.isBlocked == true
+                      ? Colors.green
+                      : Colors.redAccent,
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.isBlocked == true
+                      ? AppLocalizations.of(context).unblockMember
+                      : AppLocalizations.of(context).blockMember
+                  : pickedMember.isBlocked == true
+                      ? AppLocalizations.of(context).unblockMember
+                      : AppLocalizations.of(context).blockMember,
+            ),
+          ),
+        ],
+        colorStartAnimation: Theme.of(context).primaryColor,
+        colorEndAnimation: Theme.of(context).primaryColor,
+        animatedIconData: AnimatedIcons.list_view,
       ),
     );
   }

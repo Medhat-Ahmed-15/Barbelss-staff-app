@@ -731,6 +731,46 @@
     "syncingData": "Syncing Data...",
     "@language": {
       "description": " "
+    },
+
+    "packages": "Packages",
+    "@language": {
+      "description": " "
+    },
+
+    "payments": "Payments",
+    "@language": {
+      "description": " "
+    },
+
+    "addNote": "Add Note",
+    "@language": {
+      "description": " "
+    },
+
+    "addToBlackList": "Add to blacklist",
+    "@language": {
+      "description": " "
+    },
+
+    "removefromBlacklist": "Remove from blacklist",
+    "@language": {
+      "description": " "
+    },
+
+    "notes": "Notes",
+    "@language": {
+      "description": " "
+    },
+
+    "youMustAddNoteToSave": "Note must not be empty",
+    "@language": {
+      "description": " "
+    },
+
+    "noteAddedsccessfully": "Note added successfully",
+    "@language": {
+      "description": " "
     }
 
     

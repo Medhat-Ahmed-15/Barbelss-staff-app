@@ -86,7 +86,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 1378476243543860403),
       name: 'MemberData',
-      lastPropertyId: const IdUid(18, 4367868579330038011),
+      lastPropertyId: const IdUid(19, 2312494023041545828),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -179,6 +179,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(18, 4367868579330038011),
             name: 'operation',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(19, 2312494023041545828),
+            name: 'isBlacklist',
+            type: 1,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -387,6 +392,41 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(7, 937376422607402013),
+      name: 'Notes',
+      lastPropertyId: const IdUid(5, 3612959095483818946),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 2608205678251788159),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 9123790205682333423),
+            name: 'noteMaker',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 8545860535872122880),
+            name: 'note',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 4837468327088220779),
+            name: 'createdAt',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 3612959095483818946),
+            name: 'noteId',
+            type: 9,
+            flags: 2048,
+            indexId: const IdUid(7, 3115373230375009133))
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -410,13 +450,19 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(5, 5749498089857437392),
-      lastIndexId: const IdUid(5, 7049012826544978838),
+      lastEntityId: const IdUid(7, 937376422607402013),
+      lastIndexId: const IdUid(7, 3115373230375009133),
       lastRelationId: const IdUid(0, 0),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [],
+      retiredEntityUids: const [1502856147444356535],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [
+        5938998920743199510,
+        7186715639478742627,
+        7764904156019282437,
+        2987712245867585995,
+        1772131008003687278
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -537,7 +583,7 @@ ModelDefinition getObjectBoxModel() {
           final operationOffset = object.operation == null
               ? null
               : fbb.writeString(object.operation);
-          fbb.startTable(19);
+          fbb.startTable(20);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(1, memberIdOffset);
           fbb.addOffset(2, clubIdOffset);
@@ -556,6 +602,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(15, createdAtOffset);
           fbb.addBool(16, object.sync);
           fbb.addOffset(17, operationOffset);
+          fbb.addBool(18, object.isBlacklist);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -588,6 +635,7 @@ ModelDefinition getObjectBoxModel() {
               memberId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 6),
               memberName: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 10),
               memberPhone: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 14),
+              isBlacklist: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 40),
               sync: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 36),
               operation: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 38));
 
@@ -814,6 +862,52 @@ ModelDefinition getObjectBoxModel() {
               operation: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26));
 
           return object;
+        }),
+    Notes: EntityDefinition<Notes>(
+        model: _entities[5],
+        toOneRelations: (Notes object) => [],
+        toManyRelations: (Notes object) => {},
+        getId: (Notes object) => object.id,
+        setId: (Notes object, int id) {
+          object.id = id;
+        },
+        objectToFB: (Notes object, fb.Builder fbb) {
+          final noteMakerOffset = object.noteMaker == null
+              ? null
+              : fbb.writeString(object.noteMaker);
+          final noteOffset =
+              object.note == null ? null : fbb.writeString(object.note);
+          final createdAtOffset = object.createdAt == null
+              ? null
+              : fbb.writeString(object.createdAt);
+          final noteIdOffset =
+              object.noteId == null ? null : fbb.writeString(object.noteId);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id ?? 0);
+          fbb.addOffset(1, noteMakerOffset);
+          fbb.addOffset(2, noteOffset);
+          fbb.addOffset(3, createdAtOffset);
+          fbb.addOffset(4, noteIdOffset);
+          fbb.finish(fbb.endTable());
+          return object.id ?? 0;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = Notes(
+              id: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 4),
+              noteMaker: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 6),
+              createdAt: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 10),
+              note: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 8),
+              noteId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 12));
+
+          return object;
         })
   };
 
@@ -936,6 +1030,10 @@ class MemberData_ {
   /// see [MemberData.operation]
   static final operation =
       QueryStringProperty<MemberData>(_entities[1].properties[17]);
+
+  /// see [MemberData.isBlacklist]
+  static final isBlacklist =
+      QueryBooleanProperty<MemberData>(_entities[1].properties[18]);
 }
 
 /// [PlanData] entity fields to define ObjectBox queries.
@@ -1084,4 +1182,24 @@ class FreezeData_ {
   /// see [FreezeData.operation]
   static final operation =
       QueryStringProperty<FreezeData>(_entities[4].properties[11]);
+}
+
+/// [Notes] entity fields to define ObjectBox queries.
+class Notes_ {
+  /// see [Notes.id]
+  static final id = QueryIntegerProperty<Notes>(_entities[5].properties[0]);
+
+  /// see [Notes.noteMaker]
+  static final noteMaker =
+      QueryStringProperty<Notes>(_entities[5].properties[1]);
+
+  /// see [Notes.note]
+  static final note = QueryStringProperty<Notes>(_entities[5].properties[2]);
+
+  /// see [Notes.createdAt]
+  static final createdAt =
+      QueryStringProperty<Notes>(_entities[5].properties[3]);
+
+  /// see [Notes.noteId]
+  static final noteId = QueryStringProperty<Notes>(_entities[5].properties[4]);
 }

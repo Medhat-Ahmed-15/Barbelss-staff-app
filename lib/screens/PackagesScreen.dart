@@ -1,28 +1,27 @@
-// ignore_for_file: file_names
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_tv/flutter_swiper.dart';
-import 'package:gym_staff_app/assistant/assistantFunction.dart';
-import 'package:gym_staff_app/globalVariables.dart';
-import 'package:gym_staff_app/widgets/plansScreenWidgets/planDataTile.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
+import 'package:gym_staff_app/widgets/other/EmptyAnimationWidget.dart';
+import 'package:gym_staff_app/widgets/plansScreenWidgets/planDataTile.dart';
 import 'package:provider/provider.dart';
-import '../helper/object_box.dart';
+
+import '../assistant/assistantFunction.dart';
 import '../providers/offlineFeature_provider.dart';
-import '../widgets/other/EmptyAnimationWidget.dart';
 import '../widgets/other/FourDotsLoading.dart';
 import '../widgets/other/InternetConnectionError.dart';
+import '../widgets/plansScreenWidgets/viewPlanDatatile.dart';
 
-class PlansScreen extends StatefulWidget {
-  static const routeName = '/PlansScreen';
-
+class PackagesScreen extends StatefulWidget {
   @override
-  State<PlansScreen> createState() => _PlansScreenState();
+  State<PackagesScreen> createState() => _PackagesScreenState();
 }
 
-class _PlansScreenState extends State<PlansScreen> {
+class _PackagesScreenState extends State<PackagesScreen> {
   bool loadingPlans = false;
   bool connectionError = false;
 
@@ -85,16 +84,16 @@ class _PlansScreenState extends State<PlansScreen> {
         toolbarHeight: 100,
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            ZoomDrawer.of(context).toggle();
           },
           icon: Icon(
-            Icons.arrow_back,
+            Icons.menu,
             color: Theme.of(context).iconTheme.color,
-            size: 25,
+            size: 30,
           ),
         ),
         title: Text(
-          AppLocalizations.of(context).chooseAPlanTitle,
+          AppLocalizations.of(context).packages,
           style: TextStyle(
               color: Theme.of(context).textTheme.headline1.color,
               fontSize: 25,
@@ -127,8 +126,7 @@ class _PlansScreenState extends State<PlansScreen> {
                           builder: SwiperPagination.dots,
                         ),
                         itemBuilder: (BuildContext context, int index) {
-                          return PlanDataTile(
-                              offlineAllPlansList[index], screenComingFrom);
+                          return ViewPlanDataTile(offlineAllPlansList[index]);
                         },
                         itemCount: offlineAllPlansList.length,
                         itemWidth: MediaQuery.of(context).size.width * 0.75,
@@ -148,8 +146,8 @@ class _PlansScreenState extends State<PlansScreen> {
                                   builder: SwiperPagination.dots,
                                 ),
                                 itemBuilder: (BuildContext context, int index) {
-                                  return PlanDataTile(
-                                      allPlansList[index], screenComingFrom);
+                                  return ViewPlanDataTile(
+                                      offlineAllPlansList[index]);
                                 },
                                 itemCount: allPlansList.length,
                                 itemWidth:

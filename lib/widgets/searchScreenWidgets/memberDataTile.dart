@@ -114,12 +114,28 @@ class _MemberDataTileState extends State<MemberDataTile> {
                     ),
                   ],
                 ),
-                trailing: Text(
-                  convertDateToDayInNumberMonthInText(
-                      widget.memberData.createdAt, context),
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
+                trailing: Column(
+                  children: [
+                    Text(
+                      convertDateToDayInNumberMonthInText(
+                          widget.memberData.createdAt, context),
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(
+                        width: 50,
+                        child: Row(
+                          children: [
+                            widget.memberData.isBlocked == true
+                                ? const Icon(Icons.block)
+                                : const Icon(Icons.check),
+                            widget.memberData.isBlacklist == true
+                                ? const Icon(Icons.person_off_outlined)
+                                : const Icon(Icons.person),
+                          ],
+                        ))
+                  ],
                 ),
                 onTap: () async {
                   if (workConnectionStatus == 'offline') {

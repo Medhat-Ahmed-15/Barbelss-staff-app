@@ -17,6 +17,7 @@ Box<Registrations> registrationsBox;
 Box<MemberAttendencesData> memberAttendenceDataBox;
 Box<PlanData> planDataBox;
 Box<FreezeData> freezeBox;
+Box<Notes> notesBox;
 
 String token = '';
 String qrCodeURL = '';

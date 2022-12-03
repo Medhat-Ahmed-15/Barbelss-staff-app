@@ -75,7 +75,7 @@ class _MemberPackageDetailsScreenState
                     child: workConnectionStatus == 'offline'
                         ? memberAttendencesOfflineData
                                 .where(
-                                    (element) => element.operation != 'delete')
+                                    (element) => element.operation != 'DELETE')
                                 .toList()
                                 .isEmpty
                             ? Center(
@@ -92,12 +92,12 @@ class _MemberPackageDetailsScreenState
                                   return MemberAttendencesDataTile(
                                       memberAttendencesOfflineData
                                           .where((element) =>
-                                              element.operation != 'delete')
+                                              element.operation != 'DELETE')
                                           .toList()[index]);
                                 },
                                 itemCount: memberAttendencesOfflineData
                                     .where((element) =>
-                                        element.operation != 'delete')
+                                        element.operation != 'DELETE')
                                     .toList()
                                     .length,
                                 separatorBuilder:

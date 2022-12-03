@@ -56,8 +56,10 @@ class _MemberPackageDataTileState extends State<MemberPackageDataTile> {
                     context: context,
                     barrierDismissible: false,
                     builder: (BuildContext context) =>
-                        ConfirmDeleteRegistrationDialog(widget
-                            .memberRegistrationsResponseData.registrationId),
+                        ConfirmDeleteRegistrationDialog(
+                            registrationId: widget
+                                .memberRegistrationsResponseData.registrationId,
+                            itemToDelete: 'registration'),
                   );
                   setState(() {});
                 },

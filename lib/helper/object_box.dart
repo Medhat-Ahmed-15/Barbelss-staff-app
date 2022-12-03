@@ -23,6 +23,7 @@ class ObjectBox {
     memberAttendenceDataBox = Box<MemberAttendencesData>(store);
     planDataBox = Box<PlanData>(store);
     freezeBox = Box<FreezeData>(store);
+    notesBox = Box<Notes>(store);
   }
 
   static void closeStore() {
@@ -36,6 +37,8 @@ class ObjectBox {
     registrationsBox.putMany(offlineAllRegistrationsList);
     memberAttendenceDataBox.putMany(offlineAllAttendancesList);
     planDataBox.putMany(offlineAllPlansList);
+    //insert freeze entity
+    //insert notes entity
   }
 
 //Add New member////////////////////////////////////////////////////////////////
@@ -52,7 +55,7 @@ class ObjectBox {
     BuildContext context,
   }) {
     MemberData newMemberData = MemberData();
-    newMemberData.id = Random().nextInt(100);
+    newMemberData.id = 0;
     newMemberData.memberId = memberId;
     newMemberData.clubId = currentStaffData.staffClubId;
     newMemberData.memberName = name;
@@ -70,6 +73,7 @@ class ObjectBox {
     newMemberData.qrCodeURL = '';
     newMemberData.qrCodeURL = '';
     newMemberData.sync = sync;
+    newMemberData.isBlacklist = false;
     newMemberData.operation = 'ADD';
 
     memberDataBox.put(newMemberData);
@@ -95,7 +99,7 @@ class ObjectBox {
     bool sync,
   }) {
     Registrations newRegistration = Registrations();
-    newRegistration.id = Random().nextInt(100);
+    newRegistration.id = 0;
     newRegistration.registrationId = registrationId;
     newRegistration.registrationIsActive = registrationIsActive;
     newRegistration.registrationAttended = registartionAttended;
@@ -116,12 +120,24 @@ class ObjectBox {
     offlineAllRegistrationsList.insert(0, newRegistration);
   }
 
-  //Inser New Attandance//////////////////////////////////////////////////////////
+  //Insert New note
+
+  static void insertNewNote({String note, bool sync}) {
+    Notes notes = Notes();
+    notes.createdAt = DateTime.now().toString();
+    notes.id = 0;
+    notes.noteMaker = currentStaffData.staffName;
+    notes.note = note;
+
+    notesBox.put(notes);
+  }
+
+  //Insert New Attandance//////////////////////////////////////////////////////////
 
   static void insertNewAttendance(
       {String registrationId, String packageId, bool sync}) {
     MemberAttendencesData newAttendence = MemberAttendencesData();
-    newAttendence.id = Random().nextInt(100);
+    newAttendence.id = 0;
     newAttendence.attendenceId = DateTime.now().toString();
     newAttendence.clubId = currentStaffData.staffClubId;
     newAttendence.registrationId = registrationId;
@@ -149,7 +165,7 @@ class ObjectBox {
     registrationsBox.put(updatedRegistration);
 
     MemberAttendencesData memberAttendance = MemberAttendencesData();
-    memberAttendance.id = Random().nextInt(100);
+    memberAttendance.id = 0;
     memberAttendance.attendenceId = DateTime.now().toString();
     memberAttendance.clubId = currentStaffData.staffClubId;
     memberAttendance.createdAt = DateTime.now().toString().replaceAll(' ', 'T');
@@ -202,10 +218,25 @@ class ObjectBox {
     updatedMember.sync = sync;
     updatedMember.operation = 'UPDATE';
     memberDataBox.put(updatedMember);
-    offlineAllMembersData
-        .firstWhere((element) => element.memberId == updatedMember.memberId)
-        .isBlocked = !updatedMember.isBlocked;
+
     offlinePickedMember = updatedMember;
+  }
+
+  //BlackListmember Member////////////////////////////////////////////////////////////////
+
+  static void addtoBlackListOrRemoveFromBlacklist(
+      String memberId, bool sync, BuildContext context) {
+    var updatedMember = offlineAllMembersData
+        .firstWhere((element) => element.memberId == memberId);
+
+    updatedMember.isBlacklist = !updatedMember.isBlacklist;
+    updatedMember.sync = sync;
+    updatedMember.operation = 'UPDATE';
+    memberDataBox.put(updatedMember);
+
+    offlinePickedMember = updatedMember;
+    Provider.of<AllMemberRegistartionsProvider>(context, listen: false)
+        .setNotifyListner();
   }
 
   //Freeze Registration//////////////////////////////////////////
@@ -224,6 +255,7 @@ class ObjectBox {
             .firstWhere((element) => element.registrationId == registartionId);
 
     FreezeData freezeData = FreezeData();
+    freezeData.id = 0;
     freezeData.clubId = currentStaffData.staffClubId;
     freezeData.freezeDuration = freezeDuration;
     freezeData.freezeId = const Uuid().v1();

@@ -66,7 +66,7 @@
     },
     {
       "id": "2:1378476243543860403",
-      "lastPropertyId": "18:4367868579330038011",
+      "lastPropertyId": "19:2312494023041545828",
       "name": "MemberData",
       "properties": [
         {
@@ -161,6 +161,11 @@
           "id": "18:4367868579330038011",
           "name": "operation",
           "type": 9
+        },
+        {
+          "id": "19:2312494023041545828",
+          "name": "isBlacklist",
+          "type": 1
         }
       ],
       "relations": []
@@ -372,17 +377,61 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "7:937376422607402013",
+      "lastPropertyId": "5:3612959095483818946",
+      "name": "Notes",
+      "properties": [
+        {
+          "id": "1:2608205678251788159",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:9123790205682333423",
+          "name": "noteMaker",
+          "type": 9
+        },
+        {
+          "id": "3:8545860535872122880",
+          "name": "note",
+          "type": 9
+        },
+        {
+          "id": "4:4837468327088220779",
+          "name": "createdAt",
+          "type": 9
+        },
+        {
+          "id": "5:3612959095483818946",
+          "name": "noteId",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "7:3115373230375009133"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "5:5749498089857437392",
-  "lastIndexId": "5:7049012826544978838",
+  "lastEntityId": "7:937376422607402013",
+  "lastIndexId": "7:3115373230375009133",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    1502856147444356535
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    5938998920743199510,
+    7186715639478742627,
+    7764904156019282437,
+    2987712245867585995,
+    1772131008003687278
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
