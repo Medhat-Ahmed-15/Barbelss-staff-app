@@ -309,7 +309,7 @@
     },
     {
       "id": "5:5749498089857437392",
-      "lastPropertyId": "12:2441504589874321887",
+      "lastPropertyId": "14:229305058496920458",
       "name": "FreezeData",
       "properties": [
         {
@@ -374,13 +374,23 @@
           "id": "12:2441504589874321887",
           "name": "operation",
           "type": 9
+        },
+        {
+          "id": "13:6952962304635385432",
+          "name": "createdAt",
+          "type": 9
+        },
+        {
+          "id": "14:229305058496920458",
+          "name": "registrationOldExpirationDate",
+          "type": 9
         }
       ],
       "relations": []
     },
     {
       "id": "7:937376422607402013",
-      "lastPropertyId": "5:3612959095483818946",
+      "lastPropertyId": "8:5632674438802451963",
       "name": "Notes",
       "properties": [
         {
@@ -410,6 +420,21 @@
           "type": 9,
           "flags": 2048,
           "indexId": "7:3115373230375009133"
+        },
+        {
+          "id": "6:8878884091893511416",
+          "name": "memberId",
+          "type": 9
+        },
+        {
+          "id": "7:7585693699565712438",
+          "name": "sync",
+          "type": 1
+        },
+        {
+          "id": "8:5632674438802451963",
+          "name": "operation",
+          "type": 9
         }
       ],
       "relations": []

@@ -80,7 +80,6 @@ class _SearchScreenState extends State<SearchScreen> {
             loadingMembersData = false;
           });
         } catch (error) {
-          print(error.toString());
           showToast(AppLocalizations.of(context).somethingWentWrong, context);
           setState(() {
             connectionError = false;

@@ -37,8 +37,8 @@ class ObjectBox {
     registrationsBox.putMany(offlineAllRegistrationsList);
     memberAttendenceDataBox.putMany(offlineAllAttendancesList);
     planDataBox.putMany(offlineAllPlansList);
-    //insert freeze entity
-    //insert notes entity
+    notesBox.putMany(offlineMemberNotesList);
+    freezeBox.putMany(offlineAllFreezeList);
   }
 
 //Add New member////////////////////////////////////////////////////////////////
@@ -122,14 +122,44 @@ class ObjectBox {
 
   //Insert New note
 
-  static void insertNewNote({String note, bool sync}) {
+  static void insertNewNote({String note, bool sync, BuildContext context}) {
     Notes notes = Notes();
+
     notes.createdAt = DateTime.now().toString();
     notes.id = 0;
     notes.noteMaker = currentStaffData.staffName;
     notes.note = note;
+    notes.memberId = workConnectionStatus == 'offline'
+        ? offlinePickedMember.memberId
+        : pickedMember.memberId;
+    notes.noteId = DateTime.now().toString();
+    notes.operation = 'ADD';
+    notes.sync = sync;
 
     notesBox.put(notes);
+
+    offlineMemberNotesList.insert(0, notes);
+
+    Provider.of<AllMembersProvider>(context, listen: false).setNotifyListner();
+  }
+
+  //Remove note
+
+  static void removeNote({String note, bool sync, BuildContext context}) {
+    var updatedNote = workConnectionStatus == 'offline'
+        ? offlineMemberNotesList.firstWhere(
+            (element) => element.memberId == offlinePickedMember.memberId)
+        : offlineMemberNotesList
+            .firstWhere((element) => element.memberId == pickedMember.memberId);
+
+    updatedNote.sync = sync;
+    updatedNote.operation = 'DELETE';
+
+    notesBox.put(updatedNote);
+
+    offlineMemberNotesList.insert(0, updatedNote);
+
+    Provider.of<AllMembersProvider>(context, listen: false).setNotifyListner();
   }
 
   //Insert New Attandance//////////////////////////////////////////////////////////
@@ -210,7 +240,8 @@ class ObjectBox {
 
   //Block Member////////////////////////////////////////////////////////////////
 
-  static void blockOrUnblockMember(String memberId, bool sync) {
+  static void blockOrUnblockMember(
+      String memberId, bool sync, BuildContext context) {
     var updatedMember = offlineAllMembersData
         .firstWhere((element) => element.memberId == memberId);
 
@@ -220,6 +251,8 @@ class ObjectBox {
     memberDataBox.put(updatedMember);
 
     offlinePickedMember = updatedMember;
+
+    Provider.of<AllMembersProvider>(context, listen: false).setNotifyListner();
   }
 
   //BlackListmember Member////////////////////////////////////////////////////////////////
@@ -241,13 +274,14 @@ class ObjectBox {
 
   //Freeze Registration//////////////////////////////////////////
 
-  static void freezeRegistration(
-      {String registartionId,
-      String packageId,
-      String freezeDuration,
-      bool sync,
-      MemberData memberData,
-      BuildContext context}) {
+  static void freezeRegistration({
+    String registartionId,
+    String packageId,
+    String freezeDuration,
+    bool sync,
+    MemberData memberData,
+    BuildContext context,
+  }) {
     var updatedRegistration = workConnectionStatus == 'offline'
         ? offlinePickedMemberAllRegistrationsList
             .firstWhere((element) => element.registrationId == registartionId)
@@ -266,13 +300,22 @@ class ObjectBox {
     freezeData.registrationId = registartionId;
     freezeData.staffId = currentStaffData.staffId;
     freezeData.sync = sync;
+    freezeData.createdAt = DateTime.now().toString();
     freezeData.operation = 'ADD';
+    freezeData.registrationOldExpirationDate =
+        updatedRegistration.registrationExpiresAt;
+
     freezeData.registrationNewExpirationDate =
         calcNewExpirationDateForRegistartion(
             updatedRegistration.registrationExpiresAt, freezeDuration);
 
+    freezeBox.put(freezeData);
     offlineAllFreezeList.insert(0, freezeData);
-    freezeBox.putMany(offlineAllFreezeList);
+
+    tempIndex = offlineAllFreezeList
+        .indexWhere((element) => element.registrationId == registartionId);
+
+    offlineAllFreezeList[tempIndex] = freezeData;
 
     updatedRegistration.isFreezed = true;
     updatedRegistration.operation = 'UPDATE';
@@ -281,7 +324,19 @@ class ObjectBox {
         calcNewExpirationDateForRegistartion(
             updatedRegistration.registrationExpiresAt, freezeDuration);
 
+    if (workConnectionStatus == 'offline') {
+      var index = offlinePickedMemberAllRegistrationsList
+          .indexWhere((element) => element.registrationId == registartionId);
+      offlinePickedMemberAllRegistrationsList[index] = updatedRegistration;
+    } else {
+      var index = offlineAllRegistrationsList
+          .indexWhere((element) => element.registrationId == registartionId);
+
+      offlineAllRegistrationsList[index] = updatedRegistration;
+    }
+
     registrationsBox.put(updatedRegistration);
+
     Provider.of<AllMemberRegistartionsProvider>(context, listen: false)
         .setNotifyListner();
   }
@@ -303,16 +358,41 @@ class ObjectBox {
         .firstWhere((element) => element.registrationId == registartionId);
 
     updatedFreeze.sync = sync;
-    updatedFreeze.operation = 'UPDATE';
+    updatedFreeze.operation = 'DELETE';
+    // updatedFreeze.registrationNewExpirationDate== ezay a restore ba2 el old expiration date b3d ma 3ml reactivate fl nos
+    updatedFreeze.registrationNewExpirationDate =
+        updatedFreeze.registrationOldExpirationDate;
+
     updatedFreeze.reactivation = {
-      currentStaffData.staffId: DateTime.now().toString()
+      "staffId": currentStaffData.staffId,
+      "reactivationDate": DateTime.now().toString()
     };
+
+    var index = offlineAllFreezeList
+        .indexWhere((element) => element.registrationId == registartionId);
+
+    offlineAllFreezeList[index] = updatedFreeze;
 
     freezeBox.put(updatedFreeze);
 
     updatedRegistration.isFreezed = false;
     updatedRegistration.operation = 'UPDATE';
+    updatedRegistration.registrationExpiresAt =
+        updatedFreeze.registrationOldExpirationDate;
     updatedRegistration.sync = sync;
+
+    // updatedRegistration.registrationExpiresAt== ezay a restore ba2 el old expiration date b3d ma 3ml reactivate fl nos
+
+    if (workConnectionStatus == 'offline') {
+      var index = offlinePickedMemberAllRegistrationsList
+          .indexWhere((element) => element.registrationId == registartionId);
+      offlinePickedMemberAllRegistrationsList[index] = updatedRegistration;
+    } else {
+      var index = offlineAllRegistrationsList
+          .indexWhere((element) => element.registrationId == registartionId);
+
+      offlineAllRegistrationsList[index] = updatedRegistration;
+    }
 
     registrationsBox.put(updatedRegistration);
     Provider.of<AllMemberRegistartionsProvider>(context, listen: false)
@@ -449,12 +529,25 @@ class ObjectBox {
     //       ':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
     // }
 
+    // print(
+    //     'Member Notes List /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////');
+    // for (var element in offlineMemberNotesList) {
+    //   print('memberId ::: ${element.memberId}');
+    //   print('createdAt ::: ${element.createdAt}');
+    //   print('note ::: ${element.note}');
+    //   print('noteId ::: ${element.noteId}');
+
+    //   print('sync ::: ${element.sync}');
+    // }
+
     allMembersList = [];
     sortedMemberData = [];
     offlineAllRegistrationsList = [];
     offlineAllAttendancesList = [];
     offlineAllPlansList = [];
     offlineAllFreezeList = [];
+    offlineMemberNotesList = [];
+    notesBox.removeAll();
     memberDataBox.removeAll();
     registrationsBox.removeAll();
     memberAttendenceDataBox.removeAll();
@@ -471,6 +564,13 @@ class ObjectBox {
     offlineAllAttendancesList = memberAttendenceDataBox.getAll().toList();
     offlineAllPlansList = planDataBox.getAll().toList();
     offlineAllFreezeList = freezeBox.getAll().toList();
+    offlineMemberNotesList = notesBox.getAll().toList();
+
+    //sorting notes
+    offlineMemberNotesList.sort((a, b) {
+      return DateTime.parse(a.createdAt).compareTo(DateTime.parse(b.createdAt));
+    });
+    offlineMemberNotesList = offlineMemberNotesList.reversed.toList();
 
     //sorting registrations
     offlineAllRegistrationsList.sort((a, b) {

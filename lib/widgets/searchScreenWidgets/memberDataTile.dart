@@ -115,6 +115,7 @@ class _MemberDataTileState extends State<MemberDataTile> {
                   ],
                 ),
                 trailing: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       convertDateToDayInNumberMonthInText(
@@ -123,18 +124,24 @@ class _MemberDataTileState extends State<MemberDataTile> {
                         color: Colors.grey,
                       ),
                     ),
-                    SizedBox(
-                        width: 50,
-                        child: Row(
-                          children: [
-                            widget.memberData.isBlocked == true
-                                ? const Icon(Icons.block)
-                                : const Icon(Icons.check),
+                    widget.memberData.isBlocked == true ||
                             widget.memberData.isBlacklist == true
-                                ? const Icon(Icons.person_off_outlined)
-                                : const Icon(Icons.person),
-                          ],
-                        ))
+                        ? SizedBox(
+                            width: 50,
+                            child: Row(
+                              children: [
+                                widget.memberData.isBlocked == true
+                                    ? const Icon(
+                                        Icons.block,
+                                        color: Colors.redAccent,
+                                      )
+                                    : const Text(''),
+                                widget.memberData.isBlacklist == true
+                                    ? const Icon(Icons.person_off_outlined)
+                                    : const Text(''),
+                              ],
+                            ))
+                        : const Text('')
                   ],
                 ),
                 onTap: () async {

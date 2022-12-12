@@ -502,7 +502,7 @@ class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
                   });
                   if (workConnectionStatus == 'offline') {
                     ObjectBox.blockOrUnblockMember(
-                        offlinePickedMember.memberId, false);
+                        offlinePickedMember.memberId, false, context);
                   } else {
                     await Provider.of<AllMembersProvider>(context,
                             listen: false)

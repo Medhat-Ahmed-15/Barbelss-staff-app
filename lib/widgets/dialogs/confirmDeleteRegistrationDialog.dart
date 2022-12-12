@@ -122,9 +122,14 @@ class _ConfirmDeleteRegistrationDialogState
                             setState(() {
                               loading = true;
                             });
-                            await Provider.of<AllMembersProvider>(context,
-                                    listen: false)
-                                .removeNote(context, widget.noteId);
+                            if (workConnectionStatus == 'offline') {
+                              ObjectBox.removeNote(
+                                  sync: false, context: context);
+                            } else {
+                              await Provider.of<AllMembersProvider>(context,
+                                      listen: false)
+                                  .removeNote(context, widget.noteId);
+                            }
 
                             Navigator.of(context).pop();
                           }

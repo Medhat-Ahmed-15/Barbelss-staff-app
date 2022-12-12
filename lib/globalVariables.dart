@@ -41,6 +41,7 @@ List<PlanData> allPlansList = [];
 
 List<MemberData> offlineAllMembersData = [];
 List<MemberData> offlineSortedMemberData = [];
+List<Notes> offlineMemberNotesList = [];
 List<PlanData> offlineAllPlansList = [];
 List<Registrations> offlineAllRegistrationsList = [];
 List<Registrations> offlinePickedMemberAllRegistrationsList = [];
@@ -68,3 +69,5 @@ MaterialColor primaryColor = const MaterialColor(
     900: Color(0x00061828),
   },
 );
+
+int tempIndex;

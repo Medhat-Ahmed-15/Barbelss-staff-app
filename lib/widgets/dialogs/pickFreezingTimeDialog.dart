@@ -246,7 +246,8 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                                         '${durationController.text.trim()} $dropdownValue',
                                     memberData: offlinePickedMember,
                                     packageId: widget.packageId,
-                                    registartionId: widget.registrationId,
+                                    registartionId: offlinePickedMemberPackage
+                                        .registrationId,
                                     sync: false);
 
                                 Navigator.of(context).pop(true);
@@ -310,7 +311,6 @@ class _PickFreezingTimeDialogState extends State<PickFreezingTimeDialog> {
                                 loading = false;
                               });
                             } catch (error) {
-                              print(error.toString());
                               showToast(
                                   AppLocalizations.of(context)
                                       .somethingWentWrong,

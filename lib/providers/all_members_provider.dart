@@ -95,7 +95,7 @@ class AllMembersProvider with ChangeNotifier {
 
     sortedMemberData = allMembersList;
 
-    ObjectBox.blockOrUnblockMember(pickedMember.memberId, true);
+    ObjectBox.blockOrUnblockMember(pickedMember.memberId, true, context);
   }
 
   //Blacklist Member//////////////////////////////////////////////////////////
@@ -160,7 +160,7 @@ class AllMembersProvider with ChangeNotifier {
     ObjectBox.addtoBlackListOrRemoveFromBlacklist(
         pickedMember.memberId, true, context);
 
-    notifyListeners();
+    //notifyListeners();
   }
 
   //Add Notes//////////////////////////////////////////////////////////
@@ -220,7 +220,7 @@ class AllMembersProvider with ChangeNotifier {
 
     sortedMemberData = allMembersList;
 
-    ObjectBox.insertNewNote(note: note, sync: true);
+    ObjectBox.insertNewNote(note: note, sync: true, context: context);
   }
 
   //Remove Notes//////////////////////////////////////////////////////////
@@ -245,7 +245,7 @@ class AllMembersProvider with ChangeNotifier {
 
     pickedMember.notes.removeWhere((element) => element.noteId == noteId);
 
-    notifyListeners();
+    ObjectBox.removeNote(sync: true, context: context);
   }
 
   //Add New Member/////////////////////////////////////////////////////////////////////////////////

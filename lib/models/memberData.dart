@@ -82,6 +82,9 @@ class Notes {
   String createdAt;
   @Index()
   String noteId;
+  String memberId;
+  bool sync;
+  String operation;
 
   Notes({
     this.id,
@@ -89,6 +92,9 @@ class Notes {
     this.createdAt,
     this.note,
     this.noteId,
+    this.sync,
+    this.operation,
+    this.memberId,
   });
 
   Notes.fromjson(Map<String, dynamic> json) {
@@ -96,5 +102,8 @@ class Notes {
     note = json['note'];
     createdAt = json['createdAt'];
     noteId = json['_id'];
+    memberId = json['memberId'];
+    sync = true;
+    operation = '';
   }
 }

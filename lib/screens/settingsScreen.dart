@@ -401,6 +401,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   listen: false)
                               .setWorkStatusInStorage('offline');
 
+                          ObjectBox.getClubData();
+
                           // showSimpleNotification(
                           //   Text(AppLocalizations.of(context)
                           //       .switchedToOfflineMode),

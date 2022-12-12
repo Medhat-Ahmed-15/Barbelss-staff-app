@@ -557,7 +557,6 @@ class _AddNewMemberScreenState extends State<AddNewMemberScreen> {
         });
       }
     } catch (error) {
-      print(error.toString());
       setState(() {
         loading = false;
       });

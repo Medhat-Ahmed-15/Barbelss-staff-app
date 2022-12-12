@@ -12,10 +12,14 @@ class FreezeData {
   String packageId;
   String reactivationDate;
   String freezeDuration;
+  String createdAt;
   String registrationNewExpirationDate;
-  Map<String, String> reactivation;
+  String registrationOldExpirationDate;
+  Map<String, dynamic> reactivation;
   bool sync;
   String operation;
+
+  //  "updatedAt": "2022-11-05T13:53:41.568Z",
 
   FreezeData(
       {this.id,
@@ -23,26 +27,30 @@ class FreezeData {
       this.clubId,
       this.staffId,
       this.memberId,
+      this.createdAt,
       this.registrationId,
       this.packageId,
       this.reactivationDate,
       this.freezeDuration,
       this.registrationNewExpirationDate,
+      this.registrationOldExpirationDate,
       this.sync,
       this.operation,
       this.reactivation});
 
   FreezeData.fromjson(Map<String, dynamic> json) {
-    memberId = json['_id'];
+    memberId = json['memberId'];
     clubId = json['clubId'];
     staffId = json['staffId'];
-    freezeId = json['freezeId'];
+    freezeId = json['_id'];
     registrationId = json['registrationId'];
     packageId = json['packageId'];
     reactivationDate = json['reactivationDate'];
     freezeDuration = json['freezeDuration'];
     registrationNewExpirationDate = json['registrationNewExpirationDate'];
     reactivation = json['reactivation'];
+    createdAt = json['createdAt'];
+    registrationOldExpirationDate = '';
     sync = true;
     operation = '';
   }

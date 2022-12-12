@@ -326,7 +326,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(5, 5749498089857437392),
       name: 'FreezeData',
-      lastPropertyId: const IdUid(12, 2441504589874321887),
+      lastPropertyId: const IdUid(14, 229305058496920458),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -389,6 +389,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(12, 2441504589874321887),
             name: 'operation',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 6952962304635385432),
+            name: 'createdAt',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 229305058496920458),
+            name: 'registrationOldExpirationDate',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -396,7 +406,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(7, 937376422607402013),
       name: 'Notes',
-      lastPropertyId: const IdUid(5, 3612959095483818946),
+      lastPropertyId: const IdUid(8, 5632674438802451963),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -424,7 +434,22 @@ final _entities = <ModelEntity>[
             name: 'noteId',
             type: 9,
             flags: 2048,
-            indexId: const IdUid(7, 3115373230375009133))
+            indexId: const IdUid(7, 3115373230375009133)),
+        ModelProperty(
+            id: const IdUid(6, 8878884091893511416),
+            name: 'memberId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 7585693699565712438),
+            name: 'sync',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 5632674438802451963),
+            name: 'operation',
+            type: 9,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
@@ -819,7 +844,14 @@ ModelDefinition getObjectBoxModel() {
           final operationOffset = object.operation == null
               ? null
               : fbb.writeString(object.operation);
-          fbb.startTable(13);
+          final createdAtOffset = object.createdAt == null
+              ? null
+              : fbb.writeString(object.createdAt);
+          final registrationOldExpirationDateOffset =
+              object.registrationOldExpirationDate == null
+                  ? null
+                  : fbb.writeString(object.registrationOldExpirationDate);
+          fbb.startTable(15);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(1, freezeIdOffset);
           fbb.addOffset(2, clubIdOffset);
@@ -832,6 +864,8 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(9, registrationNewExpirationDateOffset);
           fbb.addBool(10, object.sync);
           fbb.addOffset(11, operationOffset);
+          fbb.addOffset(12, createdAtOffset);
+          fbb.addOffset(13, registrationOldExpirationDateOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -850,14 +884,16 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGetNullable(buffer, rootOffset, 10),
               memberId: const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 12),
+              createdAt: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 28),
               registrationId: const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 14),
-              packageId: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 16),
-              reactivationDate: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 18),
+              packageId:
+                  const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 16),
+              reactivationDate: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 18),
               freezeDuration: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 20),
               registrationNewExpirationDate: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
+              registrationOldExpirationDate: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 30),
               sync: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 24),
               operation: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26));
 
@@ -882,12 +918,20 @@ ModelDefinition getObjectBoxModel() {
               : fbb.writeString(object.createdAt);
           final noteIdOffset =
               object.noteId == null ? null : fbb.writeString(object.noteId);
-          fbb.startTable(6);
+          final memberIdOffset =
+              object.memberId == null ? null : fbb.writeString(object.memberId);
+          final operationOffset = object.operation == null
+              ? null
+              : fbb.writeString(object.operation);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id ?? 0);
           fbb.addOffset(1, noteMakerOffset);
           fbb.addOffset(2, noteOffset);
           fbb.addOffset(3, createdAtOffset);
           fbb.addOffset(4, noteIdOffset);
+          fbb.addOffset(5, memberIdOffset);
+          fbb.addBool(6, object.sync);
+          fbb.addOffset(7, operationOffset);
           fbb.finish(fbb.endTable());
           return object.id ?? 0;
         },
@@ -905,7 +949,13 @@ ModelDefinition getObjectBoxModel() {
               note: const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 8),
               noteId: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 12));
+                  .vTableGetNullable(buffer, rootOffset, 12),
+              sync: const fb.BoolReader()
+                  .vTableGetNullable(buffer, rootOffset, 16),
+              operation: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 18),
+              memberId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 14));
 
           return object;
         })
@@ -1182,6 +1232,14 @@ class FreezeData_ {
   /// see [FreezeData.operation]
   static final operation =
       QueryStringProperty<FreezeData>(_entities[4].properties[11]);
+
+  /// see [FreezeData.createdAt]
+  static final createdAt =
+      QueryStringProperty<FreezeData>(_entities[4].properties[12]);
+
+  /// see [FreezeData.registrationOldExpirationDate]
+  static final registrationOldExpirationDate =
+      QueryStringProperty<FreezeData>(_entities[4].properties[13]);
 }
 
 /// [Notes] entity fields to define ObjectBox queries.
@@ -1202,4 +1260,15 @@ class Notes_ {
 
   /// see [Notes.noteId]
   static final noteId = QueryStringProperty<Notes>(_entities[5].properties[4]);
+
+  /// see [Notes.memberId]
+  static final memberId =
+      QueryStringProperty<Notes>(_entities[5].properties[5]);
+
+  /// see [Notes.sync]
+  static final sync = QueryBooleanProperty<Notes>(_entities[5].properties[6]);
+
+  /// see [Notes.operation]
+  static final operation =
+      QueryStringProperty<Notes>(_entities[5].properties[7]);
 }

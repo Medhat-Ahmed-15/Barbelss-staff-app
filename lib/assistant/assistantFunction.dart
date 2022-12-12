@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
+import 'package:gym_staff_app/models/freezeData.dart';
 import 'package:gym_staff_app/models/memberAttendencesData.dart';
 import 'package:gym_staff_app/models/planData.dart';
 import 'package:gym_staff_app/models/registrations.dart';
@@ -90,7 +91,6 @@ void showErrorDialog(
 String convertDateToDayInNumberMonthInText(String date, BuildContext context) {
   String monthInText;
   String dayInNumber;
-
   dayInNumber = date.split(date.contains('T') ? "T" : " ")[0].split('-')[2];
 
   if (dayInNumber.split('')[0].contains('0')) {
@@ -572,6 +572,14 @@ Future<void> getAllClubDataAndSaveThemInStorage() async {
 
   offlineAllPlansList = (decodeData['packages'] as List)
       .map((index) => PlanData.fromjson(index))
+      .toList();
+
+  offlineMemberNotesList = (decodeData['notes'] as List)
+      .map((index) => Notes.fromjson(index))
+      .toList();
+
+  offlineAllFreezeList = (decodeData['freezedRegistrations'] as List)
+      .map((index) => FreezeData.fromjson(index))
       .toList();
 
   ObjectBox.insertClubData();

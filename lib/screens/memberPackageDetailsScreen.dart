@@ -40,6 +40,7 @@ class _MemberPackageDetailsScreenState
     if (isInit == true) {
       if (workConnectionStatus == 'offline') {
         ObjectBox.getClubData();
+
         memberAttendencesOfflineData = offlineAllAttendancesList
             .where((element) =>
                 element.registrationId ==

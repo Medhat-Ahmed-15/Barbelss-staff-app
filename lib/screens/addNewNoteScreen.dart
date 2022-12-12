@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_staff_app/Exceptions/getRequest_exception.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gym_staff_app/globalVariables.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
 import 'package:gym_staff_app/providers/all_members_provider.dart';
 import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
 import 'package:provider/provider.dart';
@@ -37,10 +38,17 @@ class _AddNewNoteScreenState extends State<AddNewNoteScreen> {
       setState(() {
         loading = true;
       });
-      await Provider.of<AllMembersProvider>(context, listen: false)
-          .addNotes(context, noteController.text.toString().trim());
+      if (workConnectionStatus == 'offline') {
+        ObjectBox.insertNewNote(
+            note: noteController.text.toString().trim(),
+            sync: false,
+            context: context);
+      } else {
+        await Provider.of<AllMembersProvider>(context, listen: false)
+            .addNotes(context, noteController.text.toString().trim());
+      }
 
-      showDialog(
+      await showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) => FeedBackDialog(
@@ -53,6 +61,8 @@ class _AddNewNoteScreenState extends State<AddNewNoteScreen> {
             },
             buttonColor: Theme.of(context).primaryColor),
       );
+
+      Navigator.of(context).pop();
       setState(() {
         loading = false;
       });

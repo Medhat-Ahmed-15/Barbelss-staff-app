@@ -340,7 +340,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
     ObjectBox.reactivateRegistration(
         context: context,
         memberData: pickedMember,
-        registartionId: oldRegistration.registrationId,
+        registartionId: pickedMemberPackage.registrationId,
         sync: true); //feeha notify listner
   }
 
@@ -362,7 +362,6 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
           "freezeDuration": duration
         }));
     final responseData = json.decode(response.body);
-    print(responseData);
 
     if (responseData['accepted'] == false) {
       throw GetRequestException(responseData['message'] ?? 'error');
@@ -398,7 +397,7 @@ class AllMemberRegistartionsProvider with ChangeNotifier {
         freezeDuration: duration,
         memberData: pickedMember,
         packageId: oldRegistration.packageId,
-        registartionId: oldRegistration.registrationId,
+        registartionId: pickedMemberPackage.registrationId,
         sync: true); //feeha notify listner
   }
 
