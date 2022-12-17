@@ -1,0 +1,800 @@
+{
+    "language": "English",
+    "@language": {
+      "description": " "
+    },
+
+    "loginTitle": "LOG IN",
+    "@language": {
+      "description": " "
+    },
+    "phoneTitle": "Phone",
+    "@language": {
+      "description": " "
+    },
+    "passwordTitle": "Password",
+    "@language": {
+      "description": " "
+    },
+    "forgetPasswordTitle": "Forget password ?",
+    "@language": {
+      "description": " "
+    },
+
+    "searchForAMember": "Search For Members",
+    "@language": {
+      "description": " "
+    },
+
+    "searchBarHintTitle": "Search Phone Number",
+    "@language": {
+      "description": " "
+    },
+
+    "homeIconTitle": "Home",
+    "@language": {
+      "description": " "
+    },
+
+    "settingsIconTitle": "Settings",
+    "@language": {
+      "description": " "
+    },
+
+    "aboutUsIconTitle": "About App",
+    "@language": {
+      "description": " "
+    },
+
+    "logOutIconTitle": "Log Out",
+    "@language": {
+      "description": " "
+    },
+
+    "confirmArrivalTitle": "Confirm Arrival",
+    "@language": {
+      "description": " "
+    },
+
+    "addANewMemberTitle": "Add New Member",
+    "@language": {
+      "description": " "
+    },
+
+    "nameHint": "Name",
+    "@language": {
+      "description": " "
+    },
+
+    "phoneHint": "Phone",
+    "@language": {
+      "description": " "
+    },
+
+    "addMemberTitle": "Add Member",
+    "@language": {
+      "description": " "
+    },
+
+    "notificationstitle": "Notifications",
+    "@language": {
+      "description": " "
+    },
+
+    "id": "ID",
+    "@language": {
+      "description": " "
+    },
+
+    "languageTitle": "Language",
+    "@language": {
+      "description": " "
+    },
+
+    "termsAndConditionsTitle": "Terms of use",
+    "@language": {
+      "description": " "
+    },
+
+    "chooseAPlanTitle": "Choose Plan",
+    "@language": {
+      "description": " "
+    },
+
+    "numberOfSessionsTitle": "Number Of Sessions",
+    "@language": {
+      "description": " "
+    },
+
+    "expirationDateTitle": "Expiration Date",
+    "@language": {
+      "description": " "
+    },
+
+    "getPlanTitle": "Get Plan",
+    "@language": {
+      "description": " "
+    },
+
+    "connectionStatusMessage": "Error connecting to the internet, Please check your internet connction and try again",
+    "@language": {
+      "description": " "
+    },
+
+     "attendedTitle": "Attended",
+    "@language": {
+      "description": " "
+    },
+
+    "activeTitle": "Active",
+    "@language": {
+      "description": " "
+    },
+
+    "inActiveTitle": "Expired",
+    "@language": {
+      "description": " "
+    },
+
+    "enrollNowTitle": "Enroll Now",
+    "@language": {
+      "description": " "
+    },
+
+    "emailTitle": "Email",
+    "@language": {
+      "description": " "
+    },
+
+    "optionalTitle": "Optional",
+    "@language": {
+      "description": " "
+    },
+
+    "memberAddedSuccessfullyTitle": "Member has been added  successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "expiresInTitle": "Expires In",
+    "@language": {
+      "description": " "
+    },
+
+    "doneTitle": "Done",
+    "@language": {
+      "description": " "
+    },
+
+    "registrationDoneTitle": "Registration Done Successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "cancelArrivalTitle": "Cancel Arrival",
+    "@language": {
+      "description": " "
+    },
+
+    "updatedAttendenceSuccessfully": "Updated Attendence Successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "cancelledAttendenceSuccessfully": "Cancelled Attendence Successfully",
+    "@language": {
+      "description": " "
+    },
+
+     "memberNameIsrequired": "Member name is required",
+    "@language": {
+      "description": " "
+    },
+
+    "phoneNumberIsRequired": "Phone number is required",
+    "@language": {
+      "description": " "
+    },
+
+    "sendQrCode": "Send Qr Code",
+    "@language": {
+      "description": " "
+    },
+
+    "exit": "Exit",
+    "@language": {
+      "description": " "
+    },
+
+    "somethingWentWrong": "Something went wrong",
+    "@language": {
+      "description": " "
+    },
+
+    "verifymember": "Verify Member",
+    "@language": {
+      "description": " "
+    },
+
+    "freezed": "Freezed",
+    "@language": {
+      "description": " "
+    },
+
+    "resendQrCode": "Resend Qr Code",
+    "@language": {
+      "description": " "
+    },
+
+    "showMore": "Show More",
+    "@language": {
+      "description": " "
+    },
+
+     "packageDetails": "Package Details",
+    "@language": {
+      "description": " "
+    },
+
+    "freeze": "Freeze",
+    "@language": {
+      "description": " "
+    },
+
+    "reactivate": "Reactivate",
+    "@language": {
+      "description": " "
+    },
+
+    "staffName": "Staff Name",
+    "@language": {
+      "description": " "
+    },
+
+    "attendenceTme": "Attendance Time",
+    "@language": {
+      "description": " "
+    },
+
+    "packageHasBeenFreezedSuccessfully": "The package has been frozen successfully",
+    "@language": {
+      "description": " "
+    },
+
+     "packageHasBeenReactivatedSuccessfully": "The package has been reactivated successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "personalInformation": "Personal Info",
+    "@language": {
+      "description": " "
+    },
+
+    "blockMember": "Block Member",
+    "@language": {
+      "description": " "
+    },
+
+    "allowVerification": "Allow Verification",
+    "@language": {
+      "description": " "
+    },
+
+    "disAllowVerification": "Disallow Verification",
+    "@language": {
+      "description": " "
+    },
+
+    "memberVerification": "Member Verification",
+    "@language": {
+      "description": " "
+    },
+
+    "next": "Next",
+    "@language": {
+      "description": " "
+    },
+
+    "moreMemberDetails": "More Member Details",
+    "@language": {
+      "description": " "
+    },
+
+
+    "gender": "Gender",
+    "@language": {
+      "description": " "
+    },
+
+    "male": "Male",
+    "@language": {
+      "description": " "
+    },
+
+    "female": "Female",
+    "@language": {
+      "description": " "
+    },
+
+    "clubMemberShip": "Club Membership",
+    "@language": {
+      "description": " "
+    },
+
+    "membership": "Membership",
+    "@language": {
+      "description": " "
+    },
+
+    "age": "Age",
+    "@language": {
+      "description": " "
+    },
+
+    "membersAge": "Memebr Age",
+    "@language": {
+      "description": " "
+    },
+
+    "day": "Day",
+    "@language": {
+      "description": " "
+    },
+
+    "week": "Week",
+    "@language": {
+      "description": " "
+    },
+
+    "month": "Month",
+    "@language": {
+      "description": " "
+    },
+
+    "year": "Year",
+    "@language": {
+      "description": " "
+    },
+
+    "specifyDuration": "Specify Duration",
+    "@language": {
+      "description": " "
+    },
+
+    "submit": "Submit",
+    "@language": {
+      "description": " "
+    },
+
+    "duration": "Duration",
+    "@language": {
+      "description": " "
+    },
+
+    "writeFirstAndSecondName": "You must write your first and second name",
+    "@language": {
+      "description": " "
+    },
+
+    "phoneNumberMustBe10Digit": "Phone number must be 10 digit",
+    "@language": {
+      "description": " "
+    },
+
+    "errorChangingLanguage": "Error changing language",
+    "@language": {
+      "description": " "
+    },
+
+    "searchResultsContains": "Search results contain",
+    "@language": {
+      "description": " "
+    },
+
+    "registrations": "subscriptions",
+    "@language": {
+      "description": " "
+    },
+
+    "cantConfirmTwice": "Sorry you can't confirm arrival twice in a row",
+    "@language": {
+      "description": " "
+    },
+
+    "usersDontMatch": "Users Don't Match",
+    "@language": {
+      "description": " "
+    },
+
+    "updateQrCodeSuccessfully": "Updated Qr Code Successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "attendences": "Attendances",
+    "@language": {
+      "description": " "
+    },
+
+    "members": "Members",
+    "@language": {
+      "description": " "
+    },
+
+    "memberVerification": "Member Verification",
+    "@language": {
+      "description": " "
+    },
+
+    "personalInfo": "Personal Information",
+    "@language": {
+      "description": " "
+    },
+
+    "memberId": "Member ID",
+    "@language": {
+      "description": " "
+    },
+
+     "ageMustBeSpecified": "Age must be specified",
+    "@language": {
+      "description": " "
+    },
+
+    "memberAddedWithoutVerify": "Member added successfully without verification",
+    "@language": {
+      "description": " "
+    },
+
+    "membershipIsRequired": "Membership is required",
+    "@language": {
+      "description": " "
+    },
+
+    "sorryMemberIsBlocked": "Sorry member is blocked",
+    "@language": {
+      "description": " "
+    },
+
+    "packageIsfreezed": "Sorry package is freezed",
+    "@language": {
+      "description": " "
+    },
+
+    "blocked": "Blocked",
+    "@language": {
+      "description": " "
+    },
+
+    "tryAgain": "Refresh",
+    "@language": {
+      "description": " "
+    },
+
+    "passwordIsRequired": "Password is required",
+    "@language": {
+      "description": " "
+    },
+
+    "forgotYourPassword": "Forgot your password",
+    "@language": {
+      "description": " "
+    },
+
+    "forgotYourPasswordSubtitle": "We need your email address to send you the password reset code.",
+    "@language": {
+      "description": " "
+    },
+
+    "send": "Send",
+    "@language": {
+      "description": " "
+    },
+
+    "emailIsrRequired": "Email is required",
+    "@language": {
+      "description": " "
+    },
+
+    "emailIssentSuccessfully": "Email is sent successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "unblockMember": "Unblock Member",
+    "@language": {
+      "description": " "
+    },
+
+    "memberIsBlockedSuccessfullly": "Member is blocked successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "memberIsUnBlockedSuccessfullly": "Member is unblocked successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "loginSubtitleOne": "Manage and track",
+    "@language": {
+      "description": " "
+    },
+
+    "loginSubtitleTwo": "your member subscriptions with us",
+    "@language": {
+      "description": " "
+    },
+
+
+    "appName": "arbells",
+    "@language": {
+      "description": " "
+    },
+
+    "emailHasNotBeenSpecified": "The email has not been specified",
+    "@language": {
+      "description": " "
+    },
+
+    "invalidPhoneNumber": "Invalid phone number",
+    "@language": {
+      "description": " "
+    },
+
+    "club": "Club",
+    "@language": {
+      "description": " "
+    },
+
+    "privacyPolicy": "Privacy Policy",
+    "@language": {
+      "description": " "
+    },
+
+    "followUsOn": "FOLLOW US ON",
+    "@language": {
+      "description": " "
+    },
+
+    "poweredBy": "Powered by",
+    "@language": {
+      "description": " "
+    },
+
+    "agile": "Agile",
+    "@language": {
+      "description": " "
+    },
+
+    "close": "Close",
+    "@language": {
+      "description": " "
+    },
+
+    "numberOfAttendancesLeft": "Number of attendances left",
+    "@language": {
+      "description": " "
+    },
+
+    "jan": "Jan",
+    "@language": {
+      "description": " "
+    },
+
+    "feb": "Feb",
+    "@language": {
+      "description": " "
+    },
+
+    "mar": "Mar",
+    "@language": {
+      "description": " "
+    },
+
+    "apr": "Apr",
+    "@language": {
+      "description": " "
+    },
+
+    "may": "May",
+    "@language": {
+      "description": " "
+    },
+
+    "jun": "Jun",
+    "@language": {
+      "description": " "
+    },
+
+    "jul": "Jul",
+    "@language": {
+      "description": " "
+    },
+
+    "aug": "Aug",
+    "@language": {
+      "description": " "
+    },
+
+    "sep": "Sep",
+    "@language": {
+      "description": " "
+    },
+
+    "oct": "Oct",
+    "@language": {
+      "description": " "
+    },
+
+    "nov": "Nov",
+    "@language": {
+      "description": " "
+    },
+
+    "dec": "Dec",
+    "@language": {
+      "description": " "
+    },
+
+    "delete": "Delete",
+    "@language": {
+      "description": " "
+    },
+
+    "confirmDelete": "Are you sure you want to delete it?",
+    "@language": {
+      "description": " "
+    },
+
+    "workOffline": "Offline mode",
+    "@language": {
+      "description": " "
+    },
+
+    "workOnline": "Online mode",
+    "@language": {
+      "description": " "
+    },
+
+    "sync": "Sync",
+    "@language": {
+      "description": " "
+    },
+
+    "unAbleToPerformAction": "Unable to perform action, the system is in offline mode",
+    "@language": {
+      "description": " "
+    },
+
+    "syncingData": "Syncing data please wait...",
+    "@language": {
+      "description": " "
+    },
+
+    "datahasBeensyncedSuccessfully": "Data has been synced successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "dataIsAlreadySynced": "Data is already synced",
+    "@language": {
+      "description": " "
+    },
+
+    "switchedToOfflineMode": "Switched to offline mode",
+    "@language": {
+      "description": " "
+    },
+
+    "backOnline": "Back online",
+    "@language": {
+      "description": " "
+    },
+
+    "dataMustBeSyncedFirst": "Data must be synced first before switching to online mode",
+    "@language": {
+      "description": " "
+    },
+
+    "emailIsUsed": "Email already exists",
+    "@language": {
+      "description": " "
+    },
+
+    "phoneIsUsed": "Phone number already exists",
+    "@language": {
+      "description": " "
+    },
+
+    "membershipIsused": "Membership already exists",
+    "@language": {
+      "description": " "
+    },
+
+    "registrationIsExpired": "This subscription is expired",
+    "@language": {
+      "description": " "
+    },
+
+    "sorryPackageHasBeenExpired": "Sorry, your package has been expired",
+    "@language": {
+      "description": " "
+    },
+
+    "sorryNoMoreSessionsToCancel": "Sorry, no more sessions to cancel",
+    "@language": {
+      "description": " "
+    },
+
+    "syncingData": "Syncing Data...",
+    "@language": {
+      "description": " "
+    },
+
+    "packages": "Packages",
+    "@language": {
+      "description": " "
+    },
+
+    "payments": "Payments",
+    "@language": {
+      "description": " "
+    },
+
+    "addNote": "Add Note",
+    "@language": {
+      "description": " "
+    },
+
+    "addToBlackList": "Add to blacklist",
+    "@language": {
+      "description": " "
+    },
+
+    "removefromBlacklist": "Remove from blacklist",
+    "@language": {
+      "description": " "
+    },
+
+    "notes": "Notes",
+    "@language": {
+      "description": " "
+    },
+
+    "youMustAddNoteToSave": "Note must not be empty",
+    "@language": {
+      "description": " "
+    },
+
+    "noteAddedsccessfully": "Note added successfully",
+    "@language": {
+      "description": " "
+    },
+
+    "submit": "Submit",
+    "@language": {
+      "description": " "
+    },
+
+    "paymentIsRecordedSuccessfully": "Payment is recorded sucssefully",
+    "@language": {
+      "description": " "
+    },
+
+    "allFieldsMustBeFilled": "All fields must be filled",
+    "@language": {
+      "description": " "
+    }
+
+    
+
+
+
+
+
+
+
+    
+}

@@ -1,0 +1,609 @@
+import 'dart:io';
+import 'package:animated_floating_buttons/widgets/animated_floating_action_button.dart';
+import 'package:flutter/material.dart';
+import 'package:gym_staff_app/globalVariables.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:gym_staff_app/helper/object_box.dart';
+import 'package:gym_staff_app/widgets/memberPersonalDataWidgets/BottomContent.dart';
+import 'package:gym_staff_app/widgets/other/FourDotsLoading.dart';
+import 'package:provider/provider.dart';
+import '../Exceptions/getRequest_exception.dart';
+import '../assistant/assistantFunction.dart';
+import '../providers/all_members_provider.dart';
+import '../widgets/dialogs/feedBackDialog.dart';
+import '../widgets/dialogs/qrCodeDialog.dart';
+import '../widgets/memberPersonalDataWidgets/MiddleContent.dart';
+import '../widgets/memberPersonalDataWidgets/UpperData.dart';
+
+class MemberPersonalDataScreen extends StatefulWidget {
+  static const routeName = '/MemberPersonalDataScreen';
+
+  @override
+  State<MemberPersonalDataScreen> createState() =>
+      _MemberPersonalDataScreenState();
+}
+
+class _MemberPersonalDataScreenState extends State<MemberPersonalDataScreen> {
+  bool allowVerification = false;
+  bool loading = false;
+  bool arabicChosen = false;
+  bool englishChosen = true;
+
+  String whatsAppMessageLang = 'en';
+
+  void setMemberVerification() async {
+    if (workConnectionStatus == 'offline') {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => FeedBackDialog(
+            titleText: AppLocalizations.of(context).unAbleToPerformAction,
+            gif: 'assets/gifs/fail.json',
+            enableButton: true,
+            buttonText: AppLocalizations.of(context).doneTitle,
+            callBackFunction: () {
+              Navigator.of(context).pop();
+            },
+            buttonColor: Colors.redAccent),
+      );
+
+      return;
+    }
+    try {
+      setState(() {
+        allowVerification = true;
+      });
+
+      if (pickedMember.canAuthenticate == false) {
+        var response = await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => QrCodeDialog(
+            pickedMember.memberName,
+            pickedMember.memberEmail,
+            pickedMember.memberPhone,
+            context,
+          ),
+        );
+        if (response == true) {
+          await Provider.of<AllMembersProvider>(context, listen: false)
+              .updateMemberVerification(
+                  context: context,
+                  verificationStatus: true,
+                  whatsAppMessageLang: whatsAppMessageLang);
+          // showToast(
+          //   '✔',
+          //   context,
+          // );
+          setState(() {
+            allowVerification = false;
+          });
+        } else {
+          // showToast(AppLocalizations.of(context).somethingWentWrong, context);
+
+          setState(() {
+            allowVerification = false;
+          });
+          return;
+        }
+      } else {
+        await Provider.of<AllMembersProvider>(context, listen: false)
+            .updateMemberVerification(
+                context: context, verificationStatus: false);
+        // showToast(
+        //   '❌',
+        //   context,
+        // );
+        setState(() {
+          allowVerification = false;
+        });
+      }
+    } on GetRequestException catch (error) {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => FeedBackDialog(
+            titleText: error.toStringMessage(),
+            gif: 'assets/gifs/fail.json',
+            enableButton: true,
+            buttonText: AppLocalizations.of(context).doneTitle,
+            callBackFunction: () {
+              Navigator.of(context).pop();
+            },
+            buttonColor: Colors.redAccent),
+      );
+    } on SocketException {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) => FeedBackDialog(
+            titleText: AppLocalizations.of(context).connectionStatusMessage,
+            gif: 'assets/gifs/fail.json',
+            enableButton: true,
+            buttonText: AppLocalizations.of(context).doneTitle,
+            callBackFunction: () {
+              Navigator.of(context).pop();
+            },
+            buttonColor: Colors.redAccent),
+      );
+    } catch (error) {
+      // showToast(AppLocalizations.of(context).somethingWentWrong, context);
+    }
+  }
+
+  Widget button(Function function, var buttonColor, String buttontext) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, right: 15),
+      child: Container(
+        width: 200,
+        height: 56,
+        decoration: const BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black54, offset: Offset(0, 4), blurRadius: 5.0)
+          ],
+        ),
+        child: ElevatedButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(buttonColor),
+              overlayColor: MaterialStateProperty.all(
+                  Theme.of(context).scaffoldBackgroundColor),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ))),
+          onPressed: function,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+            ),
+            child: Text(
+              buttontext,
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.headline1.color,
+                  fontSize: 16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget languageButton(
+    String textName,
+  ) {
+    return InkWell(
+      onTap: () {
+        if (textName == "English") {
+          whatsAppMessageLang = 'en';
+          setState(() {
+            arabicChosen = false;
+            englishChosen = true;
+          });
+        } else {
+          whatsAppMessageLang = 'ar';
+          setState(() {
+            arabicChosen = true;
+            englishChosen = false;
+          });
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        height: 40,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            border: Border.all(color: Theme.of(context).primaryColor),
+            boxShadow: const [
+              BoxShadow(
+                  color: Colors.black54, offset: Offset(0, 1), blurRadius: 1.0)
+            ],
+            color: textName == 'English' && englishChosen == true
+                ? Theme.of(context).primaryColor
+                : textName == 'العربية' && arabicChosen == true
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).scaffoldBackgroundColor),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            textName,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Colors.grey, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Provider.of<AllMembersProvider>(context, listen: true);
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            localeLanguage == const Locale('en')
+                ? Icons.arrow_back
+                : Icons.arrow_forward,
+            color: Theme.of(context).iconTheme.color,
+            size: 25,
+          ),
+        ),
+        title: Text(
+          AppLocalizations.of(context).personalInformation,
+          style: TextStyle(
+              color: Theme.of(context).textTheme.headline1.color,
+              fontSize: 25,
+              fontWeight: FontWeight.bold),
+        ),
+      ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //Upper content Containing name
+                  UpperContent(), //mathotsh constant 3ashan ta5osh gowa el func dee w ta3ml update
+                  const SizedBox(
+                    height: 30,
+                  ),
+
+                  //middle content containing email and phone
+                  const MiddleContent(),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  //Verification
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 22,
+                        right: 22,
+                        top: 22,
+                        bottom: 22,
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Colors.black54,
+                                offset: Offset(0, 0.5),
+                                blurRadius: 5.0)
+                          ],
+                          color: Theme.of(context).scaffoldBackgroundColor),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              children: [
+                                Text(
+                                  '${AppLocalizations.of(context).memberVerification}:  ',
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Theme.of(context).primaryColor),
+                                ),
+                                Icon(
+                                  workConnectionStatus == 'offline'
+                                      ? offlinePickedMember.canAuthenticate ==
+                                              false
+                                          ? Icons.cancel_outlined
+                                          : Icons.check
+                                      : pickedMember.canAuthenticate == false
+                                          ? Icons.cancel_outlined
+                                          : Icons.check,
+                                  color: workConnectionStatus == 'offline'
+                                      ? offlinePickedMember.canAuthenticate ==
+                                              false
+                                          ? Colors.redAccent
+                                          : Colors.green
+                                      : pickedMember.canAuthenticate == false
+                                          ? Colors.redAccent
+                                          : Colors.green,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Row(
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context).languageTitle,
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      color: Theme.of(context).primaryColor),
+                                ),
+                                Expanded(child: Container()),
+                                languageButton('English'),
+                                Expanded(child: Container()),
+                                languageButton('العربية'),
+                                Expanded(child: Container()),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+
+                  BottomContent(),
+                ],
+              ),
+            ),
+          ),
+          loading == true
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: FourDotsLoading(),
+                  color: Colors.black38,
+                )
+              : const SizedBox(
+                  height: 0,
+                ),
+        ],
+      ),
+      floatingActionButton: AnimatedFloatingActionButton(
+        fabButtons: <Widget>[
+          //Allow verification
+          allowVerification == true
+              ? FourDotsLoading()
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: button(
+                      setMemberVerification,
+                      Colors.blue,
+                      workConnectionStatus == 'offline'
+                          ? offlinePickedMember.canAuthenticate == true
+                              ? AppLocalizations.of(context)
+                                  .disAllowVerification
+                              : AppLocalizations.of(context).allowVerification
+                          : pickedMember.canAuthenticate == true
+                              ? AppLocalizations.of(context)
+                                  .disAllowVerification
+                              : AppLocalizations.of(context).allowVerification),
+                ),
+
+          //Resend Qr Code
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: button(() async {
+              if (workConnectionStatus == 'offline') {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText:
+                          AppLocalizations.of(context).unAbleToPerformAction,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+
+                return;
+              }
+              setState(() {
+                loading = true;
+              });
+              try {
+                var response = await showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => QrCodeDialog(
+                    pickedMember.memberName,
+                    pickedMember.memberEmail,
+                    pickedMember.memberPhone,
+                    context,
+                  ),
+                );
+
+                if (response == true) {
+                  await updateMemberQrCode(
+                      context: context,
+                      whatsAppMessageLang: whatsAppMessageLang);
+
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: AppLocalizations.of(context)
+                            .updateQrCodeSuccessfully,
+                        gif: 'assets/gifs/success.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Theme.of(context).primaryColor),
+                  );
+
+                  setState(() {
+                    loading = false;
+                  });
+                } else {
+                  setState(() {
+                    loading = false;
+                  });
+                }
+              } on GetRequestException catch (error) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText: error.toStringMessage(),
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+
+                setState(() {
+                  loading = false;
+                });
+              } on SocketException {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) => FeedBackDialog(
+                      titleText:
+                          AppLocalizations.of(context).connectionStatusMessage,
+                      gif: 'assets/gifs/fail.json',
+                      enableButton: true,
+                      buttonText: AppLocalizations.of(context).doneTitle,
+                      callBackFunction: () {
+                        Navigator.of(context).pop();
+                      },
+                      buttonColor: Colors.redAccent),
+                );
+
+                setState(() {
+                  loading = false;
+                });
+              } catch (error) {
+                // showToast(
+                //     AppLocalizations.of(context).somethingWentWrong, context);
+              }
+            }, Colors.grey, AppLocalizations.of(context).resendQrCode),
+          ),
+
+          //Block and Unblock Member
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: button(
+              () async {
+                try {
+                  setState(() {
+                    loading = true;
+                  });
+                  if (workConnectionStatus == 'offline') {
+                    ObjectBox.blockOrUnblockMember(
+                        offlinePickedMember.memberId, false, context);
+                  } else {
+                    await Provider.of<AllMembersProvider>(context,
+                            listen: false)
+                        .blockOrUnblockMember(context);
+                  }
+
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: workConnectionStatus == 'offline'
+                            ? offlinePickedMember.isBlocked == false
+                                ? AppLocalizations.of(context)
+                                    .memberIsUnBlockedSuccessfullly
+                                : AppLocalizations.of(context)
+                                    .memberIsBlockedSuccessfullly
+                            : pickedMember.isBlocked == false
+                                ? AppLocalizations.of(context)
+                                    .memberIsUnBlockedSuccessfullly
+                                : AppLocalizations.of(context)
+                                    .memberIsBlockedSuccessfullly,
+                        gif: workConnectionStatus == 'offline'
+                            ? offlinePickedMember.isBlocked == false
+                                ? 'assets/gifs/unblock.json'
+                                : 'assets/gifs/block.json'
+                            : pickedMember.isBlocked == false
+                                ? 'assets/gifs/unblock.json'
+                                : 'assets/gifs/block.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Theme.of(context).primaryColor),
+                  );
+
+                  loading = false;
+                  setState(() {});
+                } on GetRequestException catch (error) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: error.toStringMessage(),
+                        gif: 'assets/gifs/fail.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Colors.redAccent),
+                  );
+
+                  setState(() {
+                    loading = false;
+                  });
+                } on SocketException {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) => FeedBackDialog(
+                        titleText: AppLocalizations.of(context)
+                            .connectionStatusMessage,
+                        gif: 'assets/gifs/fail.json',
+                        enableButton: true,
+                        buttonText: AppLocalizations.of(context).doneTitle,
+                        callBackFunction: () {
+                          Navigator.of(context).pop();
+                        },
+                        buttonColor: Colors.redAccent),
+                  );
+
+                  setState(() {
+                    loading = false;
+                  });
+                } catch (error) {
+                  // showToast(
+                  //     AppLocalizations.of(context).somethingWentWrong, context);
+                }
+              },
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.isBlocked == true
+                      ? Colors.green
+                      : Colors.redAccent
+                  : pickedMember.isBlocked == true
+                      ? Colors.green
+                      : Colors.redAccent,
+              workConnectionStatus == 'offline'
+                  ? offlinePickedMember.isBlocked == true
+                      ? AppLocalizations.of(context).unblockMember
+                      : AppLocalizations.of(context).blockMember
+                  : pickedMember.isBlocked == true
+                      ? AppLocalizations.of(context).unblockMember
+                      : AppLocalizations.of(context).blockMember,
+            ),
+          ),
+        ],
+        colorStartAnimation: Theme.of(context).primaryColor,
+        colorEndAnimation: Theme.of(context).primaryColor,
+        animatedIconData: AnimatedIcons.list_view,
+      ),
+    );
+  }
+}

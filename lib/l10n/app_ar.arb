@@ -1,0 +1,322 @@
+{
+    "language": "العربية",
+
+    "loginTitle": "تسجيل الدخول",
+
+    "phoneTitle": "هاتف",
+
+    "passwordTitle": "كلمه السر",
+
+    "forgetPasswordTitle": "نسيت كلمة السر؟",
+
+    "searchForAMember": "البحث عن الأعضاء",
+
+    "searchBarHintTitle": "البحث عن رقم الهاتف",
+
+    "homeIconTitle": "الصفحة الرئيسية",
+
+    "settingsIconTitle": "إعدادات",
+
+    "aboutUsIconTitle": "حول التطبيق",
+
+    "logOutIconTitle": "تسجيل خروج",
+
+    "confirmArrivalTitle": "تأكيد الوصول",
+
+    "addANewMemberTitle": "اضافة عضو جديد",
+
+    "nameHint": "اسم",
+
+    "phoneHint": "هاتف",
+
+    "addMemberTitle": "إضافة عضو",
+
+    "notificationstitle": "إشعارات",
+
+    "id": "ID",
+
+    "languageTitle": "لغة",
+
+    "termsAndConditionsTitle": "تعليمات الاستخدام",
+
+    "chooseAPlanTitle": "اختر خطة",
+
+    "numberOfSessionsTitle": "عدد الجلسات",
+
+    "expirationDateTitle": "تاريخ إنتهاء الصلاحية",
+
+    "getPlanTitle": "احصل على خطة",
+
+    "connectionStatusMessage": "خطأ في الاتصال بالإنترنت ، يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى",
+
+    "attendedTitle": "حضور",
+
+    "activeTitle": "فعال",
+
+    "inActiveTitle": "غير فعال",
+
+    "enrollNowTitle": "تسجيل الآن",
+
+     "emailTitle": "البريد الإلكتروني",
+
+     "optionalTitle": "اختياري",
+
+     "memberAddedSuccessfullyTitle": "تمت إضافة العضو بنجاح",
+
+     "expiresInTitle": "ينتهي في",
+
+     "doneTitle": "تم",
+
+     "registrationDoneTitle": "تم التسجيل بنجاح",
+
+     "cancelArrivalTitle": "إلغاء الوصول",
+     
+     "cancelledAttendenceSuccessfully": "تم إلغاء الحضور بنجاح",
+
+     "updatedAttendenceSuccessfully": "تم تحديث الحضور بنجاح",
+
+     "memberNameIsrequired": "اسم العضو مطلوب",
+
+     "phoneNumberIsRequired": "رقم الهاتف مطلوب",
+
+     "sendQrCode": "أرسل رمز الاستجابة السريعة",
+
+     "exit": "مخرج",
+
+     "somethingWentWrong": "هناك خطأ ما",
+
+     "verifymember": "التحقق من العضو",
+
+     "freezed": "مجمدة",
+
+     "resendQrCode": "إعادة إرسال رمز الاستجابة السريعة",
+
+     "showMore":  "أظهر المزيد",
+
+     "packageDetails": "تفاصيل الالاشتراك",
+
+     "freeze": "تجميد",
+
+     "reactivate": "اعادة تفعيل",
+
+     "staffName": "اسم الموظف",
+
+     "attendenceTme": "وقت الحضور",
+
+     "packageHasBeenFreezedSuccessfully": "تم تجميد الالاشتراك بنجاح",
+
+     "packageHasBeenReactivatedSuccessfully": "تمت إعادة تنشيط الالاشتراك بنجاح",
+
+     "personalInformation": "معلومات شخصية",
+
+     "blockMember": "منع دخول العضو",
+
+     "allowVerification": "السماح بالتحقق",
+
+     "disAllowVerification": "عدم السماح بالتحقق",
+
+     "memberVerification": "التحقق من العضو",
+
+     "next": "التالي",
+
+     "moreMemberDetails": "المزيد من تفاصيل الأعضاء",
+
+     "gender": "جنس",
+
+     "female": "أنثى",
+
+     "male": "ذكر",
+
+     "clubMemberShip": "عضوية النادي",
+
+     "membership": "عضوية",
+
+     "age": "سن",
+
+     "membersAge": "عمر العضو",
+
+     "day": "يوم",
+
+     "week": "أسبوع",
+
+     "month": "شهر",
+
+     "year": "عام",
+
+    "specifyDuration": "حدد المدة",
+
+    "submit": "موافق",
+
+    "duration": "مدة",
+
+     "writeFirstAndSecondName": "يجب أن تكتب اسمك الأول والثاني",
+
+     "phoneNumberMustBe10Digit": "يجب أن يتكون رقم الهاتف من 10 أرقام",
+
+     "errorChangingLanguage": "خطأ في تغيير اللغة",
+
+     "searchResultsContains": "نتائج البحث تحتوي على",
+
+     "registrations": "التسجيلات",
+
+     "cantConfirmTwice": "آسف لا يمكنك تأكيد الوصول مرتين على التوالي",
+
+     "usersDontMatch": "المستخدمون لا يتطابقون",
+
+     "updateQrCodeSuccessfully": "تم تحديث رمز الاستجابة السريعة بنجاح",
+
+     "attendences": "الحضور",
+
+     "members": "أعضاء",
+
+     "memberVerification": "التحقق من العضو",
+
+     "personalInfo": "معلومات شخصية",
+
+     "memberId": "معرف العضو",
+
+     "ageMustBeSpecified": "يجب تحديد العمر",
+
+     "memberAddedWithoutVerify": "تمت إضافة العضو بنجاح بدون التحقق",
+
+     "membershipIsRequired": "العضوية مطلوبة",
+
+     "sorryMemberIsBlocked": "آسف عضو محظور",
+
+     "packageIsfreezed": "عذرا ، الاشتراك مجمد",
+
+     "blocked": "محظور",
+
+     "tryAgain": "تحديث",
+
+     "passwordIsRequired": "كلمة المرور مطلوبة",
+
+     "forgotYourPassword": "نسيت رقمك السري",
+
+     "forgotYourPasswordSubtitle": "نحتاج إلى عنوان بريدك الإلكتروني لنرسل لك رمز إعادة تعيين كلمة المرور.",
+
+     "send": "إرسال",
+
+     "emailIsrRequired": "البريد الالكتروني مطلوب",
+
+     "emailIssentSuccessfully": "تم إرسال البريد الإلكتروني بنجاح",
+
+     "unblockMember": "إلغاء حظر العضو",
+
+     "memberIsBlockedSuccessfullly": "تم حظر العضو بنجاح",
+
+     "memberIsUnBlockedSuccessfullly": "تم إلغاء حظر العضو بنجاح",
+
+     "loginSubtitleOne": "إدارة وتتبع",
+
+     "loginSubtitleTwo": "تسجيلات أعضائك معنا",
+
+     "appName": "باربلس",
+
+     "emailHasNotBeenSpecified": "لم يتم تحديد البريد الإلكتروني",
+
+     "invalidPhoneNumber": "رقم الهاتف غير صحيح",
+
+     "club": "النادي",
+
+     "privacyPolicy": "سياسة الخصوصية",
+
+     "followUsOn": "اتبعنا",
+
+     "poweredBy": "مشغل بواسطة",
+
+     "agile": "اجيل",
+
+    "close": "أغلق",
+
+    "numberOfAttendancesLeft": "عدد الحضور المتبقي",
+
+    "jan": "يناير",
+
+    "feb": "فبراير",
+
+    "mar": "مارس",
+
+    "apr": "أبريل",
+
+    "may": "مايو",
+
+    "jun": "يونيو",
+
+    "jul": "يوليو",
+
+    "aug": "أغسطس",
+
+    "sep": "سبتمبر",
+
+    "oct": "أكتوبر",
+
+    "nov": "نوفمبر",
+
+    "dec": "ديسمبر",
+
+    "delete": "حذف",
+
+    "confirmDelete": "هل أنت متأكد أنك تريد حذف ذلك؟",
+
+    "workOffline": "وضع غير متصل بالشبكة",
+
+    "workOnline": "وضع على شبكة الإنترنت",
+
+    "sync": "دمج البيانات",
+
+    "unAbleToPerformAction": "غير قادر على تنفيذ الإجراء ، النظام في وضع غير متصل بالشبكة",
+
+    "syncingData": "جاري مزامنة البيانات الرجاء الانتظار ...",
+
+    "datahasBeensyncedSuccessfully": "تمت مزامنة البيانات بنجاح",
+
+    "dataIsAlreadySynced": "البيانات متزامنة بالفعل",
+
+    "switchedToOfflineMode": "تحول إلى وضع غير متصل بالشبكة",
+
+    "backOnline": "يرجع متصل",
+
+    "dataMustBeSyncedFirst": "Data must be synced first before switching to online mode",
+
+    "emailIsUsed": "البريد الالكتروني موجود بالفعل",
+
+    "phoneIsUsed": "رقم الهاتف موجود بالفعل",
+
+    "membershipIsused": "العضوية موجودة بالفعل",
+
+    "registrationIsExpired": "انتهت صلاحية هذا الاشتراك",
+
+    "sorryPackageHasBeenExpired": "عذرا ، انتهت صلاحية الحزمة الخاصة بك",
+
+    "sorryNoMoreSessionsToCancel": "عذرا ، لا مزيد من التسجيلات للإلغاء",
+
+    "syncingData": "تحميل البيانات...",
+
+    "packages": "الاشتراكات",
+
+    "payments": "المدفوعات",
+
+    "addNote": "أضف ملاحظة",
+
+    "addToBlackList": "أضف إلى القائمة السوداء",
+
+    "removefromBlacklist": "إزالة من القائمة السوداء",
+
+    "notes": "ملحوظات",
+
+    "youMustAddNoteToSave": "يجب ألا تكون الملاحظة فارغة",
+
+    "noteAddedsccessfully": "تمت إضافة الملاحظة بنجاح",
+
+    "submit": "إرسال",
+
+    "paymentIsRecordedSuccessfully": "تم تسجيل الدفع بنجاح",
+
+    "allFieldsMustBeFilled": "يجب ملء كل الفراغات"
+
+
+
+
+    
+}

@@ -1,0 +1,462 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:6056883884754354610",
+      "lastPropertyId": "10:2596117925268838224",
+      "name": "MemberAttendencesData",
+      "properties": [
+        {
+          "id": "1:8169497247661579549",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2345819803651470036",
+          "name": "attendenceId",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "1:1159075281728089432"
+        },
+        {
+          "id": "3:8188357564399082483",
+          "name": "clubId",
+          "type": 9
+        },
+        {
+          "id": "4:7066691399028144783",
+          "name": "registrationId",
+          "type": 9
+        },
+        {
+          "id": "5:3395273663782249141",
+          "name": "packageId",
+          "type": 9
+        },
+        {
+          "id": "6:8869910621790644374",
+          "name": "staffId",
+          "type": 9
+        },
+        {
+          "id": "7:6431169059026718264",
+          "name": "memberId",
+          "type": 9
+        },
+        {
+          "id": "8:4255425999697188401",
+          "name": "createdAt",
+          "type": 9
+        },
+        {
+          "id": "9:1246980052512881873",
+          "name": "sync",
+          "type": 1
+        },
+        {
+          "id": "10:2596117925268838224",
+          "name": "operation",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:1378476243543860403",
+      "lastPropertyId": "19:2312494023041545828",
+      "name": "MemberData",
+      "properties": [
+        {
+          "id": "1:1327096607227096529",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2346699890881089942",
+          "name": "memberId",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "2:1837140264222339056"
+        },
+        {
+          "id": "3:3151209096687426663",
+          "name": "clubId",
+          "type": 9
+        },
+        {
+          "id": "4:4104382264962712542",
+          "name": "memberName",
+          "type": 9
+        },
+        {
+          "id": "5:2734083810871850484",
+          "name": "memberEmail",
+          "type": 9
+        },
+        {
+          "id": "6:1637269263225563133",
+          "name": "memberPhone",
+          "type": 9
+        },
+        {
+          "id": "7:1390623700632304518",
+          "name": "countryCode",
+          "type": 9
+        },
+        {
+          "id": "8:8766273012310475773",
+          "name": "gender",
+          "type": 9
+        },
+        {
+          "id": "9:2283240956786735449",
+          "name": "staffId",
+          "type": 9
+        },
+        {
+          "id": "10:5909434463870896822",
+          "name": "birthYear",
+          "type": 9
+        },
+        {
+          "id": "11:2700222471103630308",
+          "name": "membership",
+          "type": 6
+        },
+        {
+          "id": "12:4066257226581993699",
+          "name": "qrCodeURL",
+          "type": 9
+        },
+        {
+          "id": "13:4476010865810478439",
+          "name": "qrCodeUUID",
+          "type": 9
+        },
+        {
+          "id": "14:7297387878379818925",
+          "name": "canAuthenticate",
+          "type": 1
+        },
+        {
+          "id": "15:8121602908880867042",
+          "name": "isBlocked",
+          "type": 1
+        },
+        {
+          "id": "16:1699879179378669295",
+          "name": "createdAt",
+          "type": 9
+        },
+        {
+          "id": "17:2525735113657400380",
+          "name": "sync",
+          "type": 1
+        },
+        {
+          "id": "18:4367868579330038011",
+          "name": "operation",
+          "type": 9
+        },
+        {
+          "id": "19:2312494023041545828",
+          "name": "isBlacklist",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:6117331727512201037",
+      "lastPropertyId": "9:9218704704895438055",
+      "name": "PlanData",
+      "properties": [
+        {
+          "id": "1:2055748579743814447",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3153108036962973229",
+          "name": "planId",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "3:3634938526974646890"
+        },
+        {
+          "id": "3:4155091816015290920",
+          "name": "planClubId",
+          "type": 9
+        },
+        {
+          "id": "4:9130022310736290158",
+          "name": "planTitle",
+          "type": 9
+        },
+        {
+          "id": "5:2971009903352727492",
+          "name": "planAttendance",
+          "type": 6
+        },
+        {
+          "id": "6:9187614272923877199",
+          "name": "planExpiresIn",
+          "type": 9
+        },
+        {
+          "id": "7:6444831550383976250",
+          "name": "planPriceAsDouble",
+          "type": 8
+        },
+        {
+          "id": "8:4580966611257982922",
+          "name": "isOpen",
+          "type": 1
+        },
+        {
+          "id": "9:9218704704895438055",
+          "name": "createdAt",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:3406677903734350214",
+      "lastPropertyId": "14:5664607878573124509",
+      "name": "Registrations",
+      "properties": [
+        {
+          "id": "1:4520363289792743168",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3053439158363842617",
+          "name": "registrationId",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "4:428676365675191002"
+        },
+        {
+          "id": "3:8078348712793049997",
+          "name": "registrationIsActive",
+          "type": 1
+        },
+        {
+          "id": "4:8775719121391207079",
+          "name": "registrationAttended",
+          "type": 6
+        },
+        {
+          "id": "5:1821000588783123408",
+          "name": "registrationExpiresAt",
+          "type": 9
+        },
+        {
+          "id": "6:3473648902154709816",
+          "name": "isFreezed",
+          "type": 1
+        },
+        {
+          "id": "7:4180076389178885717",
+          "name": "registrationCreatedAt",
+          "type": 9
+        },
+        {
+          "id": "8:7549396928965287341",
+          "name": "packageId",
+          "type": 9
+        },
+        {
+          "id": "9:3133062373805329446",
+          "name": "clubId",
+          "type": 9
+        },
+        {
+          "id": "10:9039426038273245385",
+          "name": "memberId",
+          "type": 9
+        },
+        {
+          "id": "11:97440965990419427",
+          "name": "staffId",
+          "type": 9
+        },
+        {
+          "id": "12:1225971394730537049",
+          "name": "paidInDouble",
+          "type": 8
+        },
+        {
+          "id": "13:7766414752817843838",
+          "name": "sync",
+          "type": 1
+        },
+        {
+          "id": "14:5664607878573124509",
+          "name": "operation",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:5749498089857437392",
+      "lastPropertyId": "14:229305058496920458",
+      "name": "FreezeData",
+      "properties": [
+        {
+          "id": "1:1229900531739855747",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2559956367324272576",
+          "name": "freezeId",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "5:7049012826544978838"
+        },
+        {
+          "id": "3:7598401897659363695",
+          "name": "clubId",
+          "type": 9
+        },
+        {
+          "id": "4:7398454180954510446",
+          "name": "staffId",
+          "type": 9
+        },
+        {
+          "id": "5:4730986890483889962",
+          "name": "memberId",
+          "type": 9
+        },
+        {
+          "id": "6:4746919108582063692",
+          "name": "registrationId",
+          "type": 9
+        },
+        {
+          "id": "7:964660946994162657",
+          "name": "packageId",
+          "type": 9
+        },
+        {
+          "id": "8:5655410925035416110",
+          "name": "reactivationDate",
+          "type": 9
+        },
+        {
+          "id": "9:2997959157087849375",
+          "name": "freezeDuration",
+          "type": 9
+        },
+        {
+          "id": "10:4609835529531803954",
+          "name": "registrationNewExpirationDate",
+          "type": 9
+        },
+        {
+          "id": "11:3887069025824403465",
+          "name": "sync",
+          "type": 1
+        },
+        {
+          "id": "12:2441504589874321887",
+          "name": "operation",
+          "type": 9
+        },
+        {
+          "id": "13:6952962304635385432",
+          "name": "createdAt",
+          "type": 9
+        },
+        {
+          "id": "14:229305058496920458",
+          "name": "registrationOldExpirationDate",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:937376422607402013",
+      "lastPropertyId": "8:5632674438802451963",
+      "name": "Notes",
+      "properties": [
+        {
+          "id": "1:2608205678251788159",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:9123790205682333423",
+          "name": "noteMaker",
+          "type": 9
+        },
+        {
+          "id": "3:8545860535872122880",
+          "name": "note",
+          "type": 9
+        },
+        {
+          "id": "4:4837468327088220779",
+          "name": "createdAt",
+          "type": 9
+        },
+        {
+          "id": "5:3612959095483818946",
+          "name": "noteId",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "7:3115373230375009133"
+        },
+        {
+          "id": "6:8878884091893511416",
+          "name": "memberId",
+          "type": 9
+        },
+        {
+          "id": "7:7585693699565712438",
+          "name": "sync",
+          "type": 1
+        },
+        {
+          "id": "8:5632674438802451963",
+          "name": "operation",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "7:937376422607402013",
+  "lastIndexId": "7:3115373230375009133",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    1502856147444356535
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    5938998920743199510,
+    7186715639478742627,
+    7764904156019282437,
+    2987712245867585995,
+    1772131008003687278
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}
